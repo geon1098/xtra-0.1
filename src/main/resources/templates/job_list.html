@@ -1,0 +1,60 @@
+<html lang="ko" layout:decorate="~{layout}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div layout:fragment="content" class="work-board-container">
+
+    <div class="work-board-header">
+        <h1 class="board-title">구직 게시글 목록</h1>
+        <a class="board-button" th:href="@{/job/create}" sec:authorize="isAuthenticated()">+ 구직 등록</a>
+    </div>
+
+    <div class="work-board-table-wrapper">
+        <table class="work-board-table">
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>자기 소개</th>
+                    <th>근무 가능일</th>
+                    <th>희망 업무</th>
+                    <th>희망 지역</th>
+                    <th>등록일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="jobing : ${paging.content}">
+                    <td th:text="${jobing.name}"></td>
+                    <td>
+                        <a th:href="@{|/job/detail/${jobing.id}|}" 
+                           th:text="${jobing.introduction}" 
+                           class="board-link"></a>
+                    </td>
+                    <td th:text="${jobing.startDate}"></td>
+                    <td th:text="${jobing.requestWork}"></td>
+                    <td th:text="${jobing.hopArea}"></td>
+                    <td th:text="${#temporals.format(jobing.createDate, 'yyyy-MM-dd')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <button class="pagination-button"
+                th:if="${paging.hasPrevious()}"
+                th:onclick="|location.href='@{/job/list(page=${paging.number - 1})}'|">
+            ← 이전
+        </button>
+
+        <div class="pagination-pages">
+            <span th:each="i : ${#numbers.sequence(1, paging.totalPages)}"
+                  th:classappend="${i == paging.number + 1} ? 'page-number active' : 'page-number'"
+                  th:onclick="|location.href='@{/job/list(page=${i - 1})}'|"
+                  th:text="${i}">1</span>
+        </div>
+
+        <button class="pagination-button"
+                th:if="${paging.hasNext()}"
+                th:onclick="|location.href='@{/job/list(page=${paging.number + 1})}'|">
+            다음 →
+        </button>
+    </div>
+
+</div>
+</html>

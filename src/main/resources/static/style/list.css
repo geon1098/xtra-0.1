@@ -1,0 +1,102 @@
+.work-board-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.work-board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.board-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.board-button {
+  background-color: #1f8ecd;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.board-button:hover {
+  background-color: #1379b9;
+}
+
+.work-board-table-wrapper {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.work-board-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.work-board-table thead {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+}
+
+.work-board-table th,
+.work-board-table td {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.board-link {
+  color: #1f8ecd;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.board-link:hover {
+  text-decoration: underline;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+  gap: 10px;
+}
+
+.pagination-button {
+  padding: 8px 14px;
+  background-color: white;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 8px;
+}
+
+.page-number {
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-size: 14px;
+}
+
+.page-number.active {
+  background-color: #1f8ecd;
+  color: white;
+  border-color: #1f8ecd;
+}

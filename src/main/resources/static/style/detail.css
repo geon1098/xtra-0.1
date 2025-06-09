@@ -1,0 +1,112 @@
+/* detail.css - 공통 CSS 파일로 따로 분리해두세요 */
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
+    background-color: #fafafa;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    border-left: 6px solid #3498db;
+    padding-left: 10px;
+}
+
+.detail_info,
+.detail_info_detail,
+.detail_info_intro,
+.detail_info_etc {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.detail_info table,
+.detail_info_detail table,
+.detail_info_intro table,
+.detail_info_etc table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.detail_info th,
+.detail_info td,
+.detail_info_detail td,
+.detail_info_intro td,
+.detail_info_etc td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 0.95rem;
+}
+
+.detail_info th {
+    background-color: #f4f6f8;
+    font-weight: 600;
+    color: #555;
+    width: 20%;
+}
+
+.detail_info td {
+    width: 30%;
+    color: #333;
+}
+
+.detail_info_detail td,
+.detail_info_intro td,
+.detail_info_etc td {
+    padding: 1.5rem;
+    line-height: 1.6;
+    color: #444;
+    background-color: #fff;
+}
+
+.detail_info_intro th,
+.detail_info_etc th {
+    background-color: #f4f6f8;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+.text-end {
+    text-align: right;
+    margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .detail_info th, .detail_info td {
+        display: block;
+        width: 100%;
+    }
+
+    .detail_info tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+}

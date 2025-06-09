@@ -1,0 +1,61 @@
+<!-- work_list.html -->
+<html lang="ko" layout:decorate="~{layout}">
+<div layout:fragment="content" class="work-board-container">
+
+    <div class="work-board-header">
+        <h1 class="board-title">무료 구인 광고 목록</h1>
+        <a class="board-button" th:href="@{/work/info}">+ 구인 등록</a>
+    </div>
+
+    <div class="work-board-table-wrapper">
+        <table class="work-board-table">
+            <thead>
+                <tr>
+                    <th>현장명</th>
+                    <th>업무내용</th>
+                    <th>응시요건</th>
+                    <th>소재지</th>
+                    <th>작성자</th>
+                    <th>등록일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="working : ${paging.content}">
+                    <td th:text="${working.siteName}"></td>
+                    <td>
+                        <a th:href="@{|/work/detail/${working.id}|}"
+                           th:text="${working.jobContent}" 
+                           class="board-link"></a>
+                    </td>
+                    <td th:text="${working.jobWork}"></td>
+                    <td th:text="${working.location}"></td>
+                    <td th:text="${working.author != null ? working.author.username : '알 수 없음'}"></td>
+                    <td th:text="${#temporals.format(working.createDate, 'yyyy-MM-dd')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <button class="pagination-button"
+                th:if="${paging.hasPrevious()}"
+                th:onclick="|location.href='@{/work/list(page=${paging.number - 1})}'|">
+            ← 이전
+        </button>
+
+        <div class="pagination-pages">
+            <span th:each="i : ${#numbers.sequence(1, paging.totalPages)}"
+                  th:classappend="${i == paging.number + 1} ? 'page-number active' : 'page-number'"
+                  th:onclick="|location.href='@{/work/list(page=${i - 1})}'|"
+                  th:text="${i}">1</span>
+        </div>
+
+        <button class="pagination-button"
+                th:if="${paging.hasNext()}"
+                th:onclick="|location.href='@{/work/list(page=${paging.number + 1})}'|">
+            다음 →
+        </button>
+    </div>
+
+</div>
+</html>

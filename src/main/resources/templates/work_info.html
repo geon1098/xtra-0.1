@@ -1,0 +1,124 @@
+<!-- work_info.html -->
+<html lang="ko" layout:decorate="~{layout}" th:with="isLoggedIn=${#authorization.expression('isAuthenticated()')}">
+<div layout:fragment="content" class="container mt-5">
+  <div class="row g-4">
+
+    <!-- 카드 1 -->
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="프리미엄 구인정보">
+        <div class="card-body">
+          <h5 class="card-title">프리미엄구인정보(하)</h5>
+          <p class="card-text"><strong>노출위치:</strong> 구인리스트 하단, 구인지도</p>
+          <p class="card-text"><strong>광고기간:</strong> 10일</p>
+          <p class="card-text"><strong>서비스비용:</strong> 2만 2천원(부가세 포함)</p>
+          <a class="btn btn-success" th:href="@{/work/create}" onclick="handleJobRegister(event)">구인등록하기</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드 2 -->
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="무료구인광고">
+        <div class="card-body">
+          <h5 class="card-title">무료구인광고</h5>
+          <p class="card-text"><strong>노출위치:</strong> 구인리스트 최하단</p>
+          <p class="card-text"><strong>광고기간:</strong> 10일</p>
+          <p class="card-text"><strong>서비스비용:</strong> 없음</p>
+          <a class="btn btn-success" th:href="@{/work/create}" onclick="handleJobRegister(event)">구인등록하기</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드 3 -->
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="TOP배너">
+        <div class="card-body">
+          <h5 class="card-title">TOP배너(구인)</h5>
+          <p class="card-text"><strong>노출위치:</strong> 메인화면 상단 탑배너, 구인지도</p>
+          <p class="card-text"><strong>광고기간:</strong> 월 단위</p>
+          <p class="card-text"><strong>서비스비용:</strong> 1구좌당 110만원(부가세 포함)</p>
+          <a class="btn btn-success" th:href="@{/work/create}" onclick="handleJobRegister(event)">구인등록하기</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드 4 -->
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="좌측배너">
+        <div class="card-body">
+          <h5 class="card-title">구인 좌측배너</h5>
+          <p class="card-text"><strong>노출위치:</strong> 구인리스트 좌측배너, 구인지도</p>
+          <p class="card-text"><strong>광고기간:</strong> 10일</p>
+          <p class="card-text"><strong>서비스비용:</strong> 33만원(부가세 포함)</p>
+          <a class="btn btn-success" th:href="@{/work/create}" onclick="handleJobRegister(event)">구인등록하기</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드 5 -->
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="중앙배너">
+        <div class="card-body">
+          <h5 class="card-title">중앙배너(예시)</h5>
+          <p class="card-text"><strong>노출위치:</strong> 메인 중앙배너</p>
+          <p class="card-text"><strong>광고기간:</strong> 7일</p>
+          <p class="card-text"><strong>서비스비용:</strong> 15만원</p>
+          <a class="btn btn-success" th:href="@{/work/create}" onclick="handleJobRegister(event)">구인등록하기</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드 6 -->
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="하단배너">
+        <div class="card-body">
+          <h5 class="card-title">하단배너(예시)</h5>
+          <p class="card-text"><strong>노출위치:</strong> 하단 고정배너</p>
+          <p class="card-text"><strong>광고기간:</strong> 15일</p>
+          <p class="card-text"><strong>서비스비용:</strong> 5만원</p>
+          <a class="btn btn-success" th:href="@{/work/create}" onclick="handleJobRegister(event)">구인등록하기</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- 로그인 필요 모달 -->
+<div class="modal fade" id="loginRequiredModal" tabindex="-1" aria-labelledby="loginRequiredModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginRequiredModalLabel">알림</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+      </div>
+      <div class="modal-body">
+        로그인이 필요합니다.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="goToLogin()">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script layout:fragment="script" type='text/javascript'>
+  function handleJobRegister(event) {
+    const isLoggedIn = /*[[${isLoggedIn}]]*/ false;
+    if (!isLoggedIn) {
+      event.preventDefault();
+      const loginModal = new bootstrap.Modal(document.getElementById('loginRequiredModal'));
+      loginModal.show();
+    }
+  }
+
+  function goToLogin() {
+    window.location.href = '/user/login';
+  }
+</script>
+</html>

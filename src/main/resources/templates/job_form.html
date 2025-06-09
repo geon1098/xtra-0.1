@@ -1,0 +1,129 @@
+<!-- job_form.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+<head>
+    <title>구직 등록</title>
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <h2 class="mb-4">구직 등록</h2>
+
+    <form th:action="@{/job/create}" th:object="${jobingForm}" method="post" class="create_form">
+        <div class="col_input">
+            <label class="form-label">이름</label>
+            <input type="text" class="form-control" th:field="*{name}" required>
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">성별</label>
+            <select class="form-select" th:field="*{gender}">
+                <option value="남성">남성</option>
+                <option value="여성">여성</option>
+                <option value="무관">무관</option>
+            </select>
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">나이</label>
+            <input type="text" class="form-control" th:field="*{age}" required>
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">연락처</label>
+            <input type="text" class="form-control" th:field="*{phone}" required>
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">이메일</label>
+            <input type="text" class="form-control" th:field="*{email}" required>
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">주소</label>
+            <input type="text" class="form-control" th:field="*{address}">
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">희망업무</label>
+            <input type="text" class="form-control" th:field="*{requestWork}">
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">희망 지역</label>
+            <input type="text" class="form-control" th:field="*{hopArea}">
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">업무 가능일</label>
+            <input type="text" class="form-control" th:field="*{startDate}">
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">자격증</label>
+            <input type="text" class="form-control" th:field="*{license}">
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">경력</label>
+            <textarea class="form-control" rows="3" th:field="*{career}"></textarea>
+        </div>
+
+        <div class="col_input">
+            <label class="form-label">인맥</label>
+            <input type="text" class="form-control" th:field="*{networking}">
+        </div>
+
+		<div class="col_input">
+		    <label class="form-label">자기소개</label>
+		    <textarea class="form-control" th:field="*{introduction}" rows="8" placeholder="자유롭게 작성해 주세요."></textarea>
+		</div>
+
+        <div class="col_input">
+            <label class="form-label">기타</label>
+            <input type="text" class="form-control" th:field="*{etc}">
+        </div>
+
+        <div class="form_create_btn">
+            <button type="submit" class="btn">구직 등록</button>
+        </div>
+    </form>
+</div>
+
+<!-- 로그인 필요 모달 -->
+<div class="modal fade" id="loginRequiredModal" tabindex="-1" aria-labelledby="loginRequiredModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginRequiredModalLabel">알림</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+      </div>
+      <div class="modal-body">
+        로그인이 필요합니다.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="goToLogin()">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script layout:fragment="script" type='text/javascript'>
+  function checkLoginAndShowModal(event) {
+    const isLoggedIn = /*[[${#authorization.expression('isAuthenticated()')}]]*/ false;
+    if (!isLoggedIn) {
+      event.preventDefault();
+      const loginModal = new bootstrap.Modal(document.getElementById('loginRequiredModal'));
+      loginModal.show();
+    }
+  }
+  function goToLogin() {
+    window.location.href = '/user/login';
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.create_form');
+    if (form) {
+      form.addEventListener('submit', checkLoginAndShowModal);
+    }
+  });
+</script>
+</body>
+</html>

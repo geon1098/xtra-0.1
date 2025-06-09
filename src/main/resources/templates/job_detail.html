@@ -1,0 +1,104 @@
+<!-- job_detail.html -->
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container">
+    <div class="gujick_name">
+        <h1 class="display-5 fw-bold">구직신청</h1>
+	</div>
+    <!-- 기본 정보 -->
+        <div class="detail_info">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>이름</th>
+                        <td th:text="${jobing.name}"></td>
+                        <th>성별</th>
+                        <td th:text="${jobing.gender}"></td>
+                    </tr>
+                    <tr>
+                        <th>나이</th>
+                        <td th:text="${jobing.age}"></td>
+                        <th>연락처</th>
+                        <td th:text="${jobing.phone}"></td>
+                    </tr>
+                    <tr>
+                        <th>E-mail</th>
+                        <td colspan="3" th:text="${jobing.email}"></td>
+                    </tr>
+                    <tr>
+                        <th>주소</th>
+                        <td colspan="3" th:text="${jobing.address}"></td>
+                    </tr>
+                    <tr>
+                        <th>등록일</th>
+                        <td colspan="3" th:text="${#temporals.format(jobing.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <!-- 희망 근무 조건 -->
+    <div class="detail_info">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>희망 업무</th>
+                        <td th:text="${jobing.requestWork}"></td>
+                        <th>희망 지역</th>
+                        <td th:text="${jobing.hopArea}"></td>
+                    </tr>
+                    <tr>
+                        <th>시작 가능일</th>
+                        <td colspan="3" th:text="${jobing.startDate}"></td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+    <!-- 경력 사항 -->
+    <div class="detail_info">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>경력</th>
+                        <td th:text="${jobing.career}"></td>
+                        <th>자격증</th>
+                        <td th:text="${jobing.license}"></td>
+                    </tr>
+                    <tr>
+                        <th>인맥</th>
+                        <td colspan="3" th:text="${jobing.networking}"></td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+    <!-- 자기소개 -->
+        <div class="detail_info_intro">
+        	<table>
+        		<tbody>
+        			<tr>
+        				<th>자기소개</th>
+        			</tr>
+        			<tr>
+        				<td class="intro" th:text="${jobing.introduction}"></td>
+        			</tr>
+        		</tbody>
+        	</table>
+        </div>
+    <!-- 기타 -->
+        <div class="detail_info_etc">
+        	<table>
+        		<tbody>
+        			<tr>
+        				<th>기타</th>
+        			</tr>
+        			<tr>
+        				<td  class="etc" th:text="${jobing.etc}"></td>
+        			</tr>
+        		</tbody>
+        	</table>
+        </div>
+
+    <div class="text-end">
+        <a th:href="@{|/work/chat/${jobing.id}|}" class="btn btn-primary">간편문자 보내기</a>
+        <a th:href="@{/job/list}" class="btn">← 목록으로 돌아가기</a>
+    </div>
+</div>
+</html>
