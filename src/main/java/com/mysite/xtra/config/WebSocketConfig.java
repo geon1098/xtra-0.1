@@ -40,6 +40,7 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collections;
+import java.util.Map;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -119,41 +120,56 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     logger.info("STOMP 연결 시도 - 세션: {}", sessionId);
                     
                     try {
-                        // 세션에서 인증 정보 가져오기 시도
-                        HttpSession httpSession = (HttpSession) accessor.getSessionAttributes()
-                            .get(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+                        // 헤더에서 사용자 정보 가져오기
+                        String username = accessor.getFirstNativeHeader("X-User-Name");
+                        String userId = accessor.getFirstNativeHeader("X-User-Id");
                         
-                        Authentication auth = null;
-                        if (httpSession != null) {
-                            SecurityContext securityContext = (SecurityContext) httpSession
-                                .getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
-                            if (securityContext != null) {
-                                auth = securityContext.getAuthentication();
+                        if (username != null && userId != null) {
+                            logger.info("헤더에서 사용자 정보 발견: username={}, userId={}", username, userId);
+                            try {
+                                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                                if (userDetails != null) {
+                                    Authentication auth = new UsernamePasswordAuthenticationToken(
+                                        userDetails, null, userDetails.getAuthorities());
+                                    accessor.setUser(auth);
+                                    logger.info("사용자 인증 성공: {}", username);
+                                    return message;
+                                }
+                            } catch (Exception e) {
+                                logger.error("사용자 인증 실패: {}", e.getMessage());
+                            }
+                        }
+
+                        // 세션에서 인증 정보 가져오기
+                        Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
+                        if (sessionAttributes != null) {
+                            HttpSession httpSession = (HttpSession) sessionAttributes.get(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+                            if (httpSession != null) {
+                                SecurityContext securityContext = (SecurityContext) httpSession.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+                                if (securityContext != null) {
+                                    Authentication auth = securityContext.getAuthentication();
+                                    if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+                                        accessor.setUser(auth);
+                                        logger.info("HTTP 세션에서 인증 정보 발견: {}", auth.getName());
+                                        return message;
+                                    }
+                                }
                             }
                         }
                         
-                        // SecurityContextHolder에서 인증 정보 가져오기 시도
-                        if (auth == null) {
-                            auth = SecurityContextHolder.getContext().getAuthentication();
-                        }
-                        
-                        logger.info("현재 인증 상태: {}", auth != null ? 
-                            "인증됨 (사용자: " + auth.getName() + ")" : "인증되지 않음");
-                        
-                        if (auth != null && auth.isAuthenticated()) {
+                        // SecurityContextHolder에서 인증 정보 가져오기
+                        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
                             accessor.setUser(auth);
-                            logger.info("STOMP 연결 승인 - 사용자: {}, 세션: {}", 
-                                auth.getName(), sessionId);
-                        } else {
-                            // 인증되지 않은 경우에도 연결을 허용하되, 제한된 권한 부여
-                            logger.warn("STOMP 연결 - 인증되지 않은 사용자, 제한된 권한으로 연결 허용, 세션: {}", sessionId);
-                            accessor.setUser(new AnonymousAuthenticationToken("anonymous", "anonymous", 
-                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))));
+                            logger.info("SecurityContextHolder에서 인증 정보 발견: {}", auth.getName());
+                            return message;
                         }
+                        
+                        logger.warn("STOMP 연결 거부 - 인증되지 않은 사용자, 세션: {}", sessionId);
+                        throw new RuntimeException("인증이 필요합니다.");
                     } catch (Exception e) {
-                        logger.error("STOMP 연결 실패 - 예외 발생: {}, 세션: {}", 
-                            e.getMessage(), sessionId, e);
-                        throw new RuntimeException("연결 중 오류가 발생했습니다: " + e.getMessage());
+                        logger.error("STOMP 연결 실패 - 예외 발생: {}, 세션: {}", e.getMessage(), sessionId);
+                        throw new RuntimeException("인증이 필요합니다.");
                     }
                 } else if (StompCommand.CONNECTED.equals(command)) {
                     logger.info("STOMP 연결 완료 - 세션: {}", sessionId);

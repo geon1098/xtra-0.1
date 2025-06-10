@@ -22,6 +22,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.mysite.xtra.DataNotFoundException;
 
 @Controller
 public class ChatController {
@@ -56,34 +57,40 @@ public class ChatController {
         logger.info("🔔 [ChatController] 인증된 사용자: {}, 세션: {}", 
             username, headerAccessor.getSessionId());
 
-        SiteUser currentUser = userService.getUser(username);
-        if (currentUser == null) {
-            logger.error("🔔 [ChatController] 사용자를 찾을 수 없습니다: {}, 세션: {}", 
-                username, headerAccessor.getSessionId());
-            throw new RuntimeException("사용자를 찾을 수 없습니다.");
-        }
-
-        Working working = workingService.getWorking(chatMessage.getRoomId());
-        if (working == null) {
-            logger.error("🔔 [ChatController] 채팅방을 찾을 수 없습니다: {}, 세션: {}", 
-                chatMessage.getRoomId(), headerAccessor.getSessionId());
-            throw new RuntimeException("채팅방을 찾을 수 없습니다.");
-        }
-
-        // 발신자 ID 설정
-        chatMessage.setSenderId(currentUser.getId());
-        logger.info("🔔 [ChatController] 실제 발신자 ID: {}, 세션: {}", 
-            currentUser.getId(), headerAccessor.getSessionId());
-
-        // 메시지 저장 및 전송
         try {
+            SiteUser currentUser = userService.getUser(username);
+            if (currentUser == null) {
+                logger.error("🔔 [ChatController] 사용자를 찾을 수 없습니다: {}, 세션: {}", 
+                    username, headerAccessor.getSessionId());
+                throw new RuntimeException("사용자를 찾을 수 없습니다.");
+            }
+
+            Working working = workingService.getWorking(chatMessage.getRoomId());
+            if (working == null) {
+                logger.error("🔔 [ChatController] 채팅방을 찾을 수 없습니다: {}, 세션: {}", 
+                    chatMessage.getRoomId(), headerAccessor.getSessionId());
+                throw new RuntimeException("채팅방을 찾을 수 없습니다.");
+            }
+
+            // 발신자 ID 설정 및 검증
+            if (!currentUser.getId().equals(chatMessage.getSenderId())) {
+                logger.error("🔔 [ChatController] 발신자 ID 불일치 - 요청: {}, 실제: {}, 세션: {}", 
+                    chatMessage.getSenderId(), currentUser.getId(), headerAccessor.getSessionId());
+                throw new RuntimeException("잘못된 발신자 정보입니다.");
+            }
+
+            // 메시지 저장 및 전송
             ChatMessage savedMessage = chatService.saveMessage(chatMessage, currentUser, working);
             logger.info("🔔 [ChatController] 메시지 전송 성공 - ID: {}, 세션: {}", 
                 savedMessage.getId(), headerAccessor.getSessionId());
-        } catch (Exception e) {
-            logger.error("🔔 [ChatController] 메시지 전송 실패: {}, 세션: {}", 
+        } catch (DataNotFoundException e) {
+            logger.error("🔔 [ChatController] 데이터를 찾을 수 없음: {}, 세션: {}", 
                 e.getMessage(), headerAccessor.getSessionId());
-            throw new RuntimeException("메시지 전송에 실패했습니다.");
+            throw new RuntimeException("요청한 데이터를 찾을 수 없습니다: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("🔔 [ChatController] 메시지 처리 중 오류: {}, 세션: {}", 
+                e.getMessage(), headerAccessor.getSessionId());
+            throw new RuntimeException("메시지 처리 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
     
@@ -129,7 +136,7 @@ public class ChatController {
             );
             logger.info("💬 [ChatController] 채팅 히스토리 전송 완료");
         } catch (Exception e) {
-            logger.error("�� [ChatController] 채팅 히스토리 처리 중 오류: {}", e.getMessage(), e);
+            logger.error("🔔 [ChatController] 채팅 히스토리 처리 중 오류: {}", e.getMessage(), e);
         }
     }
 } 

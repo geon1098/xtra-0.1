@@ -34,15 +34,24 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/user/**"),
                     new AntPathRequestMatcher("/chat/**")
                 )
-                .disable() // CSRF 완전 비활성화
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     new AntPathRequestMatcher("/"),
                     new AntPathRequestMatcher("/job/list"),
                     new AntPathRequestMatcher("/job/detail/**"),
-                    new AntPathRequestMatcher("/user/**"),
+                    new AntPathRequestMatcher("/work/list"),
+                    new AntPathRequestMatcher("/work/detail/**"),
+                    new AntPathRequestMatcher("/user/login"),
+                    new AntPathRequestMatcher("/user/signup"),
                     new AntPathRequestMatcher("/h2-console/**"),
+                    new AntPathRequestMatcher("/css/**"),
+                    new AntPathRequestMatcher("/js/**"),
+                    new AntPathRequestMatcher("/images/**"),
+                    new AntPathRequestMatcher("/style/**"),
+                    new AntPathRequestMatcher("/webjars/**")
+                ).permitAll()
+                .requestMatchers(
                     new AntPathRequestMatcher("/ws"),
                     new AntPathRequestMatcher("/ws/**"),
                     new AntPathRequestMatcher("/topic/**"),
@@ -50,8 +59,8 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/app/**"),
                     new AntPathRequestMatcher("/user/**"),
                     new AntPathRequestMatcher("/chat/**")
-                ).permitAll()
-                .anyRequest().permitAll()
+                ).authenticated()
+                .anyRequest().authenticated()
             )
             .headers(headers -> headers
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
