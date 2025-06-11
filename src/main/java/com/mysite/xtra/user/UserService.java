@@ -46,4 +46,8 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByUsername(username)
 			.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
 	}
+
+	public SiteUser save(SiteUser user) {
+		return userRepository.save(user);
+	}
 }

@@ -37,6 +37,9 @@ public class SiteUser implements UserDetails {
 	
 	private LocalDateTime createDate; // 생성일
 
+	@Column(nullable = false)
+	private boolean emailVerified = false;
+
 	public Long getId() { return id; }
 	public void setId(Long id) { this.id = id; }
 	public String getNickname() { return nickname; }
@@ -53,6 +56,12 @@ public class SiteUser implements UserDetails {
 	public void setRole(String role) { this.role = role; }
 	public LocalDateTime getCreateDate() { return createDate; }
 	public void setCreateDate(LocalDateTime createDate) { this.createDate = createDate; }
+	public boolean isEmailVerified() {
+		return emailVerified;
+	}
+	public void setEmailVerified(boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,7 +85,7 @@ public class SiteUser implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return emailVerified;
 	}
 
 }

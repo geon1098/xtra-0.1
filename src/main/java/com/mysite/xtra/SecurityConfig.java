@@ -31,19 +31,21 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/topic/**"),
                     new AntPathRequestMatcher("/queue/**"),
                     new AntPathRequestMatcher("/app/**"),
-                    new AntPathRequestMatcher("/user/**"),
-                    new AntPathRequestMatcher("/chat/**")
+                    new AntPathRequestMatcher("/user/verify-email")
                 )
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    new AntPathRequestMatcher("/user/verify-email")
+                ).permitAll()
+                .requestMatchers(
+                    new AntPathRequestMatcher("/user/login"),
+                    new AntPathRequestMatcher("/user/signup"),
                     new AntPathRequestMatcher("/"),
                     new AntPathRequestMatcher("/job/list"),
                     new AntPathRequestMatcher("/job/detail/**"),
                     new AntPathRequestMatcher("/work/list"),
                     new AntPathRequestMatcher("/work/detail/**"),
-                    new AntPathRequestMatcher("/user/login"),
-                    new AntPathRequestMatcher("/user/signup"),
                     new AntPathRequestMatcher("/h2-console/**"),
                     new AntPathRequestMatcher("/css/**"),
                     new AntPathRequestMatcher("/js/**"),
@@ -57,8 +59,8 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/topic/**"),
                     new AntPathRequestMatcher("/queue/**"),
                     new AntPathRequestMatcher("/app/**"),
-                    new AntPathRequestMatcher("/user/**"),
-                    new AntPathRequestMatcher("/chat/**")
+                    new AntPathRequestMatcher("/chat/**"),
+                    new AntPathRequestMatcher("/user/**")
                 ).authenticated()
                 .anyRequest().authenticated()
             )

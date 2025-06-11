@@ -18,14 +18,19 @@
     </div>
     <div class="mb-3">
         <label for="password1" class="form-label">비밀번호</label>
-        <input type="password" th:field="*{password1}" class="form-control">
+        <input type="password" th:field="*{password1}" class="form-control" 
+               pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+               title="비밀번호는 최소 8자 이상이며, 영문자, 숫자, 특수문자를 포함해야 합니다."
+               required>
+        <small class="form-text text-muted">비밀번호는 최소 8자 이상이며, 영문자, 숫자, 특수문자를 포함해야 합니다.</small>
         <div th:if="${#fields.hasErrors('password1')}" class="text-danger small">
             <p th:errors="*{password1}"></p>
         </div>
     </div>
     <div class="mb-3">
         <label for="password2" class="form-label">비밀번호 확인</label>
-        <input type="password" th:field="*{password2}" class="form-control">
+        <input type="password" th:field="*{password2}" class="form-control" required>
+        <div id="password-match-message" class="text-danger small" style="display: none;">비밀번호가 일치하지 않습니다.</div>
         <div th:if="${#fields.hasErrors('password2')}" class="text-danger small">
             <p th:errors="*{password2}"></p>
         </div>
@@ -53,5 +58,28 @@
     </div>
     <button type="submit" class="btn btn-primary">회원가입</button>
 </form>
+
+<script th:inline="javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    const password1 = document.querySelector('input[name="password1"]');
+    const password2 = document.querySelector('input[name="password2"]');
+    const matchMessage = document.getElementById('password-match-message');
+    
+    function checkPasswordMatch() {
+        if (password1.value && password2.value) {
+            if (password1.value !== password2.value) {
+                matchMessage.style.display = 'block';
+                password2.setCustomValidity('비밀번호가 일치하지 않습니다.');
+            } else {
+                matchMessage.style.display = 'none';
+                password2.setCustomValidity('');
+            }
+        }
+    }
+    
+    password1.addEventListener('input', checkPasswordMatch);
+    password2.addEventListener('input', checkPasswordMatch);
+});
+</script>
 </div>
 </html>
