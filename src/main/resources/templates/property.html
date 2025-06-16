@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>매물정보 게시판</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .property-board-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 24px;
+        }
+        .property-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        .property-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            width: 260px;
+            padding: 18px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .property-img-thumb {
+            width: 100px; height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e3f0ff;
+            margin-bottom: 10px;
+        }
+        .property-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0 0 6px 0;
+            color: #007bff;
+        }
+        .property-desc {
+            font-size: 0.97em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .property-btn {
+            width: 100%;
+            margin-top: 8px;
+        }
+        @media (max-width: 700px) {
+            .property-board-container { padding: 10px; }
+            .property-list { flex-direction: column; gap: 12px; }
+            .property-card { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="property-board-container" layout:fragment="content">
+    <div class="board-title">매물정보 게시판</div>
+    <div style="text-align:right; margin-bottom:18px;">
+        <a th:href="@{/property/new}" class="btn board-button">글쓰기</a>
+    </div>
+    <div class="property-list">
+        <div class="property-card" th:each="item : ${propertyList}">
+            <img th:if="${item.imageUrls != null and !item.imageUrls.isEmpty()}" th:src="${item.imageUrls[0]}" class="property-img-thumb" alt="썸네일">
+            <div class="property-title" th:text="${item.title}"></div>
+            <div class="property-desc" th:text="${#strings.abbreviate(item.description, 40)}"></div>
+            <a th:href="@{'/property/' + ${item.id}}" class="btn btn-secondary property-btn">상세보기</a>
+        </div>
+    </div>
+
+    <!-- 매물 상세 (상세보기 페이지에서만 노출) -->
+    <div class="detail-section" th:if="${propertyDetail != null}">
+        <h3 th:text="${propertyDetail.title}"></h3>
+        <div class="img-preview">
+            <img th:each="img : ${propertyDetail.images}" th:src="${img}" class="property-img-large" alt="매물 이미지">
+        </div>
+        <div class="info-row">작성자: <span th:text="${propertyDetail.author}"></span> | 등록일: <span th:text="${propertyDetail.createdAt}"></span> | 전화번호: <span th:text="${propertyDetail.phone}"></span></div>
+        <div class="card-text" th:text="${propertyDetail.description}"></div>
+        <div th:if="${isOwner}">
+            <a th:href="@{'/property/edit/' + ${propertyDetail.id}}" class="btn">수정</a>
+            <form th:action="@{'/property/delete/' + ${propertyDetail.id}}" method="post" style="display:inline;">
+                <button type="submit" class="btn">삭제</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 매물 등록/수정 폼 (등록/수정 페이지에서만 노출) -->
+    <div class="form-section" th:if="${showForm}">
+        <h3 th:text="${formTitle}"></h3>
+        <form th:action="${formAction}" method="post" enctype="multipart/form-data">
+            <label class="form-label">제목</label>
+            <input type="text" class="form-control" name="title" th:value="${property?.title}" required>
+
+            <label class="form-label">설명</label>
+            <textarea class="form-control" name="description" rows="4" required th:text="${property?.description}"></textarea>
+
+            <label class="form-label">이미지 업로드</label>
+            <input type="file" class="form-control" name="images" multiple>
+            <div class="img-preview" th:if="${property?.images != null}">
+                <img th:each="img : ${property.images}" th:src="${img}" alt="기존 이미지">
+            </div>
+
+            <label class="form-label">작성자</label>
+            <input type="text" class="form-control" name="author" th:value="${property?.author}" required>
+
+            <label class="form-label">전화번호</label>
+            <input type="text" class="form-control" name="phone" th:value="${property?.phone}" required>
+
+            <label class="form-label">등록일</label>
+            <input type="date" class="form-control" name="createdAt" th:value="${property?.createdAt != null ? #dates.format(property.createdAt, 'yyyy-MM-dd') : #dates.format(#dates.createNow(), 'yyyy-MM-dd')}" readonly>
+
+            <button type="submit" class="btn btn-main">저장</button>
+            <a th:href="@{/property}" class="btn">취소</a>
+        </form>
+    </div>
+</div>
+</body>
+</html> 

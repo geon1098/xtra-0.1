@@ -1,70 +1,102 @@
-<html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
-	<div class="my-3 border-bottom">
-        <div>
-            <h4>회원가입</h4>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .signup-container {
+            max-width: 360px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 32px 24px 24px 24px;
+        }
+        .signup-title {
+            font-size: 1.4rem;
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .form-control {
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            background: #fafdff;
+        }
+        .btn {
+            width: 100%;
+            margin-top: 12px;
+        }
+        .text-danger.small {
+            font-size: 0.92em;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="signup-container" layout:fragment="content">
+    <div class="signup-title">회원가입</div>
     <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
-    <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
-    <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
-</div>
-    <div class="mb-3">
-        <label for="username" class="form-label">사용자ID</label>
-        <input type="text" th:field="*{username}" class="form-control">
+        <div th:if="${#fields.hasGlobalErrors()}" class="text-danger small" style="margin-bottom:10px;">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+        </div>
+        <label for="username" class="form-label">아이디</label>
+        <input type="text" th:field="*{username}" class="form-control" placeholder="아이디">
         <div th:if="${#fields.hasErrors('username')}" class="text-danger small">
             <p th:errors="*{username}"></p>
         </div>
-    </div>
-    <div class="mb-3">
+
         <label for="password1" class="form-label">비밀번호</label>
-        <input type="password" th:field="*{password1}" class="form-control" 
-               pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-               title="비밀번호는 최소 8자 이상이며, 영문자, 숫자, 특수문자를 포함해야 합니다."
-               required>
-        <small class="form-text text-muted">비밀번호는 최소 8자 이상이며, 영문자, 숫자, 특수문자를 포함해야 합니다.</small>
+        <input type="password" th:field="*{password1}" class="form-control" placeholder="비밀번호" required>
         <div th:if="${#fields.hasErrors('password1')}" class="text-danger small">
             <p th:errors="*{password1}"></p>
         </div>
-    </div>
-    <div class="mb-3">
+
         <label for="password2" class="form-label">비밀번호 확인</label>
-        <input type="password" th:field="*{password2}" class="form-control" required>
+        <input type="password" th:field="*{password2}" class="form-control" placeholder="비밀번호 확인" required>
         <div id="password-match-message" class="text-danger small" style="display: none;">비밀번호가 일치하지 않습니다.</div>
         <div th:if="${#fields.hasErrors('password2')}" class="text-danger small">
             <p th:errors="*{password2}"></p>
         </div>
-    </div>
-    <div class="mb-3">
+
         <label for="nickname" class="form-label">이름</label>
-        <input type="text" th:field="*{nickname}" class="form-control">
+        <input type="text" th:field="*{nickname}" class="form-control" placeholder="이름">
         <div th:if="${#fields.hasErrors('nickname')}" class="text-danger small">
             <p th:errors="*{nickname}"></p>
         </div>
-    </div>
-    <div class="mb-3">
+
         <label for="email" class="form-label">이메일</label>
-        <input type="email" th:field="*{email}" class="form-control">
+        <input type="email" th:field="*{email}" class="form-control" placeholder="이메일">
         <div th:if="${#fields.hasErrors('email')}" class="text-danger small">
             <p th:errors="*{email}"></p>
         </div>
-    </div>
-    <div class="mb-3">
+
         <label for="phone" class="form-label">전화번호</label>
-        <input type="text" th:field="*{phone}" class="form-control">
+        <input type="text" th:field="*{phone}" class="form-control" placeholder="전화번호">
         <div th:if="${#fields.hasErrors('phone')}" class="text-danger small">
             <p th:errors="*{phone}"></p>
         </div>
-    </div>
-    <button type="submit" class="btn btn-primary">회원가입</button>
-</form>
 
+        <button type="submit" class="btn btn-primary">회원가입</button>
+    </form>
+</div>
 <script th:inline="javascript">
 document.addEventListener('DOMContentLoaded', function() {
     const password1 = document.querySelector('input[name="password1"]');
     const password2 = document.querySelector('input[name="password2"]');
     const matchMessage = document.getElementById('password-match-message');
-    
     function checkPasswordMatch() {
         if (password1.value && password2.value) {
             if (password1.value !== password2.value) {
@@ -76,10 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
     password1.addEventListener('input', checkPasswordMatch);
     password2.addEventListener('input', checkPasswordMatch);
 });
 </script>
-</div>
+</body>
 </html>

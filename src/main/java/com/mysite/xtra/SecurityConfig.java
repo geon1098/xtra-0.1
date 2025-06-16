@@ -51,7 +51,9 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/js/**"),
                     new AntPathRequestMatcher("/images/**"),
                     new AntPathRequestMatcher("/style/**"),
-                    new AntPathRequestMatcher("/webjars/**")
+                    new AntPathRequestMatcher("/webjars/**"),
+                    new AntPathRequestMatcher("/property"),
+                    new AntPathRequestMatcher("/property/**")
                 ).permitAll()
                 .requestMatchers(
                     new AntPathRequestMatcher("/ws"),

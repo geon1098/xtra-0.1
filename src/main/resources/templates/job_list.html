@@ -1,11 +1,87 @@
-<html lang="ko" layout:decorate="~{layout}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<div layout:fragment="content" class="work-board-container">
-
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>구직 게시판</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .work-board-container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 24px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .work-board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .work-board-table-wrapper {
+            overflow-x: auto;
+        }
+        .work-board-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            margin-bottom: 18px;
+        }
+        .work-board-table th, .work-board-table td {
+            border: 1px solid #e3f0ff;
+            padding: 10px 8px;
+            text-align: center;
+        }
+        .work-board-table th {
+            background: #f2f8ff;
+            color: #007bff;
+            font-weight: 600;
+        }
+        .work-board-table td {
+            color: #333;
+        }
+        .board-link {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .board-link:hover {
+            color: #0056b3;
+        }
+        .board-button {
+            min-width: 110px;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 18px;
+        }
+        .pagination-button {
+            background: #e3f0ff;
+            color: #007bff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 18px;
+            margin: 0 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .pagination-button:disabled {
+            background: #f2f2f2;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+        @media (max-width: 700px) {
+            .work-board-container { padding: 10px; }
+            .work-board-header { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="work-board-container" layout:fragment="content">
     <div class="work-board-header">
-        <h1 class="board-title">구직 게시글 목록</h1>
-        <a class="board-button" th:href="@{/job/create}" sec:authorize="isAuthenticated()">+ 구직 등록</a>
+        <div class="board-title">구직 게시글 목록</div>
+        <a class="btn board-button" th:href="@{/job/create}" sec:authorize="isAuthenticated()">+ 구직 등록</a>
     </div>
-
     <div class="work-board-table-wrapper">
         <table class="work-board-table">
             <thead>
@@ -34,27 +110,19 @@
             </tbody>
         </table>
     </div>
-
     <div class="pagination">
         <button class="pagination-button"
                 th:if="${paging.hasPrevious()}"
                 th:onclick="|location.href='@{/job/list(page=${paging.number - 1})}'|">
             ← 이전
         </button>
-
-        <div class="pagination-pages">
-            <span th:each="i : ${#numbers.sequence(1, paging.totalPages)}"
-                  th:classappend="${i == paging.number + 1} ? 'page-number active' : 'page-number'"
-                  th:onclick="|location.href='@{/job/list(page=${i - 1})}'|"
-                  th:text="${i}">1</span>
-        </div>
-
+        <span th:text="${paging.number + 1}"></span>
         <button class="pagination-button"
                 th:if="${paging.hasNext()}"
                 th:onclick="|location.href='@{/job/list(page=${paging.number + 1})}'|">
             다음 →
         </button>
     </div>
-
 </div>
+</body>
 </html>

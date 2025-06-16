@@ -1,30 +1,67 @@
-<html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
-    <div class="my-3 border-bottom">
-        <div>
-            <h4>로그인</h4>
-        </div>
-    </div>
-    
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .login-container {
+            max-width: 360px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 32px 24px 24px 24px;
+        }
+        .login-title {
+            font-size: 1.4rem;
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .form-control {
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            background: #fafdff;
+        }
+        .btn {
+            width: 100%;
+            margin-top: 12px;
+        }
+        .text-danger, .alert {
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container" layout:fragment="content">
+    <div class="login-title">로그인</div>
     <div th:if="${message}" class="alert alert-info" role="alert">
         <p th:text="${message}"></p>
     </div>
-    
     <div th:if="${param.error}" class="alert alert-danger" role="alert">
         <p>아이디 또는 비밀번호가 올바르지 않습니다.</p>
     </div>
-    
     <form th:action="@{/user/login}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <div class="mb-3">
-            <label for="username" class="form-label">사용자ID</label>
-            <input type="text" name="username" id="username" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" name="password" id="password" class="form-control">
-        </div>
+        <label for="username" class="form-label">아이디</label>
+        <input type="text" name="username" id="username" class="form-control" placeholder="아이디">
+        <label for="password" class="form-label">비밀번호</label>
+        <input type="password" name="password" id="password" class="form-control" placeholder="비밀번호">
         <button type="submit" class="btn btn-primary">로그인</button>
     </form>
 </div>
+</body>
 </html>

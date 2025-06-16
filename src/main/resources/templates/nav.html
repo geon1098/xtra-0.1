@@ -18,12 +18,13 @@
 <style>
   .navbar {
     width: 100%;
-    background: #222;
+    background: #007bff;
     color: #fff;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
   .navbar-container {
     display: flex;
@@ -39,6 +40,7 @@
     font-weight: bold;
     font-size: 1.5rem;
     text-decoration: none;
+    letter-spacing: 1px;
   }
   .navbar-toggler {
     display: none;
@@ -57,12 +59,13 @@
     color: #fff;
     text-decoration: none;
     padding: 8px 12px;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: background 0.2s;
     display: inline-block;
+    font-weight: 500;
   }
   .nav-item a:hover {
-    background: #444;
+    background: #0056b3;
   }
   @media (max-width: 768px) {
     .navbar-container {
@@ -76,12 +79,12 @@
       display: none;
       flex-direction: column;
       width: 100%;
-      background: #222;
+      background: #007bff;
       position: absolute;
       top: 56px;
       left: 0;
       z-index: 1001;
-      border-top: 1px solid #333;
+      border-top: 1px solid #0056b3;
     }
     .navbar.show .navbar-container .navbar-nav {
       display: flex;
@@ -102,11 +105,9 @@
     const navbar = document.querySelector(".navbar");
     const navbarHeight = navbar.offsetHeight;
     document.body.style.paddingTop = navbarHeight + "px";
-    // 햄버거 메뉴 클릭 시
     document.getElementById('navbarToggler').addEventListener('click', () => {
       navbar.classList.toggle('show');
     });
-    // 메뉴 클릭 시 자동으로 닫히게
     document.querySelectorAll('.navbar-nav a').forEach(link => {
       link.addEventListener('click', () => {
         if(window.innerWidth <= 768) {
