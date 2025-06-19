@@ -143,6 +143,12 @@
     </div>
     <div style="margin-top:24px;">
         <a th:href="@{/job/list}" class="btn btn-primary">목록으로</a>
+        <span sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username == jobing.author?.username}">
+            <a th:href="@{'/job/edit/' + ${jobing.id}}" class="btn btn-secondary">수정</a>
+            <form th:action="@{'/job/delete/' + ${jobing.id}}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">삭제</button>
+            </form>
+        </span>
     </div>
 </div>
 </body>

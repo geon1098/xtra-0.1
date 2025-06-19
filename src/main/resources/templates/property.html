@@ -56,13 +56,15 @@
 </head>
 <body>
 <div class="property-board-container" layout:fragment="content">
-    <div class="board-title">매물정보 게시판</div>
+    <div class="board-title">매물정보</div>
     <div style="text-align:right; margin-bottom:18px;">
-        <a th:href="@{/property/new}" class="btn board-button">글쓰기</a>
+        <a th:href="@{/property/new}" class="btn board-button">매물 등록</a>
     </div>
     <div class="property-list">
         <div class="property-card" th:each="item : ${propertyList}">
-            <img th:if="${item.imageUrls != null and !item.imageUrls.isEmpty()}" th:src="${item.imageUrls[0]}" class="property-img-thumb" alt="썸네일">
+            <img th:if="${item.imageUrls != null and !item.imageUrls.isEmpty()}"
+                 th:src="${item.imageUrls[0]}"
+                 class="property-img-thumb" alt="썸네일">
             <div class="property-title" th:text="${item.title}"></div>
             <div class="property-desc" th:text="${#strings.abbreviate(item.description, 40)}"></div>
             <a th:href="@{'/property/' + ${item.id}}" class="btn btn-secondary property-btn">상세보기</a>
@@ -73,7 +75,9 @@
     <div class="detail-section" th:if="${propertyDetail != null}">
         <h3 th:text="${propertyDetail.title}"></h3>
         <div class="img-preview">
-            <img th:each="img : ${propertyDetail.images}" th:src="${img}" class="property-img-large" alt="매물 이미지">
+            <img th:each="img : ${propertyDetail.images}"
+                 th:src="${img}"
+                 class="property-img-large" alt="매물 이미지">
         </div>
         <div class="info-row">작성자: <span th:text="${propertyDetail.author}"></span> | 등록일: <span th:text="${propertyDetail.createdAt}"></span> | 전화번호: <span th:text="${propertyDetail.phone}"></span></div>
         <div class="card-text" th:text="${propertyDetail.description}"></div>

@@ -3,7 +3,7 @@
 <html lang="ko" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>구인 게시판</title>
+    <title>구인</title>
     <link rel="stylesheet" href="/style/style.css">
     <style>
         .work-board-container {
@@ -79,9 +79,70 @@
 </head>
 <body>
 <div class="work-board-container" layout:fragment="content">
+    <!-- 프리미엄(슬라이드형) 배너 -->
+    <div class="board-title" style="margin-bottom:16px;">프리미엄</div>
+    <div class="premium-banner-slider">
+        <div class="premium-banner" th:each="offer : ${premiumOffers}">
+            <a th:href="@{/offer/detail/{id}(id=${offer.id})}" style="text-decoration: none; color: inherit; display: block;">
+                <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/premium_default.jpg'}" 
+                     th:alt="${offer.workPlace}" class="premium-img">
+                <div class="premium-info">
+                    <div class="premium-category" th:text="'[' + ${offer.type} + ']'">[업종]</div>
+                    <div class="premium-title" th:text="${offer.workPlace}">프리미엄 현장</div>
+                    <div class="premium-pay" th:text="'급료: ' + ${offer.pay}">급료</div>
+                    <div class="premium-benefit" th:text="'복리후생: ' + ${offer.afterWork}">복리후생</div>
+                </div>
+            </a>
+        </div>
+        <!-- 프리미엄 오퍼가 없을 때 기본 배너 표시 -->
+        <div class="premium-banner" th:if="${#lists.isEmpty(premiumOffers)}">
+            <img src="/images/premium1.jpg" alt="프리미엄 현장1" class="premium-img">
+            <div class="premium-info">
+                <div class="premium-category">[아파트]</div>
+                <div class="premium-title">파격적 조건변경! 계약금 0원!</div>
+                <div class="premium-pay">급료: 2,000만원</div>
+                <div class="premium-benefit">복리후생: 숙소제공, 식사제공, 인센티브</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIP 카드형(10개) -->
+    <div class="board-title" style="margin-bottom:16px;">VIP</div>
+    <div class="vip-card-list">
+        <div class="vip-card" th:each="offer : ${vipOffers}">
+            <a th:href="@{/offer/detail/{id}(id=${offer.id})}" style="text-decoration: none; color: inherit;">
+                <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/vip_default.jpg'}" alt="VIP 현장" class="vip-img">
+                <div class="vip-info">
+                    <div class="vip-category" th:text="${offer.type}"></div>
+                    <div class="vip-title" th:text="${offer.workPlace}"></div>
+                    <div class="vip-pay" th:text="'급료: ' + ${offer.pay}"></div>
+                    <div class="vip-benefit" th:text="'복리후생: ' + ${offer.afterWork}"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 익스퍼트 카드형(무제한) -->
+    <div class="board-title" style="margin-bottom:16px;">익스퍼트</div>
+    <div class="expert-card-list">
+        <div class="expert-card" th:each="offer : ${expertOffers}">
+            <a th:href="@{/offer/detail/{id}(id=${offer.id})}" style="text-decoration: none; color: inherit;">
+                <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/expert_default.jpg'}" alt="익스퍼트 현장" class="expert-img">
+                <div class="expert-info">
+                    <div class="expert-category" th:text="${offer.type}"></div>
+                    <div class="expert-title" th:text="${offer.workPlace}"></div>
+                    <div class="expert-pay" th:text="'급료: ' + ${offer.pay}"></div>
+                    <div class="expert-benefit" th:text="'복리후생: ' + ${offer.afterWork}"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+
+
     <div class="work-board-header">
-        <div class="board-title">무료 구인 광고 목록</div>
-        <a class="btn board-button" th:href="@{/work/info}">+ 구인 등록</a>
+        <div class="board-title">무료 구인</div>
+        <a class="btn board-button" th:href="@{/work/create}">+ 구인 등록</a>
     </div>
     <div class="work-board-table-wrapper">
         <table class="work-board-table">
@@ -97,14 +158,14 @@
             </thead>
             <tbody>
                 <tr th:each="working : ${paging.content}">
-                    <td th:text="${working.siteName}"></td>
+                    <td th:text="${#strings.abbreviate(working.siteName, 10)}"></td>
                     <td>
                         <a th:href="@{|/work/detail/${working.id}|}"
-                           th:text="${working.jobContent}" 
+                           th:text="${#strings.abbreviate(working.jobContent, 10)}"
                            class="board-link"></a>
                     </td>
-                    <td th:text="${working.jobWork}"></td>
-                    <td th:text="${working.location}"></td>
+                    <td th:text="${#strings.abbreviate(working.jobWork, 10)}"></td>
+                    <td th:text="${#strings.abbreviate(working.location, 10)}"></td>
                     <td th:text="${working.author != null ? working.author.username : '알 수 없음'}"></td>
                     <td th:text="${#temporals.format(working.createDate, 'yyyy-MM-dd')}"></td>
                 </tr>

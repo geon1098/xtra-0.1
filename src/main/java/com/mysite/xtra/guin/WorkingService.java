@@ -69,4 +69,32 @@ public class WorkingService {
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
 		return this.workingRepository.findAll(pageable);
 	}
+
+    @Transactional
+    public void updateWorking(Working working, WorkingForm form) {
+        working.setSiteName(form.getSiteName());
+        working.setTitle(form.getTitle());
+        working.setCategory(form.getCategory());
+        working.setJobContent(form.getJobContent());
+        working.setJobType(form.getJobType());
+        working.setBenefits(form.getBenefits());
+        working.setLocation(form.getLocation());
+        working.setJobDescription(form.getJobDescription());
+        working.setJobWork(form.getJobWork());
+        working.setDeadDate(form.getDeadDate());
+        working.setWorkNumber(form.getWorkNumber());
+        working.setGender(form.getGender());
+        working.setAge(form.getAge());
+        working.setAddress(form.getAddress());
+        working.setMapLocation(form.getMapLocation());
+        working.setJobDetails(form.getJobDetails());
+        working.setCPerson(form.getCPerson());
+        working.setPhone(form.getPhone());
+        workingRepository.save(working);
+    }
+
+    @Transactional
+    public void deleteWorking(Working working) {
+        workingRepository.delete(working);
+    }
 }

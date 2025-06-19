@@ -47,7 +47,9 @@
 <div class="property-detail-container" layout:fragment="content">
     <div class="board-title" th:text="${property.title}">매물 제목</div>
     <div class="img-preview">
-        <img th:each="img : ${property.imageUrls}" th:src="${img}" alt="매물 이미지">
+        <img th:each="img : ${property.imageUrls}"
+             th:src="${img}"
+             alt="매물 이미지">
     </div>
     <div class="info-row">
         작성자: <span th:text="${property.author}"></span> |

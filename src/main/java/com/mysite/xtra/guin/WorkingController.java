@@ -24,6 +24,8 @@ import com.mysite.xtra.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mysite.xtra.offer.OfferService;
+import com.mysite.xtra.offer.Offer;
 
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
@@ -37,11 +39,13 @@ public class WorkingController {
 	
 	private final WorkingService workingService;
 	private final UserService userService;
+	private final OfferService offerService;
 	private static final Logger logger = LoggerFactory.getLogger(WorkingController.class);
 	
-	public WorkingController(WorkingService workingService, UserService userService) {
+	public WorkingController(WorkingService workingService, UserService userService, OfferService offerService) {
 		this.workingService = workingService;
 		this.userService = userService;
+		this.offerService = offerService;
 	}
 	
 	@GetMapping("/info")
@@ -53,6 +57,10 @@ public class WorkingController {
 	public String listWorkings(Model model, @RequestParam(value="page", defaultValue="0") int page) {
 		Page<Working> paging = this.workingService.getPageList(page);
 		model.addAttribute("paging",paging);
+		// 오퍼(프리미엄, 익스퍼트, VIP) 리스트 추가
+		model.addAttribute("premiumOffers", offerService.getOffersByCategory(Offer.OfferCategory.PREMIUM));
+		model.addAttribute("expertOffers", offerService.getOffersByCategory(Offer.OfferCategory.EXPERT));
+		model.addAttribute("vipOffers", offerService.getOffersByCategory(Offer.OfferCategory.VIP));
 		System.out.println("✅ work_list.html 렌더링됨!");
 		return "work_list";
 	}
@@ -68,6 +76,8 @@ public class WorkingController {
 	@GetMapping("/create")
 	public String workCreateForm(Model model) {
 		model.addAttribute("workingForm", new WorkingForm());
+		model.addAttribute("action", "/work/create");
+		model.addAttribute("offer", new Offer());
 		return "work_form";
 	}
 
@@ -123,5 +133,63 @@ public class WorkingController {
 		}
 		
 		return "work_chat";
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/edit/{id}")
+	public String workEditForm(@PathVariable("id") Long id, Model model, Principal principal) {
+		Working working = workingService.getWorking(id);
+		if (!working.getAuthor().getUsername().equals(principal.getName())) {
+			throw new RuntimeException("수정 권한이 없습니다.");
+		}
+		WorkingForm form = new WorkingForm();
+		form.setId(working.getId());
+		form.setSiteName(working.getSiteName());
+		form.setTitle(working.getTitle());
+		form.setCategory(working.getCategory());
+		form.setJobContent(working.getJobContent());
+		form.setJobType(working.getJobType());
+		form.setBenefits(working.getBenefits());
+		form.setLocation(working.getLocation());
+		form.setJobDescription(working.getJobDescription());
+		form.setJobWork(working.getJobWork());
+		form.setDeadDate(working.getDeadDate());
+		form.setWorkNumber(working.getWorkNumber());
+		form.setGender(working.getGender());
+		form.setAge(working.getAge());
+		form.setAddress(working.getAddress());
+		form.setMapLocation(working.getMapLocation());
+		form.setJobDetails(working.getJobDetails());
+		form.setCPerson(working.getCPerson());
+		form.setPhone(working.getPhone());
+		model.addAttribute("workingForm", form);
+		model.addAttribute("action", "/work/edit/" + id);
+		model.addAttribute("offer", new Offer());
+		return "work_form";
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("/edit/{id}")
+	public String workEdit(@PathVariable("id") Long id, @Valid @ModelAttribute("workingForm") WorkingForm workingForm, BindingResult bindingResult, Principal principal) {
+		if (bindingResult.hasErrors()) {
+			return "work_form";
+		}
+		Working working = workingService.getWorking(id);
+		if (!working.getAuthor().getUsername().equals(principal.getName())) {
+			throw new RuntimeException("수정 권한이 없습니다.");
+		}
+		workingService.updateWorking(working, workingForm);
+		return "redirect:/work/detail/" + id;
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("/delete/{id}")
+	public String workDelete(@PathVariable("id") Long id, Principal principal) {
+		Working working = workingService.getWorking(id);
+		if (!working.getAuthor().getUsername().equals(principal.getName())) {
+			throw new RuntimeException("삭제 권한이 없습니다.");
+		}
+		workingService.deleteWorking(working);
+		return "redirect:/work/list";
 	}
 }

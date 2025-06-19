@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>오퍼 등록/수정</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .offer-form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 24px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e3f0ff;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+        }
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e3f0ff;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 1em;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-back {
+            background: #28a745;
+            color: white;
+        }
+        .required {
+            color: #dc3545;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="offer-form-container" layout:fragment="content">
+    <div class="form-header">
+        <h1 th:text="${offer.id == null ? '오퍼 등록' : '오퍼 수정'}">오퍼 등록/수정</h1>
+    </div>
+    
+    <form th:action="${isEdit ? '/offer/edit/' + offer.id : '/offer/create'}" th:object="${offer}" method="post" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">카테고리 <span class="required">*</span></label>
+                <select class="form-select" th:field="*{category}" required>
+                    <option value="">카테고리 선택</option>
+                    <option value="PREMIUM">프리미엄</option>
+                    <option value="VIP">VIP</option>
+                    <option value="EXPERT">익스퍼트</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">근무지 <span class="required">*</span></label>
+                <input type="text" class="form-input" th:field="*{workPlace}" required>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">사업자 정보</label>
+                <input type="text" class="form-input" th:field="*{bisiInfo}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">담당자 이름</label>
+                <input type="text" class="form-input" th:field="*{perName}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">전화번호</label>
+                <input type="tel" class="form-input" th:field="*{phone}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">사업지 정보</label>
+                <input type="text" class="form-input" th:field="*{localInfo}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">업종</label>
+                <input type="text" class="form-input" th:field="*{type}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">성별</label>
+                <select class="form-select" th:field="*{gender}">
+                    <option value="">성별 선택</option>
+                    <option value="남성">남성</option>
+                    <option value="여성">여성</option>
+                    <option value="무관">무관</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">경력</label>
+                <input type="text" class="form-input" th:field="*{career}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">직종</label>
+                <input type="text" class="form-input" th:field="*{bisiClass}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">나이</label>
+                <input type="text" class="form-input" th:field="*{age}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">인원</label>
+                <input type="text" class="form-input" th:field="*{inOne}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">급여</label>
+                <input type="text" class="form-input" th:field="*{pay}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">복리후생</label>
+                <input type="text" class="form-input" th:field="*{afterWork}">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">이미지 파일</label>
+            <input type="file" class="form-input" name="imageFile" accept="image/*" 
+                   th:if="${!isEdit}" style="padding: 8px;">
+            <input type="file" class="form-input" name="imageFile" accept="image/*" 
+                   th:if="${isEdit}" style="padding: 8px;">
+            <div th:if="${isEdit and offer.imageUrl != null and offer.imageUrl != '/static/images/default_offer.jpg'}" 
+                 style="margin-top: 10px;">
+                <small style="color: #666;">현재 이미지:</small><br>
+                <img th:src="${offer.imageUrl}" alt="현재 이미지" style="max-width: 200px; max-height: 150px; border-radius: 4px; margin-top: 5px;">
+            </div>
+            <small style="color: #666; display: block; margin-top: 5px;">
+                이미지를 선택하지 않으면 기본 이미지가 사용됩니다. (JPG, PNG, GIF 파일 지원)
+            </small>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">상세내용</label>
+            <textarea class="form-textarea" th:field="*{content}" placeholder="상세한 업무 내용을 입력해주세요..."></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <a href="/work/list" class="btn btn-back">목록으로</a>
+            <button type="submit" class="btn btn-primary" th:text="${offer.id == null ? '등록' : '수정'}">등록</button>
+        </div>
+    </form>
+</div>
+</body>
+</html> 

@@ -1,102 +1,224 @@
 <!-- work_form.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+<html lang="ko" layout:decorate="~{layout}">
 <head>
-    <title>구인 등록</title>
+    <meta charset="UTF-8">
+    <title>구인 등록/수정</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .work-form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 24px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e3f0ff;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+        }
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e3f0ff;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 1em;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-back {
+            background: #28a745;
+            color: white;
+        }
+        .required {
+            color: #dc3545;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content" class="container">
-    <h2 class="mb-4">구인 등록</h2>
+<div class="work-form-container" layout:fragment="content">
+    <div class="form-header">
+        <h1 th:text="${workingForm.id == null ? '구인 등록' : '구인 수정'}">구인 등록/수정</h1>
+    </div>
     
-    <form th:action="@{/work/create}" th:object="${workingForm}" method="post" class="create_form">
-        <div class="col_input">
-            <label class="form-label">현장명</label>
-            <input type="text" class="form-control" th:field="*{siteName}" required>
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">제목</label>
-            <input type="text" class="form-control" th:field="*{title}" required>
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">분류</label>
-            <input type="text" class="form-control" th:field="*{category}">
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">담당자</label>
-            <input type="text" class="form-control" th:field="*{cPerson}">
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">연락처</label>
-            <input type="text" class="form-control" th:field="*{phone}">
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">업무</label>
-            <input type="text" class="form-control" th:field="*{jobContent}">
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">고용형태</label>
-            <input type="text" class="form-control" th:field="*{jobType}">
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">응시요건</label>
-            <input type="text" class="form-control" th:field="*{jobWork}">
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">복리후생</label>
-            <input type="text" class="form-control" th:field="*{benefits}" required>
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">소재지</label>
-            <input type="text" class="form-control" th:field="*{location}">
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">성별</label>
-            <select class="form-select" th:field="*{gender}">
-                <option value="남성">남성</option>
-                <option value="여성">여성</option>
-                <option value="무관">무관</option>
-            </select>
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">업무내용</label>
-            <input type="text" class="form-control" th:field="*{jobDescription}" required>
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">모집 기간</label>
-            <input type="text" class="form-control" th:field="*{deadDate}">
-        </div>
-
-        <div class="col_input">
-            <label class="form-label">모집 인원</label>
-            <input type="text" class="form-control" th:field="*{workNumber}">
-        </div>
-
-		<div class="col_input">
-		    <label class="form-label">상세요건</label>
-		    <textarea class="form-control" th:field="*{jobDetails}" rows="8" placeholder="근무 조건, 요구 사항 등을 구체적으로 작성해 주세요."></textarea>
-		</div>
-
-        <div class="map_container">
-            <div class="border p-3 bg-light">
-                <h5>📍 지도 설정 위치</h5>
-                <div class="mapLocation">지도API</div>
+    <!-- 오퍼 등록 버튼 -->
+    <div style="text-align: center; margin: 20px 0;">
+        <a href="/offer/create" class="btn btn-primary" style="background: #007bff; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none;">+ 오퍼 등록</a>
+    </div>
+    
+    <form th:action="@{${action}}" th:object="${workingForm}" method="post">
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">현장명 <span class="required">*</span></label>
+                <input type="text" class="form-input" th:field="*{siteName}" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">제목 <span class="required">*</span></label>
+                <input type="text" class="form-input" th:field="*{title}" required>
             </div>
         </div>
-
-        <div class="form_create_btn">
-            <button type="submit" class="btn">구인 등록</button>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">분류</label>
+                <input type="text" class="form-input" th:field="*{category}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">담당자</label>
+                <input type="text" class="form-input" th:field="*{cPerson}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">연락처</label>
+                <input type="tel" class="form-input" th:field="*{phone}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">업무</label>
+                <input type="text" class="form-input" th:field="*{jobContent}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">고용형태</label>
+                <input type="text" class="form-input" th:field="*{jobType}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">응시요건</label>
+                <input type="text" class="form-input" th:field="*{jobWork}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">복리후생 <span class="required">*</span></label>
+                <input type="text" class="form-input" th:field="*{benefits}" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">소재지</label>
+                <input type="text" class="form-input" th:field="*{location}">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">성별</label>
+                <select class="form-select" th:field="*{gender}">
+                    <option value="">성별 선택</option>
+                    <option value="남성">남성</option>
+                    <option value="여성">여성</option>
+                    <option value="무관">무관</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">업무내용 <span class="required">*</span></label>
+                <input type="text" class="form-input" th:field="*{jobDescription}" required>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">모집 기간</label>
+                <input type="text" class="form-input" th:field="*{deadDate}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">모집 인원</label>
+                <input type="text" class="form-input" th:field="*{workNumber}">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">상세요건</label>
+            <textarea class="form-textarea" th:field="*{jobDetails}" placeholder="근무 조건, 요구 사항 등을 구체적으로 작성해 주세요."></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <a href="/work/list" class="btn btn-back">목록으로</a>
+            <button type="submit" class="btn btn-primary" th:text="${workingForm.id == null ? '등록' : '수정'}">등록</button>
         </div>
     </form>
 </div>

@@ -133,6 +133,13 @@
     </div>
     <div style="margin-top:24px;">
         <a th:href="@{/work/list}" class="btn btn-primary">목록으로</a>
+        <a th:href="@{|/work/chat/${working.id}|}" class="btn btn-secondary" style="margin-left:10px;">1:1 채팅하기</a>
+        <span sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username == working.author?.username}">
+            <a th:href="@{'/work/edit/' + ${working.id}}" class="btn btn-secondary">수정</a>
+            <form th:action="@{'/work/delete/' + ${working.id}}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">삭제</button>
+            </form>
+        </span>
     </div>
 </div>
 </body>

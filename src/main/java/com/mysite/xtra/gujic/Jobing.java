@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import com.mysite.xtra.user.SiteUser;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Jobing { //구직
@@ -56,6 +58,9 @@ public class Jobing { //구직
     private String etc; // 기타
     
     private LocalDateTime createDate;
+
+    @ManyToOne
+    private SiteUser author;
 	
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -89,4 +94,6 @@ public class Jobing { //구직
     public void setEtc(String etc) { this.etc = etc; }
     public LocalDateTime getCreateDate() { return createDate; }
     public void setCreateDate(LocalDateTime createDate) { this.createDate = createDate; }
+    public SiteUser getAuthor() { return author; }
+    public void setAuthor(SiteUser author) { this.author = author; }
 }

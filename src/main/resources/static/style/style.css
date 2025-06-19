@@ -319,4 +319,161 @@ label {
         height: 300px;
         padding: 8px;
     }
+}
+
+/* ====== 프리미엄(슬라이드형) 배너 ====== */
+.premium-banner-slider {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 40px;
+    overflow-x: auto;
+}
+.premium-banner {
+    width: 750px;
+    height: 650px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-right: 16px;
+}
+.premium-img {
+    width: 100%;
+    height: 60%;
+    object-fit: cover;
+}
+.premium-info {
+    padding: 32px 32px 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.premium-category {
+    color: #1e90ff;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+.premium-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #222;
+}
+.premium-pay {
+    font-size: 1.4rem;
+    color: #ff7e47;
+    font-weight: 700;
+}
+.premium-benefit {
+    font-size: 1.1rem;
+    color: #3ecf8e;
+    font-weight: 600;
+}
+
+/* ====== VIP 카드형 ====== */
+.vip-card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+.vip-card {
+    width: 600px;
+    height: 400px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s;
+}
+.vip-card:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.14);
+}
+.vip-img {
+    width: 100%;
+    height: 55%;
+    object-fit: cover;
+}
+.vip-info {
+    padding: 20px 20px 14px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.vip-category {
+    color: #1e90ff;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.vip-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #222;
+}
+.vip-pay {
+    font-size: 1.1rem;
+    color: #ff7e47;
+    font-weight: 600;
+}
+.vip-benefit {
+    font-size: 1rem;
+    color: #3ecf8e;
+    font-weight: 500;
+}
+
+/* ====== 익스퍼트 카드형 ====== */
+.expert-card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 32px;
+}
+.expert-card {
+    width: 300px;
+    height: 400px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s;
+}
+.expert-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+.expert-img {
+    width: 100%;
+    height: 54%;
+    object-fit: cover;
+}
+.expert-info {
+    padding: 14px 14px 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.expert-category {
+    color: #1e90ff;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.expert-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #222;
+}
+.expert-pay {
+    font-size: 1rem;
+    color: #ff7e47;
+    font-weight: 600;
+}
+.expert-benefit {
+    font-size: 0.95rem;
+    color: #3ecf8e;
+    font-weight: 500;
 } 

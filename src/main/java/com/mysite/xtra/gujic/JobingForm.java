@@ -5,6 +5,8 @@ import javax.validation.constraints.Size;
 
 public class JobingForm {
 
+    private Long id;
+
     @NotBlank(message = "현장명은 필수 입력 값입니다.")
     @Size(max = 200)
     private String name;
@@ -77,4 +79,7 @@ public class JobingForm {
     public void setIntroduction(String introduction) { this.introduction = introduction; }
     public String getEtc() { return etc; }
     public void setEtc(String etc) { this.etc = etc; }
+    
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 }

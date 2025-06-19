@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko" layout:decorate="~{layout}">
+<html lang="ko" layout:decorate="~{layout}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>구직 게시판</title>
+    <title>구직</title>
     <link rel="stylesheet" href="/style/style.css">
     <style>
         .work-board-container {
@@ -79,8 +79,9 @@
 <body>
 <div class="work-board-container" layout:fragment="content">
     <div class="work-board-header">
-        <div class="board-title">구직 게시글 목록</div>
+        <div class="board-title">구직</div>
         <a class="btn board-button" th:href="@{/job/create}" sec:authorize="isAuthenticated()">+ 구직 등록</a>
+        <a class="btn board-button" th:href="@{/user/login}" sec:authorize="isAnonymous()">+ 구직 등록</a>
     </div>
     <div class="work-board-table-wrapper">
         <table class="work-board-table">
@@ -99,12 +100,12 @@
                     <td th:text="${jobing.name}"></td>
                     <td>
                         <a th:href="@{|/job/detail/${jobing.id}|}" 
-                           th:text="${jobing.introduction}" 
+                           th:text="${#strings.abbreviate(jobing.introduction, 20)}" 
                            class="board-link"></a>
                     </td>
-                    <td th:text="${jobing.startDate}"></td>
-                    <td th:text="${jobing.requestWork}"></td>
-                    <td th:text="${jobing.hopArea}"></td>
+                    <td th:text="${#strings.abbreviate(jobing.startDate, 20)}"></td>
+                    <td th:text="${#strings.abbreviate(jobing.requestWork, 20)}"></td>
+                    <td th:text="${#strings.abbreviate(jobing.hopArea, 20)}"></td>
                     <td th:text="${#temporals.format(jobing.createDate, 'yyyy-MM-dd')}"></td>
                 </tr>
             </tbody>

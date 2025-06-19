@@ -7,6 +7,8 @@ import javax.validation.constraints.Size;
 
 public class WorkingForm {
     
+    private Long id;
+    
     @NotBlank(message = "현장명은 필수 입력 값입니다.")
     @Size(max = 200)
     private String siteName;
@@ -74,4 +76,7 @@ public class WorkingForm {
     public void setPhone(String phone) { this.phone = phone; }
     public String getMap_location() { return map_location; }
     public void setMap_location(String map_location) { this.map_location = map_location; }
+    
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 }

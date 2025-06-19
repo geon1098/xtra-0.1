@@ -46,6 +46,7 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/job/detail/**"),
                     new AntPathRequestMatcher("/work/list"),
                     new AntPathRequestMatcher("/work/detail/**"),
+                    new AntPathRequestMatcher("/offer/detail/**"),
                     new AntPathRequestMatcher("/h2-console/**"),
                     new AntPathRequestMatcher("/css/**"),
                     new AntPathRequestMatcher("/js/**"),
