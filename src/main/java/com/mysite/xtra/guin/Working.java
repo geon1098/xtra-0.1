@@ -9,8 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.CascadeType;
 
 import com.mysite.xtra.user.SiteUser;
+import com.mysite.xtra.api.MapLocation;
 
 @Entity
 public class Working { //구인
@@ -62,8 +65,8 @@ public class Working { //구인
 	    @Column(length = 255)
 	    private String address; // 주소
 
-	    @Column(length = 255)
-	    private String mapLocation; // 지도 (위경도 정보 가능)
+	    @OneToOne(cascade = CascadeType.ALL)
+	    private MapLocation mapLocation;
 
 	    @Column(columnDefinition = "TEXT")
 	    private String jobDetails; // 상세요건
@@ -110,8 +113,8 @@ public class Working { //구인
     public void setCreateDate(LocalDateTime createDate) { this.createDate = createDate; }
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
-    public String getMapLocation() { return mapLocation; }
-    public void setMapLocation(String mapLocation) { this.mapLocation = mapLocation; }
+    public MapLocation getMapLocation() { return this.mapLocation; }
+    public void setMapLocation(MapLocation mapLocation) { this.mapLocation = mapLocation; }
     public String getJobDetails() { return jobDetails; }
     public void setJobDetails(String jobDetails) { this.jobDetails = jobDetails; }
     public String getCPerson() { return cPerson; }

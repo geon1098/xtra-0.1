@@ -173,18 +173,26 @@
         </table>
     </div>
     <div class="pagination">
-        <button class="pagination-button"
-                th:if="${paging.hasPrevious()}"
-                th:onclick="|location.href='@{/work/list(page=${paging.number - 1})}'|">
-            ← 이전
-        </button>
+        <a th:if="${paging.hasPrevious()}"
+           th:href="@{/work/list(page=${paging.number-1}, kw=${kw})}"
+           class="pagination-button">
+            <span>이전</span>
+        </a>
         <span th:text="${paging.number + 1}"></span>
-        <button class="pagination-button"
-                th:if="${paging.hasNext()}"
-                th:onclick="|location.href='@{/work/list(page=${paging.number + 1})}'|">
-            다음 →
-        </button>
+        <a th:if="${paging.hasNext()}"
+           th:href="@{/work/list(page=${paging.number+1}, kw=${kw})}"
+           class="pagination-button">
+            <span>다음</span>
+        </a>
     </div>
+    
+    <form th:action="@{/work/list}" method="get" id="searchForm">
+        <input type="hidden" name="page" value="0">
+        <div class="input-group">
+            <input type="text" name="kw" class="form-control" th:value="${kw}">
+            <button class="btn btn-outline-secondary" type="submit">찾기</button>
+        </div>
+    </form>
 </div>
 </body>
 </html>

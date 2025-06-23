@@ -36,6 +36,11 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    new AntPathRequestMatcher("/property/new"),
+                    new AntPathRequestMatcher("/property/edit/**"),
+                    new AntPathRequestMatcher("/property/delete/**")
+                ).authenticated()
+                .requestMatchers(
                     new AntPathRequestMatcher("/user/verify-email")
                 ).permitAll()
                 .requestMatchers(

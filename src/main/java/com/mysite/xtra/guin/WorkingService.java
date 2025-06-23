@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mysite.xtra.DataNotFoundException;
 import com.mysite.xtra.user.SiteUser;
+import com.mysite.xtra.api.MapLocation;
 
 @Service
 public class WorkingService {
@@ -54,7 +55,13 @@ public class WorkingService {
         working.setGender(workingForm.getGender());
         working.setAge(workingForm.getAge());
         working.setAddress(workingForm.getAddress());
-        working.setMapLocation(workingForm.getMapLocation());
+        
+        if (workingForm.getMapLocation() != null && workingForm.getMapLocation().getAddress() != null && !workingForm.getMapLocation().getAddress().isEmpty()) {
+            MapLocation mapLocation = new MapLocation();
+            mapLocation.setAddress(workingForm.getMapLocation().getAddress());
+            working.setMapLocation(mapLocation);
+        }
+
         working.setJobDetails(workingForm.getJobDetails());
         working.setCPerson(workingForm.getCPerson());
         working.setPhone(workingForm.getPhone());
@@ -63,11 +70,11 @@ public class WorkingService {
         return workingRepository.save(working);
     }
 	
-	public Page<Working> getPageList(int page){
+	public Page<Working> getPageList(int page, String kw) {
 		List<Sort.Order> sorts = new ArrayList<>();
 		sorts.add(Sort.Order.desc("createDate"));
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-		return this.workingRepository.findAll(pageable);
+		return workingRepository.findAllByKeyword(kw, pageable);
 	}
 
     @Transactional
@@ -86,7 +93,18 @@ public class WorkingService {
         working.setGender(form.getGender());
         working.setAge(form.getAge());
         working.setAddress(form.getAddress());
-        working.setMapLocation(form.getMapLocation());
+        
+        if (form.getMapLocation() != null && form.getMapLocation().getAddress() != null && !form.getMapLocation().getAddress().isEmpty()) {
+            MapLocation mapLocation = working.getMapLocation();
+            if (mapLocation == null) {
+                mapLocation = new MapLocation();
+            }
+            mapLocation.setAddress(form.getMapLocation().getAddress());
+            working.setMapLocation(mapLocation);
+        } else {
+            working.setMapLocation(null);
+        }
+
         working.setJobDetails(form.getJobDetails());
         working.setCPerson(form.getCPerson());
         working.setPhone(form.getPhone());
@@ -96,5 +114,38 @@ public class WorkingService {
     @Transactional
     public void deleteWorking(Working working) {
         workingRepository.delete(working);
+    }
+
+    public void update(Working working, WorkingForm form) {
+        working.setSiteName(form.getSiteName());
+        working.setTitle(form.getTitle());
+        working.setCategory(form.getCategory());
+        working.setJobContent(form.getJobContent());
+        working.setJobType(form.getJobType());
+        working.setBenefits(form.getBenefits());
+        working.setLocation(form.getLocation());
+        working.setJobDescription(form.getJobDescription());
+        working.setJobWork(form.getJobWork());
+        working.setDeadDate(form.getDeadDate());
+        working.setWorkNumber(form.getWorkNumber());
+        working.setGender(form.getGender());
+        working.setAge(form.getAge());
+        working.setAddress(form.getAddress());
+        
+        if (form.getMapLocation() != null && form.getMapLocation().getAddress() != null && !form.getMapLocation().getAddress().isEmpty()) {
+            MapLocation mapLocation = working.getMapLocation();
+            if (mapLocation == null) {
+                mapLocation = new MapLocation();
+            }
+            mapLocation.setAddress(form.getMapLocation().getAddress());
+            working.setMapLocation(mapLocation);
+        } else {
+            working.setMapLocation(null);
+        }
+        
+        working.setJobDetails(form.getJobDetails());
+        working.setCPerson(form.getCPerson());
+        working.setPhone(form.getPhone());
+        workingRepository.save(working);
     }
 }

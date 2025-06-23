@@ -206,8 +206,14 @@
             
             <div class="form-group">
                 <label class="form-label">복리후생</label>
-                <input type="text" class="form-input" th:field="*{afterWork}">
+                <input type="text" id="afterWork" name="afterWork" class="form-control" th:field="*{afterWork}" required>
             </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="address" class="form-label">지도에 표시할 주소</label>
+            <input type="text" id="address" name="mapLocation.address" class="form-control" placeholder="주소 검색 버튼을 클릭하세요" readonly>
+            <button type="button" class="btn btn-secondary mt-2" onclick="execDaumPostcode()">주소 검색</button>
         </div>
         
         <div class="form-group">
@@ -227,8 +233,8 @@
         </div>
         
         <div class="form-group">
-            <label class="form-label">상세내용</label>
-            <textarea class="form-textarea" th:field="*{content}" placeholder="상세한 업무 내용을 입력해주세요..."></textarea>
+            <label for="content" class="form-label">상세내용</label>
+            <textarea id="content" name="content" class="form-control" rows="5" th:field="*{content}" required></textarea>
         </div>
         
         <div class="form-actions">
@@ -237,5 +243,26 @@
         </div>
     </form>
 </div>
+
+<!-- 페이지별 스크립트 -->
+<th:block layout:fragment="script">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = '';
+                if (data.userSelectedType === 'R') {
+                    addr = data.roadAddress;
+                } else {
+                    addr = data.jibunAddress;
+                }
+                document.getElementById('address').value = addr;
+            }
+        }).open();
+    }
+    </script>
+</th:block>
+
 </body>
 </html> 

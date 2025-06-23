@@ -5,6 +5,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import com.mysite.xtra.user.SiteUser;
+import com.mysite.xtra.api.MapLocation;
 
 @Entity
 @Getter
@@ -71,6 +72,9 @@ public class Offer {
 
     // 등록일
     private LocalDateTime createDate;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private MapLocation mapLocation;
 
     public enum OfferCategory {
         PREMIUM, VIP, EXPERT

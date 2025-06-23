@@ -5,6 +5,12 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.mysite.xtra.api.MapLocation;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class WorkingForm {
     
     private Long id;
@@ -30,7 +36,7 @@ public class WorkingForm {
     private String age;
     private LocalDateTime createDate;
     private String address;
-    private String mapLocation;
+    private MapLocation mapLocation;
     private String jobDetails;
     private String cPerson;
     private String phone;
@@ -66,8 +72,8 @@ public class WorkingForm {
     public void setCreateDate(LocalDateTime createDate) { this.createDate = createDate; }
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
-    public String getMapLocation() { return mapLocation; }
-    public void setMapLocation(String mapLocation) { this.mapLocation = mapLocation; }
+    public MapLocation getMapLocation() { return mapLocation; }
+    public void setMapLocation(MapLocation mapLocation) { this.mapLocation = mapLocation; }
     public String getJobDetails() { return jobDetails; }
     public void setJobDetails(String jobDetails) { this.jobDetails = jobDetails; }
     public String getCPerson() { return cPerson; }

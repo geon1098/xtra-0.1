@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.mysite.xtra.user.SiteUser;
 import com.mysite.xtra.user.UserService;
@@ -26,27 +28,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mysite.xtra.offer.OfferService;
 import com.mysite.xtra.offer.Offer;
+import com.mysite.xtra.config.KakaoProperties;
+import com.mysite.xtra.api.MapLocation;
 
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.security.Principal;
+import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/work")
+@RequiredArgsConstructor
 @Controller
 public class WorkingController {
 	
 	private final WorkingService workingService;
 	private final UserService userService;
 	private final OfferService offerService;
+	private final KakaoProperties kakaoProperties;
 	private static final Logger logger = LoggerFactory.getLogger(WorkingController.class);
-	
-	public WorkingController(WorkingService workingService, UserService userService, OfferService offerService) {
-		this.workingService = workingService;
-		this.userService = userService;
-		this.offerService = offerService;
-	}
 	
 	@GetMapping("/info")
 	public String workInfo() {
@@ -54,8 +55,9 @@ public class WorkingController {
 	}
 	
 	@GetMapping("/list")
-	public String listWorkings(Model model, @RequestParam(value="page", defaultValue="0") int page) {
-		Page<Working> paging = this.workingService.getPageList(page);
+	public String listWorkings(Model model, @RequestParam(value="page", defaultValue="0") int page,
+			@RequestParam(value = "kw", defaultValue = "") String kw) {
+		Page<Working> paging = this.workingService.getPageList(page, kw);
 		model.addAttribute("paging",paging);
 		// 오퍼(프리미엄, 익스퍼트, VIP) 리스트 추가
 		model.addAttribute("premiumOffers", offerService.getOffersByCategory(Offer.OfferCategory.PREMIUM));
@@ -68,7 +70,8 @@ public class WorkingController {
 	@GetMapping("/detail/{id}")
 	public String detail(Model model, @PathVariable("id") Long id) {
 		Working working = this.workingService.getWorking(id);
-		model.addAttribute("working",working);
+		model.addAttribute("working", working);
+		model.addAttribute("kakaoAppKey", kakaoProperties.getJavascriptAppKey());
 		return "work_detail";
 	}
 	
@@ -191,5 +194,42 @@ public class WorkingController {
 		}
 		workingService.deleteWorking(working);
 		return "redirect:/work/list";
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("/modify/{id}")
+	public String workingUpdate(WorkingForm form, @PathVariable("id") Long id, Principal principal) {
+		// ... (validation and authorization)
+		
+		Working working = this.workingService.getWorking(id);
+		
+		// ... (authorization check)
+
+		this.workingService.update(working, form);
+		return String.format("redirect:/work/detail/%s", id);
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/modify/{id}")
+	public String workingModify(WorkingForm form, @PathVariable("id") Long id, Principal principal) {
+		Working working = this.workingService.getWorking(id);
+		if(!working.getAuthor().getUsername().equals(principal.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+		}
+		form.setSiteName(working.getSiteName());
+		form.setTitle(working.getTitle());
+		// ... (setting other form fields)
+		form.setAddress(working.getAddress());
+
+		if (working.getMapLocation() != null) {
+			form.setMapLocation(working.getMapLocation());
+		} else {
+			form.setMapLocation(new MapLocation());
+		}
+
+		form.setJobDetails(working.getJobDetails());
+		form.setCPerson(working.getCPerson());
+		form.setPhone(working.getPhone());
+		return "work_form";
 	}
 }

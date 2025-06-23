@@ -10,6 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.io.IOException;
+import java.security.Principal;
+
+import com.mysite.xtra.config.KakaoProperties;
+import com.mysite.xtra.api.MapLocation;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,6 +23,7 @@ public class OfferController {
     private final OfferService offerService;
     private final com.mysite.xtra.user.UserService userService;
     private final FileUploadService fileUploadService;
+    private final KakaoProperties kakaoProperties;
 
     // 카테고리별 리스트
     @GetMapping("/list/{category}")
@@ -30,18 +36,16 @@ public class OfferController {
 
     // 상세
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable Long id, Model model) {
-        Optional<Offer> offer = offerService.getOffer(id);
-        if (offer.isPresent()) {
-            model.addAttribute("offer", offer.get());
-            
-            // 현재 로그인한 사용자 정보 추가
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getName())) {
-                com.mysite.xtra.user.SiteUser currentUser = userService.getUser(auth.getName());
-                model.addAttribute("currentUser", currentUser);
-            }
+    public String detail(@PathVariable Long id, Model model, Principal principal) {
+        Offer offer = offerService.getOffer(id).orElseThrow(() -> new IllegalArgumentException("Invalid offer Id:" + id));
+        model.addAttribute("offer", offer);
+        model.addAttribute("kakaoAppKey", kakaoProperties.getJavascriptAppKey());
+
+        if (principal != null) {
+            com.mysite.xtra.user.SiteUser currentUser = userService.getUser(principal.getName());
+            model.addAttribute("currentUser", currentUser);
         }
+
         return "offer_detail";
     }
 
@@ -77,6 +81,11 @@ public class OfferController {
         } else {
             // 이미지가 없으면 기본 이미지 사용
             offer.setImageUrl("/static/images/default_offer.jpg");
+        }
+        
+        // MapLocation 처리: 주소 정보가 있을 때만 저장하고, 없으면 null로 설정
+        if (offer.getMapLocation() == null || offer.getMapLocation().getAddress() == null || offer.getMapLocation().getAddress().trim().isEmpty()) {
+            offer.setMapLocation(null);
         }
         
         offerService.save(offer);
@@ -131,7 +140,18 @@ public class OfferController {
                 // 이미지가 없으면 기존 이미지 유지
                 offer.setImageUrl(existing.getImageUrl());
             }
-            
+
+            // MapLocation 처리: 수정 시 기존 mapLocation ID를 설정하여 업데이트
+            MapLocation formMapLocation = offer.getMapLocation();
+            if (formMapLocation != null && formMapLocation.getAddress() != null && !formMapLocation.getAddress().trim().isEmpty()) {
+                MapLocation existingMapLocation = existing.getMapLocation();
+                if (existingMapLocation != null) {
+                    formMapLocation.setId(existingMapLocation.getId());
+                }
+            } else {
+                offer.setMapLocation(null);
+            }
+
             offer.setId(id);
             offer.setCreateDate(existing.getCreateDate()); // 기존 등록일 유지
             offer.setAuthor(existing.getAuthor()); // 기존 작성자 유지

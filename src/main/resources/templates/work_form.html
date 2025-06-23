@@ -216,11 +216,40 @@
             <textarea class="form-textarea" th:field="*{jobDetails}" placeholder="근무 조건, 요구 사항 등을 구체적으로 작성해 주세요."></textarea>
         </div>
         
+        <div class="form-row">
+            <div class="form-group">
+                <label for="address" class="form-label">지도에 표시할 주소</label>
+                <input type="text" id="address" name="mapLocation.address" class="form-control" placeholder="주소 검색 버튼을 클릭하세요" readonly>
+                <button type="button" class="btn btn-secondary mt-2" onclick="execDaumPostcode()">주소 검색</button>
+            </div>
+        </div>
+        
         <div class="form-actions">
             <a href="/work/list" class="btn btn-back">목록으로</a>
             <button type="submit" class="btn btn-primary" th:text="${workingForm.id == null ? '등록' : '수정'}">등록</button>
         </div>
     </form>
 </div>
+
+<!-- 페이지별 스크립트 -->
+<th:block layout:fragment="script">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = '';
+                if (data.userSelectedType === 'R') {
+                    addr = data.roadAddress;
+                } else {
+                    addr = data.jibunAddress;
+                }
+                document.getElementById('address').value = addr;
+            }
+        }).open();
+    }
+    </script>
+</th:block>
+
 </body>
 </html>
