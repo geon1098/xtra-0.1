@@ -41,7 +41,10 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/property/delete/**")
                 ).authenticated()
                 .requestMatchers(
-                    new AntPathRequestMatcher("/user/verify-email")
+                    new AntPathRequestMatcher("/user/verify-email"),
+                    new AntPathRequestMatcher("/user/find-id"),
+                    new AntPathRequestMatcher("/user/find-password"),
+                    new AntPathRequestMatcher("/user/reset-password")
                 ).permitAll()
                 .requestMatchers(
                     new AntPathRequestMatcher("/user/login"),
@@ -67,8 +70,7 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/topic/**"),
                     new AntPathRequestMatcher("/queue/**"),
                     new AntPathRequestMatcher("/app/**"),
-                    new AntPathRequestMatcher("/chat/**"),
-                    new AntPathRequestMatcher("/user/**")
+                    new AntPathRequestMatcher("/chat/**")
                 ).authenticated()
                 .anyRequest().authenticated()
             )

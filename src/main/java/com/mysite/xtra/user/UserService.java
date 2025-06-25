@@ -50,4 +50,20 @@ public class UserService implements UserDetailsService {
 	public SiteUser save(SiteUser user) {
 		return userRepository.save(user);
 	}
+	
+	public SiteUser findByEmail(String email) {
+		return userRepository.findByEmail(email)
+			.orElseThrow(() -> new DataNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다."));
+	}
+	
+	public SiteUser findByUsernameAndEmail(String username, String email) {
+		return userRepository.findByUsernameAndEmail(username, email)
+			.orElseThrow(() -> new DataNotFoundException("아이디와 이메일이 일치하는 사용자를 찾을 수 없습니다."));
+	}
+	
+	public void updatePassword(SiteUser user, String newPassword) {
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		user.setPassword(encodedPassword);
+		userRepository.save(user);
+	}
 }

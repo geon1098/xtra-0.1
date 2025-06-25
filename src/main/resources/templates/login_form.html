@@ -43,6 +43,43 @@
             font-size: 0.95em;
             margin-bottom: 10px;
         }
+        .login-links {
+            margin-top: 20px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+            padding-top: 20px;
+        }
+        .login-links a {
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin: 0 8px;
+            transition: color 0.2s;
+        }
+        .login-links a:hover {
+            color: #007bff;
+        }
+        .signup-link {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .signup-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -50,6 +87,12 @@
     <div class="login-title">로그인</div>
     <div th:if="${message}" class="alert alert-info" role="alert">
         <p th:text="${message}"></p>
+    </div>
+    <div th:if="${success}" class="alert alert-success" role="alert">
+        <p th:text="${success}"></p>
+    </div>
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <p th:text="${error}"></p>
     </div>
     <div th:if="${param.error}" class="alert alert-danger" role="alert">
         <p>아이디 또는 비밀번호가 올바르지 않습니다.</p>
@@ -62,6 +105,16 @@
         <input type="password" name="password" id="password" class="form-control" placeholder="비밀번호">
         <button type="submit" class="btn btn-primary">로그인</button>
     </form>
+    
+    <div class="login-links">
+        <a href="/user/find-id">아이디 찾기</a>
+        <a href="/user/find-password">비밀번호 찾기</a>
+    </div>
+    
+    <div class="signup-link">
+        <span>계정이 없으신가요? </span>
+        <a href="/user/signup">회원가입</a>
+    </div>
 </div>
 </body>
 </html>
