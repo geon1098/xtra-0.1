@@ -73,10 +73,19 @@ public class Offer {
     // 등록일
     private LocalDateTime createDate;
 
+    // 승인 상태 (PENDING: 대기중, APPROVED: 승인됨, REJECTED: 거절됨)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
+
     @OneToOne(cascade = CascadeType.ALL)
     private MapLocation mapLocation;
 
     public enum OfferCategory {
         PREMIUM, VIP, EXPERT
+    }
+
+    public enum ApprovalStatus {
+        PENDING, APPROVED, REJECTED
     }
 }

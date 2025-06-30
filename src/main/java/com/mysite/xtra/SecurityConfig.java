@@ -36,6 +36,9 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    new AntPathRequestMatcher("/admin/**")
+                ).hasRole("ADMIN")
+                .requestMatchers(
                     new AntPathRequestMatcher("/property/new"),
                     new AntPathRequestMatcher("/property/edit/**"),
                     new AntPathRequestMatcher("/property/delete/**")

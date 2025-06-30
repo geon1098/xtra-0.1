@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>오퍼 등록/수정</title>
     <link rel="stylesheet" href="/style/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .offer-form-container {
             max-width: 800px;
@@ -99,12 +100,39 @@
         .required {
             color: #dc3545;
         }
+        .approval-notice {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .notice-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1976d2;
+        }
+        .notice-content i {
+            font-size: 1.2em;
+            color: #2196f3;
+        }
+        .notice-content p {
+            margin: 0;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
             }
             .form-actions {
                 flex-direction: column;
+            }
+            .notice-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
             }
         }
     </style>
@@ -113,6 +141,13 @@
 <div class="offer-form-container" layout:fragment="content">
     <div class="form-header">
         <h1 th:text="${offer.id == null ? '오퍼 등록' : '오퍼 수정'}">오퍼 등록/수정</h1>
+        <!-- 승인 대기 안내 메시지 (새 게시글 등록 시에만 표시) -->
+        <div th:if="${offer.id == null}" class="approval-notice">
+            <div class="notice-content">
+                <i class="fas fa-info-circle"></i>
+                <p>게시글 등록 후 관리자 승인을 거쳐 게시됩니다. 승인까지 1-2일 정도 소요될 수 있습니다.</p>
+            </div>
+        </div>
     </div>
     
     <form th:action="${isEdit ? '/offer/edit/' + offer.id : '/offer/create'}" th:object="${offer}" method="post" enctype="multipart/form-data">

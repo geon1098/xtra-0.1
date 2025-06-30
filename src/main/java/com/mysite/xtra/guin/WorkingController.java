@@ -59,10 +59,19 @@ public class WorkingController {
 			@RequestParam(value = "kw", defaultValue = "") String kw) {
 		Page<Working> paging = this.workingService.getPageList(page, kw);
 		model.addAttribute("paging",paging);
-		// 오퍼(프리미엄, 익스퍼트, VIP) 리스트 추가
+		// 오퍼(프리미엄, 익스퍼트, VIP) 리스트 추가 - 승인된 게시글만 (임시 주석 처리)
 		model.addAttribute("premiumOffers", offerService.getOffersByCategory(Offer.OfferCategory.PREMIUM));
 		model.addAttribute("expertOffers", offerService.getOffersByCategory(Offer.OfferCategory.EXPERT));
 		model.addAttribute("vipOffers", offerService.getOffersByCategory(Offer.OfferCategory.VIP));
+		// model.addAttribute("premiumOffers", offerService.getOffersByCategory(Offer.OfferCategory.PREMIUM).stream()
+		// 	.filter(offer -> offer.getApprovalStatus() == Offer.ApprovalStatus.APPROVED)
+		// 	.collect(java.util.stream.Collectors.toList()));
+		// model.addAttribute("expertOffers", offerService.getOffersByCategory(Offer.OfferCategory.EXPERT).stream()
+		// 	.filter(offer -> offer.getApprovalStatus() == Offer.ApprovalStatus.APPROVED)
+		// 	.collect(java.util.stream.Collectors.toList()));
+		// model.addAttribute("vipOffers", offerService.getOffersByCategory(Offer.OfferCategory.VIP).stream()
+		// 	.filter(offer -> offer.getApprovalStatus() == Offer.ApprovalStatus.APPROVED)
+		// 	.collect(java.util.stream.Collectors.toList()));
 		System.out.println("✅ work_list.html 렌더링됨!");
 		return "work_list";
 	}

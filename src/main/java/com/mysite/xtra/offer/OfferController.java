@@ -29,6 +29,10 @@ public class OfferController {
     @GetMapping("/list/{category}")
     public String listByCategory(@PathVariable Offer.OfferCategory category, Model model) {
         List<Offer> offers = offerService.getOffersByCategory(category);
+        // 승인된 게시글만 필터링 (임시 주석 처리)
+        // offers = offers.stream()
+        //     .filter(offer -> offer.getApprovalStatus() == Offer.ApprovalStatus.APPROVED)
+        //     .collect(java.util.stream.Collectors.toList());
         model.addAttribute("offers", offers);
         model.addAttribute("category", category);
         return "offer_list";
@@ -61,6 +65,7 @@ public class OfferController {
     @PostMapping("/create")
     public String create(@ModelAttribute Offer offer, @RequestParam("imageFile") MultipartFile imageFile) {
         offer.setCreateDate(LocalDateTime.now());
+        offer.setApprovalStatus(Offer.ApprovalStatus.PENDING);
         
         // 현재 로그인한 사용자를 작성자로 설정
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

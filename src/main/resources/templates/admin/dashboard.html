@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 대시보드</title>
+    <link rel="stylesheet" href="/style/admin.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1><i class="fas fa-tachometer-alt"></i> 관리자 대시보드</h1>
+            <nav class="admin-nav">
+                <a href="/admin/dashboard" class="active">대시보드</a>
+                <a href="/admin/pending">승인 대기</a>
+                <a href="/admin/approved">승인된 게시글</a>
+                <a href="/admin/rejected">거절된 게시글</a>
+                <a href="/admin/all-offers">전체 게시글 관리</a>
+                <a href="/" class="home-link">홈으로</a>
+            </nav>
+        </header>
+
+        <main class="admin-main">
+            <!-- 통계 카드 -->
+            <div class="stats-container">
+                <div class="stat-card pending">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>승인 대기</h3>
+                        <p class="stat-number" th:text="${pendingCount}">0</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card approved">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>승인됨</h3>
+                        <p class="stat-number" th:text="${approvedCount}">0</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card rejected">
+                    <div class="stat-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>거절됨</h3>
+                        <p class="stat-number" th:text="${rejectedCount}">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 승인 대기 게시글 -->
+            <section class="section">
+                <h2><i class="fas fa-clock"></i> 승인 대기 게시글</h2>
+                <div class="offer-grid" th:if="${!pendingOffers.empty}">
+                    <div class="offer-card pending" th:each="offer : ${pendingOffers}">
+                        <div class="offer-header">
+                            <h3 th:text="${offer.perName}">담당자명</h3>
+                            <span class="status pending">승인 대기</span>
+                        </div>
+                        <div class="offer-content">
+                            <p><strong>작성자:</strong> <span th:text="${offer.author.nickname}">작성자</span></p>
+                            <p><strong>업종:</strong> <span th:text="${offer.type}">업종</span></p>
+                            <p><strong>근무지:</strong> <span th:text="${offer.workPlace}">근무지</span></p>
+                            <p><strong>등록일:</strong> <span th:text="${#temporals.format(offer.createDate, 'yyyy-MM-dd HH:mm')}">등록일</span></p>
+                        </div>
+                        <div class="offer-actions">
+                            <button class="btn-approve" th:onclick="'approveOffer(' + ${offer.id} + ')'">
+                                <i class="fas fa-check"></i> 승인
+                            </button>
+                            <button class="btn-reject" th:onclick="'rejectOffer(' + ${offer.id} + ')'">
+                                <i class="fas fa-times"></i> 거절
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="empty-state" th:if="${pendingOffers.empty}">
+                    <i class="fas fa-inbox"></i>
+                    <p>승인 대기중인 게시글이 없습니다.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function approveOffer(id) {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+            if (confirm('이 게시글을 승인하시겠습니까?')) {
+                fetch(`/admin/approve/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    }
+                })
+                .then(response => response.text())
+                .then(result => {
+                    if (result === 'success') {
+                        alert('게시글이 승인되었습니다.');
+                        location.reload();
+                    } else {
+                        alert('승인 처리 중 오류가 발생했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('승인 처리 중 오류가 발생했습니다.');
+                });
+            }
+        }
+
+        function rejectOffer(id) {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+            if (confirm('이 게시글을 거절하시겠습니까?')) {
+                fetch(`/admin/reject/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    }
+                })
+                .then(response => response.text())
+                .then(result => {
+                    if (result === 'success') {
+                        alert('게시글이 거절되었습니다.');
+                        location.reload();
+                    } else {
+                        alert('거절 처리 중 오류가 발생했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('거절 처리 중 오류가 발생했습니다.');
+                });
+            }
+        }
+    </script>
+</body>
+</html> 
