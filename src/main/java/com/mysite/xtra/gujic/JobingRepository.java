@@ -21,4 +21,7 @@ public interface JobingRepository extends JpaRepository<Jobing, Long>{
 	
 	// 사용자별 최근 구직글 5개
 	List<Jobing> findTop5ByAuthorOrderByCreateDateDesc(SiteUser author);
+	
+	// 키워드 검색 (제목, 자기소개, 희망업무, 희망지역)
+	Page<Jobing> findByNameContainingIgnoreCaseOrIntroductionContainingIgnoreCaseOrRequestWorkContainingIgnoreCaseOrHopAreaContainingIgnoreCase(String name, String intro, String requestWork, String hopArea, Pageable pageable);
 }

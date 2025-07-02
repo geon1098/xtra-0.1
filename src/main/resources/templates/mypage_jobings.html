@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -221,63 +221,37 @@
     </style>
 </head>
 <body>
-    <div th:replace="~{nav :: navbarFragment}"></div>
-    
+<div layout:fragment="content">
     <div class="mypage-container">
-        <!-- 페이지 헤더 -->
         <div class="page-header">
             <h1>내 구직 게시글</h1>
             <a href="/mypage" class="back-button">← 마이페이지로</a>
         </div>
-        
-        <!-- 구직글 목록 -->
         <div class="jobings-list">
-            <div th:if="${jobings.empty}" class="empty-state">
-                <h3>아직 작성한 구직 게시글이 없습니다</h3>
-                <p>첫 번째 구직 게시글을 작성해보세요!</p>
-                <a href="/job/create" class="create-btn">구직 게시글 작성하기</a>
-            </div>
-            
-            <div th:each="jobbing : ${jobings}" class="jobbing-item">
-                <div class="jobbing-info">
-                    <div class="jobbing-title" th:text="${jobbing.name} + ' - ' + ${jobbing.requestWork}">구직자명 - 희망업무</div>
-                    <div class="jobbing-details">
-                        <span th:text="${jobbing.gender}">성별</span>
-                        <span th:text="${jobbing.age} + '세'">나이</span>
-                        <span th:text="${jobbing.hopArea}">희망지역</span>
-                        <span th:text="${jobbing.career} + '년 경력'">경력</span>
-                        <span th:text="${#temporals.format(jobbing.createDate, 'yyyy.MM.dd')}">작성일</span>
-                    </div>
-                </div>
-                <div class="jobbing-actions">
-                    <span class="status-badge status-active">게시 중</span>
-                    <a th:href="@{/job/detail/{id}(id=${jobbing.id})}" class="action-btn">보기</a>
-                    <a th:href="@{/job/edit/{id}(id=${jobbing.id})}" class="action-btn edit">수정</a>
-                    <a th:href="@{/job/delete/{id}(id=${jobbing.id})}" 
-                       class="action-btn delete"
-                       onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 페이지네이션 -->
-        <div th:if="${jobings.totalPages > 1}" class="pagination">
-            <a th:if="${jobings.hasPrevious()}" 
-               th:href="@{/mypage/jobings(page=${jobings.number - 1})}" 
-               class="page-link">이전</a>
-            
-            <span th:each="pageNum : ${#numbers.sequence(0, jobings.totalPages - 1)}">
-                <a th:if="${pageNum != jobings.number}"
-                   th:href="@{/mypage/jobings(page=${pageNum})}" 
-                   class="page-link" th:text="${pageNum + 1}">1</a>
-                <span th:if="${pageNum == jobings.number}" 
-                      class="page-link active" th:text="${pageNum + 1}">1</span>
-            </span>
-            
-            <a th:if="${jobings.hasNext()}" 
-               th:href="@{/mypage/jobings(page=${jobings.number + 1})}" 
-               class="page-link">다음</a>
+            <table class="jobings-table">
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>희망업무</th>
+                        <th>등록일</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="jobbing : ${jobings}">
+                        <td th:text="${jobbing.name}">이름</td>
+                        <td th:text="${jobbing.requestWork}">희망업무</td>
+                        <td th:text="${#temporals.format(jobbing.createDate, 'yyyy.MM.dd HH:mm')}">등록일</td>
+                        <td>
+                            <a th:href="@{'/job/detail/' + ${jobbing.id}}" class="btn btn-sm btn-outline-primary">상세</a>
+                            <a th:href="@{'/job/edit/' + ${jobbing.id}}" class="btn btn-sm btn-outline-success">수정</a>
+                            <a th:href="@{'/job/delete/' + ${jobbing.id}}" class="btn btn-sm btn-outline-danger">삭제</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 </body>
 </html> 

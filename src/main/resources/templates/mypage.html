@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -213,121 +213,145 @@
     </style>
 </head>
 <body>
-    <div th:replace="~{nav :: navbarFragment}"></div>
-    
-    <div class="mypage-container">
-        <!-- 프로필 헤더 -->
-        <div class="mypage-header">
-            <div class="profile-section">
-                <div class="profile-image">
-                    <span th:text="${#strings.substring(user.nickname, 0, 1)}">사</span>
-                </div>
-                <div class="profile-info">
-                    <h2 th:text="${user.nickname} + ' 님'">사용자 님</h2>
-                    <p th:text="'가입일: ' + ${#temporals.format(user.createDate, 'yyyy.MM.dd')}">가입일: 2023.02.10</p>
-                    <p th:text="'이메일: ' + ${user.email}">이메일: user@example.com</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 통계 카드 -->
-        <div class="stats-section">
-            <div class="stat-card">
-                <div class="stat-number" th:text="${workingCount + jobbingCount}">32</div>
-                <div class="stat-label">내가 쓴 글</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" th:text="${workingCount}">15</div>
-                <div class="stat-label">구인 게시글</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" th:text="${jobbingCount}">17</div>
-                <div class="stat-label">구직 게시글</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">3</div>
-                <div class="stat-label">새 알림</div>
-            </div>
-        </div>
-        
-        <!-- 메뉴 섹션 -->
-        <div class="menu-section">
-            <!-- 내 활동 관리 -->
-            <div class="menu-card">
-                <h3>📄 내 활동 관리</h3>
-                <a href="/mypage/workings" class="menu-item">
-                    <span class="icon">💼</span>
-                    <span>유료 구인 게시글 목록</span>
-                    <span class="arrow">→</span>
-                </a>
-                <a href="/mypage/workings" class="menu-item">
-                    <span class="icon">📋</span>
-                    <span>무료 구인 게시글 목록</span>
-                    <span class="arrow">→</span>
-                </a>
-                <a href="/mypage/jobings" class="menu-item">
-                    <span class="icon">👤</span>
-                    <span>구직 게시글 목록</span>
-                    <span class="arrow">→</span>
-                </a>
-                <a href="/mypage/payments" class="menu-item">
-                    <span class="icon">💳</span>
-                    <span>결제 목록</span>
-                    <span class="arrow">→</span>
-                </a>
-            </div>
-            
-            <!-- 회원 설정 -->
-            <div class="menu-card">
-                <h3>⚙️ 회원 설정</h3>
-                <a href="/mypage/profile" class="menu-item">
-                    <span class="icon">👤</span>
-                    <span>회원정보 수정</span>
-                    <span class="arrow">→</span>
-                </a>
-                <a href="/mypage/password" class="menu-item">
-                    <span class="icon">🔐</span>
-                    <span>비밀번호 변경</span>
-                    <span class="arrow">→</span>
-                </a>
-                <a href="/user/withdraw" class="menu-item">
-                    <span class="icon">🚪</span>
-                    <span>회원 탈퇴</span>
-                    <span class="arrow">→</span>
-                </a>
-            </div>
-        </div>
-        
-        <!-- 최근 게시글 -->
-        <div class="recent-posts">
-            <h3>📝 최근 게시글</h3>
-            
-            <!-- 최근 구인글 -->
-            <div th:if="${!recentWorkings.empty}">
-                <h4 style="margin: 15px 0 10px 0; color: #667eea;">구인 게시글</h4>
-                <div th:each="working : ${recentWorkings}" class="post-item">
-                    <div>
-                        <div class="post-title" th:text="${working.title}">게시글 제목</div>
-                        <div class="post-date" th:text="${#temporals.format(working.createDate, 'yyyy.MM.dd HH:mm')}">2023.02.10 14:30</div>
+    <div layout:fragment="content">
+        <div class="mypage-container">
+            <!-- 프로필 헤더 -->
+            <div class="mypage-header">
+                <div class="profile-section">
+                    <div class="profile-image">
+                        <span th:text="${#strings.substring(user.nickname, 0, 1)}">사</span>
                     </div>
-                    <span class="status-badge status-active">게시 중</span>
-                </div>
-            </div>
-            
-            <!-- 최근 구직글 -->
-            <div th:if="${!recentJobings.empty}">
-                <h4 style="margin: 15px 0 10px 0; color: #667eea;">구직 게시글</h4>
-                <div th:each="jobbing : ${recentJobings}" class="post-item">
-                    <div>
-                        <div class="post-title" th:text="${jobbing.name} + ' - ' + ${jobbing.requestWork}">구직자명 - 희망업무</div>
-                        <div class="post-date" th:text="${#temporals.format(jobbing.createDate, 'yyyy.MM.dd HH:mm')}">2023.02.10 14:30</div>
+                    <div class="profile-info">
+                        <h2 th:text="${user.nickname} + ' 님'">사용자 님</h2>
+                        <p th:text="'가입일: ' + ${#temporals.format(user.createDate, 'yyyy.MM.dd')}">가입일: 2023.02.10</p>
+                        <p th:text="'이메일: ' + ${user.email}">이메일: user@example.com</p>
                     </div>
-                    <span class="status-badge status-active">게시 중</span>
                 </div>
             </div>
             
-            <div th:if="${recentWorkings.empty and recentJobings.empty}" style="text-align: center; color: #999; padding: 20px;">
-                아직 작성한 게시글이 없습니다.
+            <!-- 통계 카드 -->
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${workingCount + jobbingCount}">32</div>
+                    <div class="stat-label">내가 쓴 글</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${workingCount}">15</div>
+                    <div class="stat-label">구인 게시글</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${jobbingCount}">17</div>
+                    <div class="stat-label">구직 게시글</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">새 알림</div>
+                </div>
+            </div>
+            
+            <!-- 내 게시글 관리 섹션 -->
+            <div class="menu-card" style="margin-bottom: 30px;">
+                <h3>🗂️ 내 게시글 관리</h3>
+                <div th:if="${!allWorkings.empty}">
+                    <h4 style="margin: 15px 0 10px 0; color: #667eea;">구인 게시글</h4>
+                    <div th:each="working : ${allWorkings}" class="post-item">
+                        <div>
+                            <span class="post-title" th:text="${working.title}">게시글 제목</span>
+                            <span class="post-date" th:text="${#temporals.format(working.createDate, 'yyyy.MM.dd HH:mm')}">2023.02.10 14:30</span>
+                        </div>
+                        <div>
+                            <a th:href="@{'/work/detail/' + ${working.id}}" class="menu-item" style="color:#667eea;">상세보기</a>
+                            <a th:href="@{'/work/edit/' + ${working.id}}" class="menu-item" style="color:#4caf50; margin-left:8px;">수정</a>
+                            <a th:href="@{'/work/delete/' + ${working.id}}" class="menu-item" style="color:#f44336; margin-left:8px;">삭제</a>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${!allJobings.empty}">
+                    <h4 style="margin: 15px 0 10px 0; color: #667eea;">구직 게시글</h4>
+                    <div th:each="jobbing : ${allJobings}" class="post-item">
+                        <div>
+                            <span class="post-title" th:text="${jobbing.name} + ' - ' + ${jobbing.requestWork}">구직자명 - 희망업무</span>
+                            <span class="post-date" th:text="${#temporals.format(jobbing.createDate, 'yyyy.MM.dd HH:mm')}">2023.02.10 14:30</span>
+                        </div>
+                        <div>
+                            <a th:href="@{'/job/detail/' + ${jobbing.id}}" class="menu-item" style="color:#667eea;">상세보기</a>
+                            <a th:href="@{'/job/edit/' + ${jobbing.id}}" class="menu-item" style="color:#4caf50; margin-left:8px;">수정</a>
+                            <a th:href="@{'/job/delete/' + ${jobbing.id}}" class="menu-item" style="color:#f44336; margin-left:8px;">삭제</a>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${allWorkings.empty and allJobings.empty}" style="text-align: center; color: #999; padding: 20px;">
+                    아직 작성한 게시글이 없습니다.
+                </div>
+            </div>
+            
+            <!-- 내 유료 구인 게시글 관리 -->
+            <div class="menu-card" style="margin-bottom: 30px;">
+                <h3>💎 유료 구인 게시글 (프리미엄/VIP/익스퍼트)</h3>
+                <div th:if="${!myOffers.empty}">
+                    <div th:each="offer : ${myOffers}" class="post-item">
+                        <div>
+                            <span class="post-title" th:text="${offer.category} + ' - ' + ${offer.workPlace}">카테고리 - 현장명</span>
+                            <span class="post-date" th:text="${#temporals.format(offer.createDate, 'yyyy.MM.dd HH:mm')}">2023.02.10 14:30</span>
+                        </div>
+                        <div>
+                            <a th:href="@{'/offer/detail/' + ${offer.id}}" class="menu-item" style="color:#667eea;">상세보기</a>
+                            <a th:href="@{'/offer/edit/' + ${offer.id}}" class="menu-item" style="color:#4caf50; margin-left:8px;">수정</a>
+                            <a th:href="@{'/offer/delete/' + ${offer.id}}" class="menu-item" style="color:#f44336; margin-left:8px;">삭제</a>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${myOffers.empty}" style="text-align: center; color: #999; padding: 20px;">
+                    아직 유료 구인 게시글이 없습니다.
+                </div>
+            </div>
+            
+            <!-- 메뉴 섹션 -->
+            <div class="menu-section">
+                <!-- 내 활동 관리 -->
+                <div class="menu-card">
+                    <h3>📄 내 활동 관리</h3>
+                    <a href="/mypage/workings" class="menu-item">
+                        <span class="icon">💼</span>
+                        <span>유료 구인 게시글 목록</span>
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="/mypage/workings" class="menu-item">
+                        <span class="icon">📋</span>
+                        <span>무료 구인 게시글 목록</span>
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="/mypage/jobings" class="menu-item">
+                        <span class="icon">👤</span>
+                        <span>구직 게시글 목록</span>
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="/mypage/payments" class="menu-item">
+                        <span class="icon">💳</span>
+                        <span>결제 목록</span>
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
+                
+                <!-- 회원 설정 -->
+                <div class="menu-card">
+                    <h3>⚙️ 회원 설정</h3>
+                    <a href="/mypage/profile" class="menu-item">
+                        <span class="icon">👤</span>
+                        <span>회원정보 수정</span>
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="/mypage/password" class="menu-item">
+                        <span class="icon">🔐</span>
+                        <span>비밀번호 변경</span>
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="/user/withdraw" class="menu-item">
+                        <span class="icon">🚪</span>
+                        <span>회원 탈퇴</span>
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

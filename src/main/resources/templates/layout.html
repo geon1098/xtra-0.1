@@ -8,13 +8,14 @@
     <link rel="stylesheet" th:href="@{/style/list.css}">
     <link rel="stylesheet" th:href="@{/style/detail.css}">
     <link rel="stylesheet" th:href="@{/style/form.css}">
+    <link rel="stylesheet" th:href="@{/style/nav.css}">
     <title layout:title-pattern="$CONTENT_TITLE - XTRA">XTRA</title>
     
     <!-- 공통 스크립트 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <!-- 페이지별 스크립트 -->
     <th:block layout:fragment="headScript"></th:block>
 </head>
@@ -26,5 +27,24 @@
     <!-- 페이지별 스크립트 -->
     <th:block layout:fragment="script"></th:block>
     <th:block layout:fragment="bodyScript"></th:block>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const avatar = document.getElementById('userAvatar');
+        const dropdown = document.getElementById('dropdownMenu');
+        console.log('avatar:', avatar, 'dropdown:', dropdown);
+        if (avatar && dropdown) {
+          avatar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            avatar.parentElement.classList.toggle('show');
+            console.log('avatar clicked!');
+          });
+          document.addEventListener('click', function(e) {
+            if (!avatar.contains(e.target)) {
+              avatar.parentElement.classList.remove('show');
+            }
+          });
+        }
+      });
+    </script>
 </body>
 </html>

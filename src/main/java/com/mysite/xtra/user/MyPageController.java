@@ -20,6 +20,8 @@ import com.mysite.xtra.guin.Working;
 import com.mysite.xtra.guin.WorkingRepository;
 import com.mysite.xtra.gujic.Jobing;
 import com.mysite.xtra.gujic.JobingRepository;
+import com.mysite.xtra.offer.Offer;
+import com.mysite.xtra.offer.OfferRepository;
 
 @Controller
 @RequestMapping("/mypage")
@@ -30,13 +32,15 @@ public class MyPageController {
     private final WorkingRepository workingRepository;
     private final JobingRepository jobingRepository;
     private final PasswordEncoder passwordEncoder;
+    private final OfferRepository offerRepository;
 
     public MyPageController(UserService userService, WorkingRepository workingRepository, 
-                          JobingRepository jobingRepository, PasswordEncoder passwordEncoder) {
+                          JobingRepository jobingRepository, PasswordEncoder passwordEncoder, OfferRepository offerRepository) {
         this.userService = userService;
         this.workingRepository = workingRepository;
         this.jobingRepository = jobingRepository;
         this.passwordEncoder = passwordEncoder;
+        this.offerRepository = offerRepository;
     }
 
     @GetMapping("")
@@ -61,6 +65,18 @@ public class MyPageController {
         // 최근 구직글 5개
         List<Jobing> recentJobings = jobingRepository.findTop5ByAuthorOrderByCreateDateDesc(user);
         model.addAttribute("recentJobings", recentJobings);
+        
+        // 전체 구인글
+        Pageable allPageable = PageRequest.of(0, Integer.MAX_VALUE);
+        List<Working> allWorkings = workingRepository.findByAuthorOrderByCreateDateDesc(user, allPageable).getContent();
+        model.addAttribute("allWorkings", allWorkings);
+        // 전체 구직글
+        List<Jobing> allJobings = jobingRepository.findByAuthorOrderByCreateDateDesc(user, allPageable).getContent();
+        model.addAttribute("allJobings", allJobings);
+        
+        // 내 유료 구인글(프리미엄/VIP/익스퍼트)
+        List<Offer> myOffers = offerRepository.findByAuthorOrderByCreateDateDesc(user);
+        model.addAttribute("myOffers", myOffers);
         
         return "mypage";
     }

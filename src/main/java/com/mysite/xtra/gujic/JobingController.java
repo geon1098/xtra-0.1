@@ -32,9 +32,12 @@ public class JobingController {
     }
 
     @GetMapping("/list")
-    public String listJobings(Model model, @RequestParam(value="page", defaultValue="0") int page) {
-    	Page<Jobing> paging = this.jobingService.getPageList(page);
+    public String listJobings(Model model, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="keyword", required=false) String keyword) {
+    	Page<Jobing> paging = this.jobingService.getPageList(page, keyword);
+        java.util.Map<String, Object> param = new java.util.HashMap<>();
+        if (keyword != null) param.put("keyword", keyword);
         model.addAttribute("paging", paging);
+        model.addAttribute("param", param);
         return "job_list";
     }
     

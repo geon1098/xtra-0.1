@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -151,8 +151,7 @@
     </style>
 </head>
 <body>
-    <div th:replace="~{nav :: navbarFragment}"></div>
-    
+<div layout:fragment="content">
     <div class="mypage-container">
         <!-- 페이지 헤더 -->
         <div class="page-header">
@@ -212,5 +211,6 @@
             </form>
         </div>
     </div>
+</div>
 </body>
 </html> 

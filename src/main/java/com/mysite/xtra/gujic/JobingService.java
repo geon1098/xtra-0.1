@@ -58,11 +58,16 @@ public class JobingService {
         return jobingRepository.save(jobing);
     }
 	
-	public Page<Jobing> getPageList(int page){
+	public Page<Jobing> getPageList(int page, String keyword) {
 		List<Sort.Order> sorts = new ArrayList<>();
 		sorts.add(Sort.Order.desc("createDate"));
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-		return this.jobingRepository.findAll(pageable);
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			return this.jobingRepository.findByNameContainingIgnoreCaseOrIntroductionContainingIgnoreCaseOrRequestWorkContainingIgnoreCaseOrHopAreaContainingIgnoreCase(
+				keyword, keyword, keyword, keyword, pageable);
+		} else {
+			return this.jobingRepository.findAll(pageable);
+		}
 	}
 
     @Transactional

@@ -173,12 +173,11 @@
         }
 
         .job-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: #fff;
             border-radius: 20px;
             padding: 25px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid #f0f0f0;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -375,57 +374,11 @@
             <a class="register-btn" th:href="@{/job/create}" sec:authorize="isAuthenticated()">+ 구직 등록</a>
             <a class="register-btn" th:href="@{/user/login}" sec:authorize="isAnonymous()">+ 구직 등록</a>
         </div>
-        
         <form class="search-form" method="get" th:action="@{/job/list}">
             <input type="text" name="keyword" placeholder="키워드 검색" class="search-input" th:value="${param.keyword}">
-            <select name="workType" class="search-input">
-                <option value="">희망 업무</option>
-                <option value="분양">분양</option>
-                <option value="영업">영업</option>
-                <option value="관리">관리</option>
-                <option value="기타">기타</option>
-            </select>
-            <select name="area" class="search-input">
-                <option value="">희망 지역</option>
-                <option value="서울">서울</option>
-                <option value="경기">경기</option>
-                <option value="인천">인천</option>
-                <option value="부산">부산</option>
-                <option value="대구">대구</option>
-                <option value="대전">대전</option>
-                <option value="광주">광주</option>
-                <option value="울산">울산</option>
-                <option value="강원">강원</option>
-                <option value="충북">충북</option>
-                <option value="충남">충남</option>
-                <option value="전북">전북</option>
-                <option value="전남">전남</option>
-                <option value="경북">경북</option>
-                <option value="경남">경남</option>
-                <option value="제주">제주</option>
-            </select>
             <button type="submit" class="search-btn">검색</button>
         </form>
     </div>
-
-    <!-- 프리미엄 구직 슬라이드 -->
-    <div class="premium-section">
-        <div class="premium-header">
-            <h2 class="premium-title">프리미엄 구직</h2>
-            <span class="premium-badge">VIP</span>
-        </div>
-        <div class="premium-slide">
-            <div class="premium-job-title">부동산몬스터</div>
-            <div class="premium-job-info">신규 대행현장을 접수받고 있습니다. 수도권 위주로 진행하며 상가부터 지산,전원주택,펜션 및 해외부동산등 모든 현장 진행할수 있습니다.</div>
-            <div class="premium-job-info">연락처: 010-2534-8589</div>
-        </div>
-        <div class="premium-slide">
-            <div class="premium-job-title">대표 남성은 즉시</div>
-            <div class="premium-job-info">신고가의 50% 부동산 (오피스텔,연립,이피트) 구합니다. 즉각 수십채 계약할 수 있는 회사입니다.</div>
-            <div class="premium-job-info">연락처: 010-XXXX-XXXX</div>
-        </div>
-    </div>
-
     <!-- 구직 카드 리스트 -->
     <div class="job-list">
         <div class="job-card" th:each="jobing : ${paging.content}">
@@ -460,13 +413,13 @@
     <div class="pagination">
         <a class="pagination-btn"
            th:if="${paging.hasPrevious()}"
-           th:href="@{/job/list(page=${paging.number - 1}, keyword=${param.keyword}, workType=${param.workType}, area=${param.area})}">
+           th:href="@{/job/list(page=${paging.number - 1}, keyword=${param.keyword})}">
             ← 이전
         </a>
         <span class="pagination-current" th:text="${paging.number + 1}">1</span>
         <a class="pagination-btn"
            th:if="${paging.hasNext()}"
-           th:href="@{/job/list(page=${paging.number + 1}, keyword=${param.keyword}, workType=${param.workType}, area=${param.area})}">
+           th:href="@{/job/list(page=${paging.number + 1}, keyword=${param.keyword})}">
             다음 →
         </a>
     </div>

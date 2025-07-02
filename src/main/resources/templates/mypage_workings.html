@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -256,16 +256,12 @@
     </style>
 </head>
 <body>
-    <div th:replace="~{nav :: navbarFragment}"></div>
-    
+<div layout:fragment="content">
     <div class="mypage-container">
-        <!-- 페이지 헤더 -->
         <div class="page-header">
             <h1>내 구인 게시글</h1>
             <a href="/mypage" class="back-button">← 마이페이지로</a>
         </div>
-        
-        <!-- 필터 섹션 -->
         <div class="filter-section">
             <div class="filter-buttons">
                 <a href="/mypage/workings" class="filter-btn active">전체</a>
@@ -275,54 +271,31 @@
                 <a href="/mypage/workings?type=free" class="filter-btn">무료</a>
             </div>
         </div>
-        
-        <!-- 구인글 목록 -->
         <div class="workings-list">
-            <div th:if="${workings.empty}" class="empty-state">
-                <h3>아직 작성한 구인 게시글이 없습니다</h3>
-                <p>첫 번째 구인 게시글을 작성해보세요!</p>
-                <a href="/work/create" class="create-btn">구인 게시글 작성하기</a>
-            </div>
-            
-            <div th:each="working : ${workings}" class="working-item">
-                <div class="working-info">
-                    <div class="working-title" th:text="${working.title}">구인 게시글 제목</div>
-                    <div class="working-details">
-                        <span th:text="${working.siteName}">현장명</span>
-                        <span th:text="${working.jobContent}">업무</span>
-                        <span th:text="${working.location}">소재지</span>
-                        <span th:text="${#temporals.format(working.createDate, 'yyyy.MM.dd')}">작성일</span>
-                    </div>
-                </div>
-                <div class="working-actions">
-                    <span class="status-badge status-active">게시 중</span>
-                    <a th:href="@{/work/detail/{id}(id=${working.id})}" class="action-btn">보기</a>
-                    <a th:href="@{/work/edit/{id}(id=${working.id})}" class="action-btn edit">수정</a>
-                    <a th:href="@{/work/delete/{id}(id=${working.id})}" 
-                       class="action-btn delete"
-                       onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 페이지네이션 -->
-        <div th:if="${workings.totalPages > 1}" class="pagination">
-            <a th:if="${workings.hasPrevious()}" 
-               th:href="@{/mypage/workings(page=${workings.number - 1})}" 
-               class="page-link">이전</a>
-            
-            <span th:each="pageNum : ${#numbers.sequence(0, workings.totalPages - 1)}">
-                <a th:if="${pageNum != workings.number}"
-                   th:href="@{/mypage/workings(page=${pageNum})}" 
-                   class="page-link" th:text="${pageNum + 1}">1</a>
-                <span th:if="${pageNum == workings.number}" 
-                      class="page-link active" th:text="${pageNum + 1}">1</span>
-            </span>
-            
-            <a th:if="${workings.hasNext()}" 
-               th:href="@{/mypage/workings(page=${workings.number + 1})}" 
-               class="page-link">다음</a>
+            <table class="workings-table">
+                <thead>
+                    <tr>
+                        <th>제목</th>
+                        <th>등록일</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="working : ${workings}">
+                        <td th:text="${working.title}">제목</td>
+                        <td th:text="${#temporals.format(working.createDate, 'yyyy.MM.dd HH:mm')}">등록일</td>
+                        <td>게시중</td>
+                        <td>
+                            <a th:href="@{'/work/detail/' + ${working.id}}" class="btn btn-sm btn-outline-primary">상세</a>
+                            <a th:href="@{'/work/edit/' + ${working.id}}" class="btn btn-sm btn-outline-success">수정</a>
+                            <a th:href="@{'/work/delete/' + ${working.id}}" class="btn btn-sm btn-outline-danger">삭제</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 </body>
 </html> 
