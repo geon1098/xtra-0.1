@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>받은 이력서 목록</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .resume-list-container {
+            width: 1000px;
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            padding: 40px 48px 32px 48px;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .unread-badge {
+            background: #dc3545;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .resume-item {
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .resume-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        .resume-item.unread {
+            background: #f8f9ff;
+            border-color: #667eea;
+        }
+        .resume-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .sender-info {
+            flex: 1;
+        }
+        .sender-name {
+            font-weight: 600;
+            color: #764ba2;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .working-title {
+            color: #667eea;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .send-date {
+            color: #6c757d;
+            font-size: 12px;
+        }
+        .resume-status {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-unread {
+            background: #dc3545;
+            color: white;
+        }
+        .status-read {
+            background: #28a745;
+            color: white;
+        }
+        .resume-content {
+            margin-top: 12px;
+        }
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .file-icon {
+            color: #667eea;
+            font-size: 16px;
+        }
+        .file-name {
+            color: #333;
+            font-weight: 500;
+        }
+        .file-size {
+            color: #6c757d;
+            font-size: 12px;
+        }
+        .message {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: 48px;
+            color: #dee2e6;
+            margin-bottom: 16px;
+        }
+        .empty-state h3 {
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+        .empty-state p {
+            color: #adb5bd;
+        }
+        .btn {
+            min-width: 100px;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 8px 16px;
+            margin-right: 8px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #667eea;
+        }
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+<div class="resume-list-container" layout:fragment="content">
+    <div class="page-title">
+        받은 이력서 목록
+        <span th:if="${unreadCount > 0}" class="unread-badge" th:text="${unreadCount + '개 미읽'}"></span>
+    </div>
+    
+    <!-- 이력서 목록 -->
+    <div th:if="${!resumes.empty}">
+        <div th:each="resume : ${resumes}" class="resume-item" th:classappend="${!resume.read ? 'unread' : ''}"
+             th:onclick="'location.href=\'/resume/detail/' + ${resume.id} + '\''">
+            <div class="resume-header">
+                <div class="sender-info">
+                    <div class="sender-name" th:text="${resume.sender.username}">발신자</div>
+                    <div class="working-title" th:text="${resume.working != null ? resume.working.siteName : (resume.offer != null ? resume.offer.title : '제목 없음')}">구인 제목</div>
+                    <div class="send-date" th:text="${#temporals.format(resume.sendDate, 'yyyy-MM-dd HH:mm')}">전송일시</div>
+                </div>
+                <div class="resume-status">
+                    <span th:if="${!resume.read}" class="status-badge status-unread">미읽</span>
+                    <span th:if="${resume.read}" class="status-badge status-read">읽음</span>
+                </div>
+            </div>
+            
+            <div class="resume-content">
+                <div class="file-info">
+                    <i class="fas fa-file file-icon"></i>
+                    <span class="file-name" th:text="${resume.originalFileName}">파일명</span>
+                    <span class="file-size" th:text="${#numbers.formatDecimal(resume.fileSize / 1024, 1, 1) + ' KB'}">파일크기</span>
+                </div>
+                
+                <div th:if="${resume.message != null and !resume.message.isEmpty()}" class="message" th:text="${resume.message}">
+                    메시지 내용
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 빈 상태 -->
+    <div th:if="${resumes.empty}" class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <h3>받은 이력서가 없습니다</h3>
+        <p>구인 게시글을 등록하면 구직자들이 이력서를 보내드립니다.</p>
+    </div>
+    
+    <!-- 하단 버튼 -->
+    <div style="text-align: center; margin-top: 32px;">
+        <a href="/work/list" class="btn btn-primary">구인 목록 보기</a>
+        <a href="/mypage" class="btn btn-secondary">마이페이지</a>
+    </div>
+</div>
+</body>
+</html> 

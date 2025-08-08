@@ -16,10 +16,16 @@ public class OfferService {
     }
 
     public List<Offer> getOffersByCategory(Offer.OfferCategory category) {
-        // 승인된 오퍼만 반환
-        return offerRepository.findByCategory(category).stream()
-            .filter(offer -> offer.getApprovalStatus() == Offer.ApprovalStatus.APPROVED)
-            .toList();
+        try {
+            // 승인된 오퍼만 반환
+            return offerRepository.findByCategory(category).stream()
+                .filter(offer -> offer.getApprovalStatus() == Offer.ApprovalStatus.APPROVED)
+                .toList();
+        } catch (Exception e) {
+            // 로그 출력 후 빈 리스트 반환
+            System.err.println("카테고리별 오퍼 조회 중 오류 발생: " + e.getMessage());
+            return new java.util.ArrayList<>();
+        }
     }
 
     public Optional<Offer> getOffer(Long id) {

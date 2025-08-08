@@ -9,23 +9,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.mysite.xtra.config.JwtUtil;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	
 	private final UserService userService;
 	private final EmailService emailService;
 	private final EmailVerificationRepository emailVerificationRepository;
 	private final PasswordResetTokenRepository passwordResetTokenRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final JwtUtil jwtUtil;
 	
 	public UserController(UserService userService, EmailService emailService, 
 						 EmailVerificationRepository emailVerificationRepository,
-						 PasswordResetTokenRepository passwordResetTokenRepository) {
+						 PasswordResetTokenRepository passwordResetTokenRepository,
+						 PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
 		this.userService = userService;
 		this.emailService = emailService;
 		this.emailVerificationRepository = emailVerificationRepository;
 		this.passwordResetTokenRepository = passwordResetTokenRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.jwtUtil = jwtUtil;
 	}
 	
 	@GetMapping("/signup")
@@ -128,14 +145,9 @@ public class UserController {
 		}
 		
 		try {
-			SiteUser user = userService.findByUsernameAndEmail(
-				findPasswordForm.getUsername(), findPasswordForm.getEmail());
+			SiteUser user = userService.findByUsernameAndEmail(findPasswordForm.getUsername(), findPasswordForm.getEmail());
 			
-			// 기존 토큰이 있다면 삭제
-			passwordResetTokenRepository.findByUserId(user.getId())
-				.ifPresent(passwordResetTokenRepository::delete);
-			
-			// 새로운 비밀번호 재설정 토큰 생성
+			// 비밀번호 재설정 토큰 생성 및 저장
 			PasswordResetToken resetToken = PasswordResetToken.createPasswordResetToken(user);
 			passwordResetTokenRepository.save(resetToken);
 			
@@ -220,5 +232,120 @@ public class UserController {
 			bindingResult.reject("resetPasswordFailed", "비밀번호 재설정에 실패했습니다.");
 			return "reset_password_form";
 		}
+	}
+	
+	// 회원탈퇴 폼
+	@GetMapping("/withdraw")
+	public String withdrawForm(WithdrawForm withdrawForm, Model model) {
+		logger.info("회원탈퇴 폼 접근 시도");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getName())) {
+			SiteUser user = userService.getUser(authentication.getName());
+			model.addAttribute("user", user);
+			logger.info("회원탈퇴 폼 표시: 사용자={}", user.getUsername());
+			return "withdraw_form";
+		}
+		logger.warn("회원탈퇴 폼 접근 실패: 로그인되지 않은 사용자");
+		return "redirect:/user/login";
+	}
+	
+	// 회원탈퇴 처리
+	@PostMapping("/withdraw")
+	public String withdraw(@Valid WithdrawForm withdrawForm, BindingResult bindingResult, 
+						  RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response) {
+		logger.info("회원탈퇴 처리 시작");
+		
+		if(bindingResult.hasErrors()) {
+			logger.warn("회원탈퇴 폼 검증 실패: {}", bindingResult.getAllErrors());
+			return "withdraw_form";
+		}
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getName())) {
+			logger.warn("회원탈퇴 처리 실패: 로그인되지 않은 사용자");
+			redirectAttributes.addFlashAttribute("error", "로그인이 필요합니다.");
+			return "redirect:/user/login";
+		}
+		
+		try {
+			SiteUser user = userService.getUser(authentication.getName());
+			logger.info("회원탈퇴 처리 중: 사용자={}", user.getUsername());
+			
+			// 비밀번호 확인
+			if (!passwordEncoder.matches(withdrawForm.getPassword(), user.getPassword())) {
+				logger.warn("회원탈퇴 실패: 비밀번호 불일치");
+				bindingResult.rejectValue("password", "passwordInCorrect", "비밀번호가 일치하지 않습니다.");
+				return "withdraw_form";
+			}
+			
+			// 탈퇴 확인 문구 확인
+			if (!"탈퇴하겠습니다".equals(withdrawForm.getConfirmText())) {
+				logger.warn("회원탈퇴 실패: 확인 문구 불일치. 입력값={}", withdrawForm.getConfirmText());
+				bindingResult.rejectValue("confirmText", "confirmTextInCorrect", "탈퇴 확인 문구를 정확히 입력해주세요.");
+				return "withdraw_form";
+			}
+			
+			logger.info("회원탈퇴 처리 시작: 사용자={}", user.getUsername());
+			
+			// 현재 JWT 토큰을 블랙리스트에 추가
+			String token = resolveToken(request);
+			if (token != null && jwtUtil.validateToken(token)) {
+				jwtUtil.blacklistToken(token);
+				logger.info("JWT 토큰을 블랙리스트에 추가했습니다: 사용자={}", user.getUsername());
+			}
+			
+			// 회원탈퇴 처리
+			userService.withdrawUser(user);
+			
+			// JWT 쿠키 삭제
+			javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie("jwt", "");
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			cookie.setMaxAge(0);
+			cookie.setSecure(false);
+			response.addCookie(cookie);
+			
+			// 세션 무효화
+			SecurityContextHolder.clearContext();
+			
+			logger.info("회원탈퇴 완료: 사용자={}", user.getUsername());
+			redirectAttributes.addFlashAttribute("message", "회원탈퇴가 완료되었습니다. 이용해주셔서 감사했습니다.");
+			return "redirect:/";
+			
+		} catch(Exception e) {
+			logger.error("회원탈퇴 처리 중 오류 발생: {}", e.getMessage(), e);
+			bindingResult.reject("withdrawFailed", "회원탈퇴 처리 중 오류가 발생했습니다: " + e.getMessage());
+			return "withdraw_form";
+		}
+	}
+	
+	private String resolveToken(HttpServletRequest request) {
+		// 1. Authorization 헤더 우선
+		String bearerToken = request.getHeader("Authorization");
+		if (org.springframework.util.StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7);
+		}
+		// 2. 쿠키에서 jwt 찾기
+		if (request.getCookies() != null) {
+			for (javax.servlet.http.Cookie cookie : request.getCookies()) {
+				if ("jwt".equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
+	}
+	
+	@GetMapping("/login-success")
+	public String loginSuccess() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null) {
+			for (GrantedAuthority authority : authentication.getAuthorities()) {
+				if (authority.getAuthority().equals("ROLE_ADMIN")) {
+					return "redirect:/admin/dashboard";
+				}
+			}
+		}
+		return "redirect:/";
 	}
 }

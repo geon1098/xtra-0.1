@@ -218,11 +218,11 @@
             <!-- 프로필 헤더 -->
             <div class="mypage-header">
                 <div class="profile-section">
-                    <div class="profile-image">
-                        <span th:text="${#strings.substring(user.nickname, 0, 1)}">사</span>
-                    </div>
                     <div class="profile-info">
-                        <h2 th:text="${user.nickname} + ' 님'">사용자 님</h2>
+                        <h2>
+                            <span th:text="${user.username}">user</span>
+                            <span> 님</span>
+                        </h2>
                         <p th:text="'가입일: ' + ${#temporals.format(user.createDate, 'yyyy.MM.dd')}">가입일: 2023.02.10</p>
                         <p th:text="'이메일: ' + ${user.email}">이메일: user@example.com</p>
                     </div>
@@ -295,6 +295,7 @@
                             <span class="post-date" th:text="${#temporals.format(offer.createDate, 'yyyy.MM.dd HH:mm')}">2023.02.10 14:30</span>
                         </div>
                         <div>
+
                             <a th:href="@{'/offer/detail/' + ${offer.id}}" class="menu-item" style="color:#667eea;">상세보기</a>
                             <a th:href="@{'/offer/edit/' + ${offer.id}}" class="menu-item" style="color:#4caf50; margin-left:8px;">수정</a>
                             <a th:href="@{'/offer/delete/' + ${offer.id}}" class="menu-item" style="color:#f44336; margin-left:8px;">삭제</a>
@@ -324,6 +325,16 @@
                     <a href="/mypage/jobings" class="menu-item">
                         <span class="icon">👤</span>
                         <span>구직 게시글 목록</span>
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="/resume/received" class="menu-item">
+                        <span class="icon">📥</span>
+                        <span>받은 이력서</span>
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="/resume/sent" class="menu-item">
+                        <span class="icon">📤</span>
+                        <span>보낸 이력서</span>
                         <span class="arrow">→</span>
                     </a>
                     <a href="/mypage/payments" class="menu-item">

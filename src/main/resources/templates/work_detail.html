@@ -7,134 +7,117 @@
     <link rel="stylesheet" href="/style/style.css">
     <style>
         .work-detail-container {
-            max-width: 700px;
+            width: 1000px;
+            max-width: 1000px;
+            min-width: 1000px;
             margin: 40px auto;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            padding: 32px 24px 24px 24px;
-        }
-        .detail_info, .detail_info_detail {
-            margin-bottom: 18px;
-        }
-        .detail_info table, .detail_info_detail table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-        }
-        .detail_info th, .detail_info td, .detail_info_detail td {
-            border: 1px solid #e3f0ff;
-            padding: 10px 8px;
-            text-align: left;
-        }
-        .detail_info th {
-            background: #f2f8ff;
-            color: #007bff;
-            font-weight: 600;
-            width: 120px;
-        }
-        .detail_info td, .detail_info_detail td {
-            color: #333;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            padding: 40px 48px 32px 48px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
         .board-title {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #007bff;
-            margin-bottom: 18px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 24px;
+        }
+        .info-row {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 12px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #764ba2;
+            min-width: 90px;
+        }
+        .info-value {
+            color: #333;
+        }
+        .info-block {
+            margin-bottom: 10px;
+        }
+        .detail-block {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 10px;
         }
         .btn {
             min-width: 100px;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 10px 24px;
+            margin-right: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+            border: none;
+        }
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #667eea;
+            border: none;
+        }
+        #map {
+            border-radius: 12px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 <div class="work-detail-container" layout:fragment="content">
     <div class="board-title">구인 상세</div>
-    <!-- 기본 정보 -->
-    <div class="detail_info">
-        <table>
-            <tbody>
-                <tr>
-                    <th>현장명</th>
-                    <td th:text="${working.siteName}"></td>
-                    <th>분류</th>
-                    <td th:text="${working.category}"></td>
-                </tr>
-                <tr>
-                    <th>업무</th>
-                    <td th:text="${working.jobContent}"></td>
-                    <th>고용형태</th>
-                    <td th:text="${working.jobType}"></td>
-                </tr>
-                <tr>
-                    <th>소재지</th>
-                    <td colspan="3" th:text="${working.location}"></td>
-                </tr>
-                <tr>
-                    <th>현장 주소</th>
-                    <td colspan="3" th:text="${working.address}"></td>
-                </tr>
-                <tr>
-                    <th>작성자</th>
-                    <td colspan="3" th:text="${working.author != null ? working.author.username : '알 수 없음'}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="info-block">
+        <div class="info-row"><span class="info-label">현장명</span><span class="info-value" th:text="${working.siteName}"></span></div>
+        <div class="info-row"><span class="info-label">분류</span><span class="info-value" th:text="${working.category}"></span></div>
+        <div class="info-row"><span class="info-label">업무</span><span class="info-value" th:text="${working.jobContent}"></span></div>
+        <div class="info-row"><span class="info-label">고용형태</span><span class="info-value" th:text="${working.jobType}"></span></div>
+        <div class="info-row"><span class="info-label">소재지</span><span class="info-value" th:text="${working.location}"></span></div>
+        <div class="info-row"><span class="info-label">현장 주소</span><span class="info-value" th:text="${working.address}"></span></div>
+        <div class="info-row"><span class="info-label">작성자</span><span class="info-value" th:text="${working.author != null ? working.author.username : '알 수 없음'}"></span></div>
     </div>
-    <!-- 근무 조건 -->
-    <div class="detail_info">
-        <table>
-            <tbody>
-                <tr>
-                    <th>업무내용</th>
-                    <td th:text="${working.jobDescription}"></td>
-                    <th>응시요건</th>
-                    <td th:text="${working.jobWork}"></td>
-                </tr>
-                <tr>
-                    <th>복리후생</th>
-                    <td th:text="${working.benefits}"></td>
-                    <th>모집인원</th>
-                    <td th:text="${working.workNumber}"></td>
-                </tr>
-                <tr>
-                    <th>모집기간</th>
-                    <td th:text="${working.deadDate}"></td>
-                    <th>성별</th>
-                    <td th:text="${working.gender}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="info-block">
+        <div class="info-row"><span class="info-label">업무내용</span><span class="info-value" th:text="${working.jobDescription}"></span></div>
+        <div class="info-row"><span class="info-label">응시요건</span><span class="info-value" th:text="${working.jobWork}"></span></div>
+        <div class="info-row"><span class="info-label">복리후생</span><span class="info-value" th:text="${working.benefits}"></span></div>
+        <div class="info-row"><span class="info-label">모집인원</span><span class="info-value" th:text="${working.workNumber}"></span></div>
+        <div class="info-row"><span class="info-label">모집기간</span><span class="info-value" th:text="${working.deadDate}"></span></div>
+        <div class="info-row"><span class="info-label">성별</span><span class="info-value" th:text="${working.gender}"></span></div>
     </div>
-    <!-- 담당자 -->
-    <div class="detail_info">
-        <table>
-            <tbody>
-                <tr>
-                    <th>담당자</th>
-                    <td th:text="${working.cPerson}"></td>
-                    <th>연락처</th>
-                    <td th:text="${working.phone}"></td>
-                </tr>
-                <tr>
-                    <th>등록일자</th>
-                    <td colspan="3" th:text="${#temporals.format(working.createDate, 'yyyy-MM-dd HH:mm')}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="info-block">
+        <div class="info-row"><span class="info-label">담당자</span><span class="info-value" th:text="${working.cPerson}"></span></div>
+        <div class="info-row"><span class="info-label">연락처</span><span class="info-value" th:text="${working.phone}"></span></div>
+        <div class="info-row"><span class="info-label">등록일자</span><span class="info-value" th:text="${#temporals.format(working.createDate, 'yyyy-MM-dd HH:mm')}"></span></div>
     </div>
-    <!-- 상세요건 -->
-    <div class="detail_info_detail">
-        <table>
-        <tr>
-            <th>상세내용</th>
-            <td th:text="${working.jobDetails}"></td>
-        </tr>
-        </table>
+    <div class="detail-block">
+        <div class="info-label">상세내용</div>
+        <div class="info-value" th:text="${working.jobDetails}"></div>
     </div>
     <div style="margin-top:24px;">
         <a th:href="@{/work/list}" class="btn btn-primary">목록으로</a>
-        <a th:href="@{|/work/chat/${working.id}|}" class="btn btn-secondary" style="margin-left:10px;">1:1 채팅하기</a>
+        
+        <!-- 로그인한 사용자이고, 자신이 작성한 글이 아니고, 아직 이력서를 보내지 않은 경우에만 이력서 보내기 버튼 표시 -->
+        <span sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username != working.author?.username && !alreadySentResume}">
+            <a th:href="@{|/resume/send/${working.id}|}" class="btn btn-secondary" style="margin-left:10px;">이력서 보내기</a>
+        </span>
+        
+        <!-- 이미 이력서를 보낸 경우 안내 메시지 -->
+        <span sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username != working.author?.username && alreadySentResume}">
+            <span class="btn btn-secondary" style="margin-left:10px; background-color: #e9ecef; color: #6c757d; cursor: default;">이미 이력서를 보냈습니다</span>
+        </span>
+        
+        <!-- 로그인하지 않은 경우 로그인 안내 -->
+        <span sec:authorize="!isAuthenticated()">
+            <a th:href="@{/user/login}" class="btn btn-secondary" style="margin-left:10px;">로그인하여 이력서 보내기</a>
+        </span>
+        
+        <!-- 자신이 작성한 글인 경우 수정/삭제 버튼 표시 -->
         <span sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username == working.author?.username}">
             <a th:href="@{'/work/edit/' + ${working.id}}" class="btn btn-secondary">수정</a>
             <form th:action="@{'/work/delete/' + ${working.id}}" method="post" style="display:inline;">
@@ -142,10 +125,9 @@
             </form>
         </span>
     </div>
-
     <div style="margin-top: 20px; margin-bottom: 20px;">
         <p><strong>지도</strong></p>
-        <div id="map" style="width:100%;height:350px;margin-top:10px;"></div>
+        <div id="map" style="width:100%;height:350px;"></div>
     </div>
 </div>
 

@@ -41,6 +41,9 @@ public class WorkingForm {
     private String cPerson;
     private String phone;
     private String map_location;
+    private String industry;
+    private String experience;
+    private String salary;
 
     public String getSiteName() { return siteName; }
     public void setSiteName(String siteName) { this.siteName = siteName; }
@@ -82,6 +85,12 @@ public class WorkingForm {
     public void setPhone(String phone) { this.phone = phone; }
     public String getMap_location() { return map_location; }
     public void setMap_location(String map_location) { this.map_location = map_location; }
+    public String getIndustry() { return industry; }
+    public void setIndustry(String industry) { this.industry = industry; }
+    public String getExperience() { return experience; }
+    public void setExperience(String experience) { this.experience = experience; }
+    public String getSalary() { return salary; }
+    public void setSalary(String salary) { this.salary = salary; }
     
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

@@ -2,7 +2,7 @@
   <div class="custom-navbar-container">
     <div class="custom-navbar-left">
       <a class="custom-navbar-logo" href="/">
-        <img src="" alt="logo" style="height:36px;vertical-align:middle;">
+        <img src="/images/logo.png" alt="logo" style="height:36px;vertical-align:middle;">
       </a>
       <a class="custom-navbar-menu" href="/">HOME</a>
       <a class="custom-navbar-menu" href="/work/list">구인</a>
@@ -15,16 +15,30 @@
       <a class="custom-navbar-link" th:href="@{/user/signup}" sec:authorize="isAnonymous()">회원가입</a>
       <span class="custom-navbar-divider" sec:authorize="isAnonymous()">|</span>
       <a class="custom-navbar-link" href="/notice">공지사항</a>
-      <div class="user-dropdown" sec:authorize="isAuthenticated()">
-        <button type="button" class="user-avatar" id="userAvatar" style="cursor:pointer; display: flex; flex-direction: column; align-items: center; background:none; border:none; padding:0;">
-          <div style="width:32px; height:32px; border-radius:50%; background:#fff; border:1.5px solid #e3f0ff;"></div>
-          <span class="user-id" style="font-size: 14px; color: #007bff; margin-top: 2px;" sec:authentication="name"></span>
+      <div class="user-dropdown" sec:authorize="isAuthenticated()" style="position:relative;">
+        <button type="button" id="userAvatar" style="cursor:pointer; background:none; border:none; padding:8px 10px; color:#fff; font-weight:600;">
+          <span sec:authentication="name">사용자ID</span>
         </button>
-        <div class="dropdown-menu" id="dropdownMenu">
-          <a class="dropdown-item" th:href="@{/mypage}">마이페이지</a>
-          <form th:action="@{/user/logout}" method="post" style="margin:0;">
-            <button type="submit" class="dropdown-item" style="width:100%;text-align:left;background:none;border:none;padding:12px 20px;">로그아웃</button>
-          </form>
+        <div class="header_layer layer_profile" id="profileLayer" style="display:none; position:absolute; top:48px; right:0;">
+          <div class="inner_header_layer">
+            <h2 class="screen_out">개인정보</h2>
+            <div class="info_profile">
+              <div class="wrap_account">
+                <span class="txt_id" sec:authentication="name">닉네임</span>
+              </div>
+              <span class="txt_email" sec:authentication="principal.email">이메일</span>
+              <a class="link_setting" href="/mypage/profile" sec:authorize="!hasRole('ADMIN')">계정관리</a>
+              <a class="link_setting" href="/admin/dashboard" sec:authorize="hasRole('ADMIN')">관리자페이지</a>
+            </div>
+            <div class="wrap_list">
+              <h3 class="tit_list_type">내 활동</h3>
+              <a class="txt_id" href="/mypage">내 게시글</a>
+              <a class="txt_id" href="/mypage/payments">결제내역</a>
+            </div>
+            <form th:action="@{/user/logout}" method="post">
+              <button class="btn_logout" type="submit">로그아웃</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -37,23 +51,18 @@
 
 </style>
 <th:block layout:fragment="script">
-<script th:inline="javascript">
-  window.addEventListener("DOMContentLoaded", () => {
-    const avatar = document.getElementById('userAvatar');
-    const dropdown = document.getElementById('dropdownMenu');
-    console.log('avatar:', avatar, 'dropdown:', dropdown);
-    if (avatar && dropdown) {
-      avatar.addEventListener('click', function(e) {
-        e.stopPropagation();
-        avatar.parentElement.classList.toggle('show');
-        console.log('avatar clicked!');
-      });
-      document.addEventListener('click', function(e) {
-        if (!avatar.contains(e.target)) {
-          avatar.parentElement.classList.remove('show');
-        }
-      });
-    }
-  });
+<script>
+  const avatarBtn = document.getElementById('userAvatar');
+  const profileLayer = document.getElementById('profileLayer');
+  if (avatarBtn && profileLayer) {
+    avatarBtn.onclick = function(e) {
+      e.stopPropagation();
+      profileLayer.style.display = (profileLayer.style.display === 'block') ? 'none' : 'block';
+    };
+    document.addEventListener('click', function(e) {
+      if (profileLayer.style.display === 'block') profileLayer.style.display = 'none';
+    });
+    profileLayer.onclick = function(e) { e.stopPropagation(); };
+  }
 </script>
 </th:block>

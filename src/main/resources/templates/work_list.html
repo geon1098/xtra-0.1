@@ -5,13 +5,9 @@
     <meta charset="UTF-8">
     <title>구인</title>
     <link rel="stylesheet" href="/style/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-        /* 분양라인 스타일 반영 */
-        body {
-            background: #f5f5f5;
-            font-family: 'Noto Sans KR', sans-serif;
-        }
+        /* 메인페이지 톤 반영 */
+        body { background:#f6f8fa; font-family: 'Noto Sans KR', sans-serif; }
         
         .work-board-container {
             max-width: 1200px;
@@ -23,225 +19,78 @@
         }
         
         /* 상단 검색/필터 바 */
-        .search-filter-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .search-filter-bar { background:#fff; padding:24px; border-radius:16px; margin-bottom:24px; box-shadow:0 4px 24px rgba(44,90,160,0.10); }
         
-        .region-select, .category-select {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            background: white;
-            font-size: 14px;
-            min-width: 120px;
-        }
+        .region-select, .category-select { padding:12px 14px; border:2px solid #e1e5e9; border-radius:12px; background:#fff; font-size:14px; min-width:120px; transition:border-color .2s; }
+        .region-select:focus, .category-select:focus { outline:none; border-color:#2c5aa0; }
         
-        .search-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            min-width: 200px;
-        }
+        .search-input { flex:1; padding:14px 16px; border:2px solid #e1e5e9; border-radius:50px; font-size:15px; min-width:200px; background:#fff; transition:border-color .2s; }
+        .search-input:focus { outline:none; border-color:#2c5aa0; }
         
-        .search-btn {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
+        .search-btn { background: linear-gradient(135deg, #2c5aa0 0%, #1e3f6b 100%); color:#fff; border:none; padding:12px 24px; border-radius:50px; cursor:pointer; font-weight:600; transition:transform .2s, box-shadow .2s; }
+        .search-btn:hover { transform: translateY(-2px); box-shadow:0 6px 18px rgba(44,90,160,0.25); }
         
-        .search-btn:hover {
-            background: #0056b3;
-        }
+        /* 섹션 제목 */
+        .board-title { font-size:1.5rem; font-weight:700; color:#2c5aa0; margin:30px 0 16px 0; display:flex; align-items:center; gap:10px; }
+        .board-title::before { content:''; width:4px; height:24px; background:#f39c12; border-radius:2px; }
         
-        /* 프리미엄(슬라이드형) 배너 */
-        .premium-banner-swiper-wrap {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto 32px auto;
-            box-sizing: border-box;
-            position: relative;
-            border-radius: 24px;
-            overflow: hidden;
-        }
+        /* 프리미엄/VIP 카드 리스트 - 1열로 세로 배치 */
+        .premium-card-list, .vip-card-list { display:flex; flex-direction:column; gap:15px; margin-bottom:30px; }
         
-        .premium-banner-swiper {
-            width: 100%;
-        }
+        .premium-card, .vip-card { background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(44,90,160,0.10); transition: transform .2s, box-shadow .2s; border:2px solid #28a745; display:flex; flex-direction:row; height:200px; }
         
-        .premium-banner {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            height: 320px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 0;
-            overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+        .premium-card:hover, .vip-card:hover { transform: translateY(-3px); box-shadow:0 8px 32px rgba(44,90,160,0.20); }
         
-        .premium-banner:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-        }
-        
-        .premium-img-wrap {
-            width: 66.67%;
+        .premium-img, .vip-img {
+            width: 300px;
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #eee;
-        }
-        
-        .premium-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 0;
-        }
-        
-        .premium-info {
-            width: 33.33%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 48px 36px;
-            background: white;
-            color: #333;
-        }
-        
-        .premium-category {
-            background: #764ba2;
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-        
-        .premium-title {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 24px;
-        }
-        
-        .premium-pay, .premium-benefit {
-            font-size: 20px;
-            margin-bottom: 14px;
-        }
-        
-        /* VIP 카드 리스트 */
-        .vip-card-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 5px;
-            margin-bottom: 30px;
-        }
-        
-        .vip-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 2px solid #28a745;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .vip-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        }
-        
-        .vip-img {
-            width: 100%;
-            height: 200px;
             object-fit: cover;
             flex-shrink: 0;
         }
         
-        .vip-info {
-            padding: 20px;
+        .premium-info, .vip-info {
+            padding: 25px;
             flex: 1;
             display: flex;
             flex-direction: column;
-        }
-        
-        .vip-category {
-            background: #28a745;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            display: inline-block;
-            margin-bottom: 10px;
-            align-self: flex-start;
-        }
-        
-        .vip-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
-        }
-        
-        .vip-pay, .vip-benefit {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 4px;
-        }
-        
-        /* 익스퍼트 카드 리스트 */
-        .expert-card-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 5px;
-            margin-bottom: 30px;
             justify-content: center;
         }
         
-        .expert-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 2px solid #28a745;
+        .premium-category, .vip-category {
+            background: #28a745;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+            align-self: flex-start;
+        }
+        
+        .premium-title, .vip-title { font-size:20px; font-weight:700; margin-bottom:12px; color:#333; }
+        
+        .premium-pay, .vip-pay, .premium-benefit, .vip-benefit {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        /* 익스퍼트 카드 리스트 - 1열로 세로 배치 */
+        .expert-card-list {
             display: flex;
             flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
         }
         
-        .expert-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        }
+        .expert-card { background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(44,90,160,0.10); transition: transform .2s, box-shadow .2s; border:2px solid #28a745; display:flex; flex-direction:row; height:180px; }
+        
+        .expert-card:hover { transform: translateY(-3px); box-shadow:0 8px 32px rgba(44,90,160,0.20); }
         
         .expert-img {
-            width: 100%;
-            height: 200px;
+            width: 250px;
+            height: 100%;
             object-fit: cover;
             flex-shrink: 0;
         }
@@ -251,6 +100,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            justify-content: center;
         }
         
         .expert-category {
@@ -266,417 +116,194 @@
         }
         
         .expert-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #333;
         }
         
         .expert-pay, .expert-benefit {
             font-size: 14px;
             color: #666;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
         
-        /* 섹션 제목 */
-        .board-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            padding: 0;
-            background: none;
-            border: none;
+        /* 일반 구인 게시글 리스트 */
+        .work-list { background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(44,90,160,0.10); }
+        
+        .work-item { padding:20px; border-bottom:1px solid #eef1f5; transition: background .2s, transform .2s; }
+        
+        .work-item:hover { background:#f8f9ff; transform: translateY(-1px); }
+        
+        .work-item:last-child {
+            border-bottom: none;
         }
         
-        /* 무료 구인 테이블 */
-        .work-board-header {
-            background: white;
-            padding: 20px;
-            border-radius: 8px 8px 0 0;
-            margin-bottom: 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .work-title { font-size:18px; font-weight:700; color:#333; margin-bottom:8px; }
         
-        .work-board-table-wrapper {
-            background: white;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
+        .work-info { display:flex; gap:20px; color:#666; font-size:14px; flex-wrap:wrap; }
         
-        .work-board-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            margin-bottom: 0;
-        }
-        
-        .work-board-table th {
-            background: #f8f9fa;
-            color: #333;
-            font-weight: 600;
-            padding: 15px 10px;
-            border-bottom: 2px solid #dee2e6;
-            text-align: center;
-        }
-        
-        .work-board-table td {
-            padding: 15px 10px;
-            border-bottom: 1px solid #dee2e6;
-            text-align: center;
-            color: #333;
-        }
-        
-        .work-board-table tr:hover {
-            background: #f8f9fa;
-        }
-        
-        .board-link {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .board-link:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-        
-        .board-button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-        
-        .board-button:hover {
-            background: #0056b3;
-            color: white;
-            text-decoration: none;
+        .work-date {
+            color: #999;
+            font-size: 12px;
         }
         
         /* 페이지네이션 */
         .pagination {
-            background: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .pagination-button {
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 8px 16px;
-            margin: 0 4px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none;
-            transition: background 0.2s;
-        }
-        
-        .pagination-button:hover {
-            background: #0056b3;
-            color: white;
-            text-decoration: none;
-        }
-        
-        .pagination-button:disabled {
-            background: #6c757d;
-            color: white;
-            cursor: not-allowed;
-        }
-        
-        /* 검색 폼 */
-        #searchForm {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .input-group {
             display: flex;
+            justify-content: center;
             gap: 10px;
-            align-items: center;
+            margin-top: 30px;
         }
         
-        .form-control {
-            flex: 1;
+        .page-link {
             padding: 10px 15px;
             border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
+            background: white;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.2s;
         }
         
-        .btn-outline-secondary {
-            background: #6c757d;
+        .page-link:hover, .page-link.active {
+            background: #007bff;
             color: white;
-            border: none;
-            padding: 10px 20px;
+            border-color: #007bff;
+        }
+        
+        /* 등록 버튼 */
+        .register-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 24px;
             border-radius: 6px;
-            cursor: pointer;
+            text-decoration: none;
             font-weight: 500;
             transition: background 0.2s;
+            display: inline-block;
+            margin-bottom: 20px;
         }
         
-        .btn-outline-secondary:hover {
-            background: #545b62;
-        }
-        
-        /* 반응형 */
-        @media (max-width: 768px) {
-            .search-filter-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .vip-card-list, .expert-card-list {
-                grid-template-columns: 1fr;
-            }
-            
-            .work-board-header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-            
-            .input-group {
-                flex-direction: column;
-            }
-            
-            .premium-banner {
-                flex-direction: column;
-                height: auto;
-                min-width: 350px;
-            }
-            
-            .premium-img-wrap, .premium-info {
-                width: 100%;
-                height: 180px;
-            }
-            
-            .premium-info {
-                height: auto;
-                padding: 20px 12px;
-                align-items: center;
-                text-align: center;
-            }
-            
-            .vip-img, .expert-img {
-                height: 180px;
-            }
-        }
-        
-        @media (max-width: 1200px) {
-            .premium-banner-swiper-wrap {
-                max-width: 100vw;
-            }
-            .premium-banner {
-                height: 240px;
-            }
-            .premium-title {
-                font-size: 22px;
-            }
-            .premium-pay, .premium-benefit {
-                font-size: 16px;
-            }
-        }
-        
-        @media (max-width: 900px) {
-            .premium-banner {
-                flex-direction: column;
-                height: auto;
-            }
-            .premium-img-wrap, .premium-info {
-                width: 100%;
-                height: 180px;
-            }
-            .premium-info {
-                height: auto;
-                padding: 20px 12px;
-                align-items: center;
-                text-align: center;
-            }
-        }
-        
-        .premium-banner-swiper .swiper-slide {
-            border-radius: 0 !important;
+        .register-btn:hover {
+            background: #218838;
+            color: white;
         }
     </style>
 </head>
 <body>
 <div class="work-board-container" layout:fragment="content">
-    <!-- 상단 검색/필터 바 -->
-    <!-- <div class="search-filter-bar">
-        <input th:value="${kw}" type="text" class="search-input" placeholder="현장명, 업종, 주소 등 검색">
-        <button class="search-btn">검색</button>
-    </div> -->
-
-    <!-- 프리미엄(슬라이드형) 배너 -->
-    <div class="board-title">프리미엄</div>
-    <div class="premium-banner-swiper-wrap">
-      <div class="premium-banner-swiper swiper">
-        <div class="swiper-wrapper">
-          <a class="premium-banner swiper-slide" th:each="offer : ${premiumOffers}" th:href="@{/offer/detail/{id}(id=${offer.id})}">
-            <div class="premium-img-wrap">
-              <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/premium_default.jpg'}" th:alt="${offer.workPlace}" class="premium-img">
-            </div>
-            <div class="premium-info">
-              <div class="premium-category" th:text="'[' + ${offer.type} + ']'">[업종]</div>
-              <div class="premium-title" th:text="${offer.workPlace}">현장명</div>
-              <div class="premium-pay" th:text="'급료: ' + ${offer.pay}">급료</div>
-              <div class="premium-benefit" th:text="'복리후생: ' + ${offer.afterWork}">복리후생</div>
-            </div>
-          </a>
-          <a class="premium-banner swiper-slide" th:if="${#lists.isEmpty(premiumOffers)}" href="#">
-            <div class="premium-img-wrap">
-              <img src="/images/premium1.jpg" alt="프리미엄 현장1" class="premium-img">
-            </div>
-            <div class="premium-info">
-              <div class="premium-category">[아파트]</div>
-              <div class="premium-title">파격적 조건변경! 계약금 0원!</div>
-              <div class="premium-pay">급료: 2,000만원</div>
-              <div class="premium-benefit">복리후생: 숙소제공, 식사제공, 인센티브</div>
-            </div>
-          </a>
-        </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
-      </div>
-    </div>
-
-    <!-- VIP 카드형(10개) -->
-    <div class="board-title">VIP</div>
-    <div class="vip-card-list">
-        <div class="vip-card" th:each="offer : ${vipOffers}">
-            <a th:href="@{/offer/detail/{id}(id=${offer.id})}" style="text-decoration: none; color: inherit;">
-                <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/vip_default.jpg'}" alt="VIP 현장" class="vip-img">
-                <div class="vip-info">
-                    <div class="vip-category" th:text="${offer.type}"></div>
-                    <div class="vip-title" th:text="${offer.workPlace}"></div>
-                    <div class="vip-pay" th:text="'급료: ' + ${offer.pay}"></div>
-                    <div class="vip-benefit" th:text="'복리후생: ' + ${offer.afterWork}"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <!-- 익스퍼트 카드형(무제한) -->
-    <div class="board-title">익스퍼트</div>
-    <div class="expert-card-list">
-        <div class="expert-card" th:each="offer : ${expertOffers}">
-            <a th:href="@{/offer/detail/{id}(id=${offer.id})}" style="text-decoration: none; color: inherit;">
-                <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/expert_default.jpg'}" alt="익스퍼트 현장" class="expert-img">
-                <div class="expert-info">
-                    <div class="expert-category" th:text="${offer.type}"></div>
-                    <div class="expert-title" th:text="${offer.workPlace}"></div>
-                    <div class="expert-pay" th:text="'급료: ' + ${offer.pay}"></div>
-                    <div class="expert-benefit" th:text="'복리후생: ' + ${offer.afterWork}"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <div class="work-board-header">
-        <div class="board-title">무료 구인</div>
-        <a class="btn board-button" th:href="@{/work/create}">+ 구인 등록</a>
-    </div>
-    <div class="work-board-table-wrapper">
-        <table class="work-board-table">
-            <thead>
-                <tr>
-                    <th>현장명</th>
-                    <th>업무내용</th>
-                    <th>응시요건</th>
-                    <th>소재지</th>
-                    <th>작성자</th>
-                    <th>등록일</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="working : ${paging.content}">
-                    <td th:text="${#strings.abbreviate(working.siteName, 10)}"></td>
-                    <td>
-                        <a th:href="@{|/work/detail/${working.id}|}"
-                           th:text="${#strings.abbreviate(working.jobContent, 10)}"
-                           class="board-link"></a>
-                    </td>
-                    <td th:text="${#strings.abbreviate(working.jobWork, 10)}"></td>
-                    <td th:text="${#strings.abbreviate(working.location, 10)}"></td>
-                    <td th:text="${working.author != null ? working.author.username : '알 수 없음'}"></td>
-                    <td th:text="${#temporals.format(working.createDate, 'yyyy-MM-dd')}"></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="pagination">
-        <a th:if="${paging.hasPrevious()}"
-           th:href="@{/work/list(page=${paging.number-1}, kw=${kw})}"
-           class="pagination-button">
-            <span>이전</span>
-        </a>
-        <span th:text="${paging.number + 1}"></span>
-        <a th:if="${paging.hasNext()}"
-           th:href="@{/work/list(page=${paging.number+1}, kw=${kw})}"
-           class="pagination-button">
-            <span>다음</span>
-        </a>
+    <!-- 에러 메시지 표시 -->
+    <div th:if="${error}" class="error-message" style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+        <strong>오류:</strong> <span th:text="${error}"></span>
     </div>
     
-    <form th:action="@{/work/list}" method="get" id="searchForm">
-        <input type="hidden" name="page" value="0">
-        <div class="input-group">
-            <input type="text" name="kw" class="form-control" th:value="${kw}">
-            <button class="btn btn-outline-secondary" type="submit">찾기</button>
+    <!-- 상단 검색/필터 바 -->
+    <div class="search-filter-bar">
+        <form th:action="@{/work/list}" method="get" class="search-form">
+            <input type="text" class="search-input" placeholder="구인글을 검색해보세요..." name="kw" th:value="${param.kw}">
+            <select class="category-select" name="gender" th:value="${param.gender}">
+                <option value="">성별</option>
+                <option value="남자">남자</option>
+                <option value="여자">여자</option>
+                <option value="무관">무관</option>
+            </select>
+            <select class="category-select" name="experience" th:value="${param.experience}">
+                <option value="">경력</option>
+                <option value="신입">신입</option>
+                <option value="1-3년">1-3년</option>
+                <option value="3-5년">3-5년</option>
+                <option value="5년이상">5년이상</option>
+            </select>
+            <select class="category-select" name="salary" th:value="${param.salary}">
+                <option value="">급여</option>
+                <option value="협의">협의</option>
+                <option value="월급">월급</option>
+                <option value="일급">일급</option>
+                <option value="건별">건별</option>
+            </select>
+            <button type="submit" class="search-btn">검색</button>
+        </form>
+    </div>
+    
+    <!-- 등록 버튼 -->
+    <a href="/work/create" class="register-btn">구인 등록</a>
+    
+    <!-- 프리미엄 게시글 -->
+    <div th:if="${premiumOffers != null and !premiumOffers.empty}">
+        <h2 class="board-title">프리미엄 구인</h2>
+        <div class="premium-card-list">
+            <div th:each="offer : ${premiumOffers}" class="premium-card">
+                <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/default-offer.png'}" alt="프리미엄 구인" class="premium-img">
+                <div class="premium-info">
+                    <span class="premium-category">프리미엄</span>
+                    <h3 class="premium-title" th:text="${offer.title}">제목</h3>
+                    <p class="premium-pay" th:text="${offer.pay}">급여</p>
+                    <p class="premium-benefit" th:text="${offer.afterWork}">복리후생</p>
+                </div>
+            </div>
         </div>
-    </form>
+    </div>
+    
+    <!-- VIP 게시글 -->
+    <div th:if="${vipOffers != null and !vipOffers.empty}">
+        <h2 class="board-title">VIP 구인</h2>
+        <div class="vip-card-list">
+            <div th:each="offer : ${vipOffers}" class="vip-card">
+                <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/default-offer.png'}" alt="VIP 구인" class="vip-img">
+                <div class="vip-info">
+                    <span class="vip-category">VIP</span>
+                    <h3 class="vip-title" th:text="${offer.title}">제목</h3>
+                    <p class="vip-pay" th:text="${offer.pay}">급여</p>
+                    <p class="vip-benefit" th:text="${offer.afterWork}">복리후생</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 익스퍼트 게시글 -->
+    <div th:if="${expertOffers != null and !expertOffers.empty}">
+        <h2 class="board-title">익스퍼트 구인</h2>
+        <div class="expert-card-list">
+            <div th:each="offer : ${expertOffers}" class="expert-card">
+                <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/default-offer.png'}" alt="익스퍼트 구인" class="expert-img">
+                <div class="expert-info">
+                    <span class="expert-category">익스퍼트</span>
+                    <h3 class="expert-title" th:text="${offer.title}">제목</h3>
+                    <p class="expert-pay" th:text="${offer.pay}">급여</p>
+                    <p class="expert-benefit" th:text="${offer.afterWork}">복리후생</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 일반 구인 게시글 -->
+    <div th:if="${paging != null and !paging.empty}">
+        <h2 class="board-title">일반 구인</h2>
+        <div class="work-list">
+            <div th:each="working : ${paging}" class="work-item">
+                <a th:href="@{/work/detail/{id}(id=${working.id})}" style="text-decoration: none; color: inherit;">
+                    <div class="work-title" th:text="${working.siteName}">현장명</div>
+                    <div class="work-info">
+                        <span th:text="${working.category}">분류</span>
+                        <span th:text="${working.jobContent}">업무</span>
+                        <span th:text="${working.location}">소재지</span>
+                    </div>
+                    <div class="work-date" th:text="${#temporals.format(working.createDate, 'yyyy-MM-dd')}">등록일</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 페이지네이션 -->
+    <div class="pagination" th:if="${paging != null and paging.totalPages > 1}">
+        <a th:if="${paging.hasPrevious()}" th:href="@{/work/list(page=${paging.number - 1}, kw=${param.kw})}" class="page-link">이전</a>
+        <a th:each="pageNum : ${#numbers.sequence(0, paging.totalPages - 1)}" 
+           th:href="@{/work/list(page=${pageNum}, kw=${param.kw})}" 
+           th:text="${pageNum + 1}" 
+           th:class="${pageNum == paging.number ? 'page-link active' : 'page-link'}">1</a>
+        <a th:if="${paging.hasNext()}" th:href="@{/work/list(page=${paging.number + 1}, kw=${param.kw})}" class="page-link">다음</a>
+    </div>
 </div>
-<th:block layout:fragment="script">
-<!-- Swiper JS CDN 및 초기화 -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script th:inline="javascript">
-window.onload = function() {
-  var swiperEl = document.querySelector('.premium-banner-swiper');
-  var slideCount = swiperEl ? swiperEl.querySelectorAll('.swiper-slide').length : 0;
-  var enableLoop = slideCount > 1;
-  var enableAutoplay = slideCount > 1;
-  new Swiper('.premium-banner-swiper', {
-    slidesPerView: 1,
-    spaceBetween: 0,
-    loop: enableLoop,
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
-    autoplay: enableAutoplay ? {
-      delay: 5000,
-      disableOnInteraction: false,
-      pauseOnMouseEnter: true
-    } : false,
-    watchSlidesProgress: true,
-    observer: true,
-    observeParents: true
-  });
-};
-</script>
-</th:block>
 </body>
 </html>

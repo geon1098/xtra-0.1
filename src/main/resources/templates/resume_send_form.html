@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>이력서 전송</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .resume-form-container {
+            width: 800px;
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            padding: 40px 48px 32px 48px;
+        }
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .working-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .working-info h3 {
+            color: #764ba2;
+            margin-bottom: 12px;
+        }
+        .info-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 80px;
+        }
+        .info-value {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #764ba2;
+            margin-bottom: 8px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .file-input {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .file-input input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .file-input-label {
+            display: block;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            text-align: center;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-input-label:hover {
+            background: #667eea;
+            color: white;
+        }
+        .file-info {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .btn {
+            min-width: 120px;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 12px 24px;
+            margin-right: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #667eea;
+        }
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+<div class="resume-form-container" layout:fragment="content">
+    <div class="form-title">이력서 전송</div>
+    
+    <!-- 알림 메시지 -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    
+    <!-- 구인 정보 -->
+    <div class="working-info">
+        <h3 th:text="${working != null ? '구인 정보' : '오퍼 정보'}">구인 정보</h3>
+        
+        <!-- Working 정보 -->
+        <div th:if="${working != null}">
+            <div class="info-row">
+                <span class="info-label">현장명:</span>
+                <span class="info-value" th:text="${working.siteName}"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">업무:</span>
+                <span class="info-value" th:text="${working.jobContent}"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">소재지:</span>
+                <span class="info-value" th:text="${working.location}"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">담당자:</span>
+                <span class="info-value" th:text="${working.cPerson}"></span>
+            </div>
+        </div>
+        
+        <!-- Offer 정보 -->
+        <div th:if="${offer != null}">
+            <div class="info-row">
+                <span class="info-label">현장명:</span>
+                <span class="info-value" th:text="${offer.workPlace}"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">업종:</span>
+                <span class="info-value" th:text="${offer.type}"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">사업지:</span>
+                <span class="info-value" th:text="${offer.localInfo}"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">담당자:</span>
+                <span class="info-value" th:text="${offer.perName}"></span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 이미 이력서를 보낸 경우 -->
+    <div th:if="${alreadySent}" class="alert alert-warning">
+        이미 이력서를 전송했습니다. 중복 전송은 불가능합니다.
+    </div>
+    
+    <!-- 이력서 전송 폼 -->
+    <form th:if="${!alreadySent}" th:action="${working != null ? '/resume/send/' + working.id : '/resume/send/offer/' + offer.id}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="form-label">이력서 파일 *</label>
+            <div class="file-input">
+                <input type="file" name="file" id="resumeFile" accept=".pdf,.hwp,.doc,.docx" required>
+                <label for="resumeFile" class="file-input-label">
+                    <i class="fas fa-upload"></i> 파일을 선택하세요
+                </label>
+            </div>
+            <div class="file-info">
+                지원 형식: PDF, HWP, DOC, DOCX (최대 10MB)
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">메시지 (선택사항)</label>
+            <textarea name="message" class="form-control" rows="4" 
+                      placeholder="구인자에게 전달할 메시지를 입력하세요..."></textarea>
+        </div>
+        
+        <div style="text-align: center; margin-top: 32px;">
+            <button type="submit" class="btn btn-primary">이력서 전송</button>
+            <a th:href="${working != null ? '/work/detail/' + working.id : '/offer/detail/' + offer.id}" class="btn btn-secondary">취소</a>
+        </div>
+    </form>
+    
+    <!-- 이미 전송한 경우 버튼 -->
+    <div th:if="${alreadySent}" style="text-align: center; margin-top: 32px;">
+        <a th:href="${working != null ? '/work/detail/' + working.id : '/offer/detail/' + offer.id}" class="btn btn-primary">목록으로 돌아가기</a>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script>
+        // 파일 선택 시 라벨 업데이트
+        document.getElementById('resumeFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const label = document.querySelector('.file-input-label');
+            
+            if (file) {
+                label.textContent = file.name;
+                label.style.background = '#667eea';
+                label.style.color = 'white';
+            } else {
+                label.innerHTML = '<i class="fas fa-upload"></i> 파일을 선택하세요';
+                label.style.background = '#f8f9fa';
+                label.style.color = '#667eea';
+            }
+        });
+        
+        // 폼 제출 전 파일 검증
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('resumeFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                e.preventDefault();
+                alert('이력서 파일을 선택해주세요.');
+                return;
+            }
+            
+            // 파일 크기 검증 (10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                e.preventDefault();
+                alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                return;
+            }
+            
+            // 파일 형식 검증
+            const allowedTypes = ['application/pdf', 'application/x-hwp', 'application/msword', 
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!allowedTypes.includes(file.type)) {
+                e.preventDefault();
+                alert('지원하지 않는 파일 형식입니다. (PDF, HWP, DOC, DOCX만 가능)');
+                return;
+            }
+        });
+    </script>
+</th:block>
+</body>
+</html> 

@@ -7,139 +7,94 @@
     <link rel="stylesheet" href="/style/style.css">
     <style>
         .job-detail-container {
-            max-width: 700px;
+            width: 1000px;
+            max-width: 1000px;
+            min-width: 1000px;
             margin: 40px auto;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            padding: 32px 24px 24px 24px;
-        }
-        .detail_info, .detail_info_intro, .detail_info_etc {
-            margin-bottom: 18px;
-        }
-        .detail_info table, .detail_info_intro table, .detail_info_etc table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-        }
-        .detail_info th, .detail_info td, .detail_info_intro th, .detail_info_intro td, .detail_info_etc th, .detail_info_etc td {
-            border: 1px solid #e3f0ff;
-            padding: 10px 8px;
-            text-align: left;
-        }
-        .detail_info th, .detail_info_intro th, .detail_info_etc th {
-            background: #f2f8ff;
-            color: #007bff;
-            font-weight: 600;
-            width: 120px;
-        }
-        .detail_info td, .detail_info_intro td, .detail_info_etc td {
-            color: #333;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            padding: 40px 48px 32px 48px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
         .board-title {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #007bff;
-            margin-bottom: 18px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 24px;
+        }
+        .info-row {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 12px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #764ba2;
+            min-width: 90px;
+        }
+        .info-value {
+            color: #333;
+        }
+        .info-block {
+            margin-bottom: 10px;
+        }
+        .intro-block, .etc-block {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 10px;
         }
         .btn {
             min-width: 100px;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 10px 24px;
+            margin-right: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+            border: none;
+        }
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #667eea;
+            border: none;
         }
     </style>
 </head>
 <body>
 <div class="job-detail-container" layout:fragment="content">
     <div class="board-title">구직 상세</div>
-    <!-- 기본 정보 -->
-    <div class="detail_info">
-        <table>
-            <tbody>
-                <tr>
-                    <th>이름</th>
-                    <td th:text="${jobing.name}"></td>
-                    <th>성별</th>
-                    <td th:text="${jobing.gender}"></td>
-                </tr>
-                <tr>
-                    <th>나이</th>
-                    <td th:text="${jobing.age}"></td>
-                    <th>연락처</th>
-                    <td th:text="${jobing.phone}"></td>
-                </tr>
-                <tr>
-                    <th>E-mail</th>
-                    <td colspan="3" th:text="${jobing.email}"></td>
-                </tr>
-                <tr>
-                    <th>주소</th>
-                    <td colspan="3" th:text="${jobing.address}"></td>
-                </tr>
-                <tr>
-                    <th>등록일</th>
-                    <td colspan="3" th:text="${#temporals.format(jobing.createDate, 'yyyy-MM-dd HH:mm')}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="info-block">
+        <div class="info-row"><span class="info-label">이름</span><span class="info-value" th:text="${jobing.name}"></span></div>
+        <div class="info-row"><span class="info-label">성별</span><span class="info-value" th:text="${jobing.gender}"></span></div>
+        <div class="info-row"><span class="info-label">나이</span><span class="info-value" th:text="${jobing.age}"></span></div>
+        <div class="info-row"><span class="info-label">연락처</span><span class="info-value" th:text="${jobing.phone}"></span></div>
+        <div class="info-row"><span class="info-label">E-mail</span><span class="info-value" th:text="${jobing.email}"></span></div>
+        <div class="info-row"><span class="info-label">주소</span><span class="info-value" th:text="${jobing.address}"></span></div>
+        <div class="info-row"><span class="info-label">등록일</span><span class="info-value" th:text="${#temporals.format(jobing.createDate, 'yyyy-MM-dd HH:mm')}"></span></div>
     </div>
-    <!-- 희망 근무 조건 -->
-    <div class="detail_info">
-        <table>
-            <tbody>
-                <tr>
-                    <th>희망 업무</th>
-                    <td th:text="${jobing.requestWork}"></td>
-                    <th>희망 지역</th>
-                    <td th:text="${jobing.hopArea}"></td>
-                </tr>
-                <tr>
-                    <th>시작 가능일</th>
-                    <td colspan="3" th:text="${jobing.startDate}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="info-block">
+        <div class="info-row"><span class="info-label">희망 업무</span><span class="info-value" th:text="${jobing.requestWork}"></span></div>
+        <div class="info-row"><span class="info-label">희망 지역</span><span class="info-value" th:text="${jobing.hopArea}"></span></div>
+        <div class="info-row"><span class="info-label">시작 가능일</span><span class="info-value" th:text="${jobing.startDate}"></span></div>
     </div>
-    <!-- 경력 사항 -->
-    <div class="detail_info">
-        <table>
-            <tbody>
-                <tr>
-                    <th>경력</th>
-                    <td th:text="${jobing.career}"></td>
-                    <th>자격증</th>
-                    <td th:text="${jobing.license}"></td>
-                </tr>
-                <tr>
-                    <th>인맥</th>
-                    <td colspan="3" th:text="${jobing.networking}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="info-block">
+        <div class="info-row"><span class="info-label">경력</span><span class="info-value" th:text="${jobing.career}"></span></div>
+        <div class="info-row"><span class="info-label">자격증</span><span class="info-value" th:text="${jobing.license}"></span></div>
+        <div class="info-row"><span class="info-label">인맥</span><span class="info-value" th:text="${jobing.networking}"></span></div>
     </div>
-    <!-- 자기소개 -->
-    <div class="detail_info_intro">
-        <table>
-            <tbody>
-                <tr>
-                    <th>자기소개</th>
-                </tr>
-                <tr>
-                    <td class="intro" th:text="${jobing.introduction}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="intro-block">
+        <div class="info-label">자기소개</div>
+        <div class="info-value" th:text="${jobing.introduction}"></div>
     </div>
-    <!-- 기타 -->
-    <div class="detail_info_etc">
-        <table>
-            <tbody>
-                <tr>
-                    <th>기타</th>
-                </tr>
-                <tr>
-                    <td class="etc" th:text="${jobing.etc}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="etc-block">
+        <div class="info-label">기타</div>
+        <div class="info-value" th:text="${jobing.etc}"></div>
     </div>
     <div style="margin-top:24px;">
         <a th:href="@{/job/list}" class="btn btn-primary">목록으로</a>

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>구인 등록/수정</title>
     <link rel="stylesheet" href="/style/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .work-form-container {
             max-width: 800px;
@@ -100,6 +101,81 @@
         .required {
             color: #dc3545;
         }
+        
+        /* 이미지 업로드 스타일 */
+        .image-upload-container {
+            margin-top: 10px;
+        }
+        
+        .image-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .image-upload-area:hover {
+            border-color: #007bff;
+            background: #f0f8ff;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        .upload-icon span {
+            font-size: 24px;
+            color: #007bff;
+            font-weight: bold;
+        }
+        
+        .upload-info {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+        
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .preview-item {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -121,7 +197,7 @@
         <a href="/offer/create" class="btn btn-primary" style="background: #007bff; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none;">+ 오퍼 등록</a>
     </div>
     
-    <form th:action="@{${action}}" th:object="${workingForm}" method="post">
+    <form th:action="@{${action}}" th:object="${workingForm}" method="post" enctype="multipart/form-data">
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label">현장명 <span class="required">*</span></label>
@@ -160,29 +236,22 @@
         
         <div class="form-row">
             <div class="form-group">
-                <label class="form-label">고용형태</label>
-                <input type="text" class="form-input" th:field="*{jobType}">
+                <label class="form-label">업종</label>
+                <select class="form-select" th:field="*{industry}">
+                    <option value="">업종 선택</option>
+                    <option value="아파트">아파트</option>
+                    <option value="오피스텔">오피스텔</option>
+                    <option value="주택">주택</option>
+                    <option value="호텔">호텔</option>
+                    <option value="상가/쇼핑몰">상가/쇼핑몰</option>
+                    <option value="오피스">오피스</option>
+                    <option value="토지">토지</option>
+                    <option value="빌라">빌라</option>
+                    <option value="펜션">펜션</option>
+                    <option value="기타">기타</option>
+                </select>
             </div>
             
-            <div class="form-group">
-                <label class="form-label">응시요건</label>
-                <input type="text" class="form-input" th:field="*{jobWork}">
-            </div>
-        </div>
-        
-        <div class="form-row">
-            <div class="form-group">
-                <label class="form-label">복리후생 <span class="required">*</span></label>
-                <input type="text" class="form-input" th:field="*{benefits}" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">소재지</label>
-                <input type="text" class="form-input" th:field="*{location}">
-            </div>
-        </div>
-        
-        <div class="form-row">
             <div class="form-group">
                 <label class="form-label">성별</label>
                 <select class="form-select" th:field="*{gender}">
@@ -191,6 +260,90 @@
                     <option value="여성">여성</option>
                     <option value="무관">무관</option>
                 </select>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">경력</label>
+                <select class="form-select" th:field="*{experience}">
+                    <option value="">경력 선택</option>
+                    <option value="무관">무관</option>
+                    <option value="1개월 이상">1개월 이상</option>
+                    <option value="3개월 이상">3개월 이상</option>
+                    <option value="6개월 이상">6개월 이상</option>
+                    <option value="1년 이상">1년 이상</option>
+                    <option value="2년 이상">2년 이상</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">직종</label>
+                <select class="form-select" th:field="*{jobType}">
+                    <option value="">직종 선택</option>
+                    <option value="업무대행">업무대행</option>
+                    <option value="건설사">건설사</option>
+                    <option value="분양">분양</option>
+                    <option value="정규직">정규직</option>
+                    <option value="데스크">데스크</option>
+                    <option value="기타">기타</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">나이</label>
+                <select class="form-select" th:field="*{age}">
+                    <option value="">나이 선택</option>
+                    <option value="무관">무관</option>
+                    <option value="40세 미만">40세 미만</option>
+                    <option value="50세 미만">50세 미만</option>
+                    <option value="60세 미만">60세 미만</option>
+                    <option value="직접입력">직접입력</option>
+                </select>
+                <input type="text" class="form-input" id="ageInput" name="ageInput" placeholder="나이를 직접 입력하세요" style="margin-top: 8px; display: none;">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">인원</label>
+                <select class="form-select" th:field="*{workNumber}">
+                    <option value="">인원 선택</option>
+                    <option value="0명">0명</option>
+                    <option value="00명">00명</option>
+                    <option value="1명">1명</option>
+                    <option value="2명">2명</option>
+                    <option value="3명">3명</option>
+                    <option value="4명">4명</option>
+                    <option value="5명">5명</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">급여</label>
+                <select class="form-select" th:field="*{salary}">
+                    <option value="">급여 선택</option>
+                    <option value="계약수수료">계약수수료</option>
+                    <option value="기본급">기본급</option>
+                    <option value="기본급 + 인센">기본급 + 인센</option>
+                    <option value="시급">시급</option>
+                    <option value="일급">일급</option>
+                    <option value="기타">기타</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">복리후생 <span class="required">*</span></label>
+                <input type="text" class="form-input" th:field="*{benefits}" required>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">소재지</label>
+                <input type="text" class="form-input" th:field="*{location}">
             </div>
             
             <div class="form-group">
@@ -206,8 +359,8 @@
             </div>
             
             <div class="form-group">
-                <label class="form-label">모집 인원</label>
-                <input type="text" class="form-input" th:field="*{workNumber}">
+                <label class="form-label">응시요건</label>
+                <input type="text" class="form-input" th:field="*{jobWork}">
             </div>
         </div>
         
@@ -216,12 +369,27 @@
             <textarea class="form-textarea" th:field="*{jobDetails}" placeholder="근무 조건, 요구 사항 등을 구체적으로 작성해 주세요."></textarea>
         </div>
         
-        <div class="form-row">
-            <div class="form-group">
-                <label for="address" class="form-label">지도에 표시할 주소</label>
-                <input type="text" id="address" name="mapLocation.address" class="form-control" placeholder="주소 검색 버튼을 클릭하세요" readonly>
-                <button type="button" class="btn btn-secondary mt-2" onclick="execDaumPostcode()">주소 검색</button>
+        <!-- 이미지 업로드 섹션 -->
+        <div class="form-group">
+            <label class="form-label">현장 이미지 첨부</label>
+            <div class="image-upload-container">
+                <div class="image-upload-area" id="imageUploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-image"></i>
+                        <span>+</span>
+                    </div>
+                    <p>이미지 첨부</p>
+                    <p class="upload-info">50MB 이하 jpg, png, gif 파일 5개까지 업로드 가능합니다.</p>
+                </div>
+                <input type="file" id="imageInput" name="images" multiple accept="image/*" style="display: none;">
+                <div id="imagePreview" class="image-preview"></div>
             </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="address" class="form-label">지도에 표시할 주소</label>
+            <input type="text" id="address" name="mapLocation.address" class="form-control" placeholder="주소 검색 버튼을 클릭하세요" readonly>
+            <button type="button" class="btn btn-secondary mt-2" onclick="execDaumPostcode()">주소 검색</button>
         </div>
         
         <div class="form-actions">
@@ -248,6 +416,90 @@
             }
         }).open();
     }
+    
+    // 나이 직접입력 기능
+    document.addEventListener('DOMContentLoaded', function() {
+        const ageSelect = document.querySelector('select[name="age"]');
+        const ageInput = document.getElementById('ageInput');
+        
+        if (ageSelect) {
+            ageSelect.addEventListener('change', function() {
+                if (this.value === '직접입력') {
+                    ageInput.style.display = 'block';
+                    ageInput.focus();
+                } else {
+                    ageInput.style.display = 'none';
+                    ageInput.value = '';
+                }
+            });
+        }
+        
+        // 이미지 업로드 기능
+        const imageUploadArea = document.getElementById('imageUploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        let uploadedFiles = [];
+        
+        if (imageUploadArea && imageInput) {
+            imageUploadArea.addEventListener('click', function() {
+                imageInput.click();
+            });
+            
+            imageInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                
+                // 파일 개수 제한 (5개)
+                if (uploadedFiles.length + files.length > 5) {
+                    alert('최대 5개의 이미지만 업로드할 수 있습니다.');
+                    return;
+                }
+                
+                files.forEach(file => {
+                    // 파일 크기 제한 (50MB)
+                    if (file.size > 50 * 1024 * 1024) {
+                        alert('파일 크기는 50MB 이하여야 합니다.');
+                        return;
+                    }
+                    
+                    // 파일 타입 검사
+                    if (!file.type.startsWith('image/')) {
+                        alert('이미지 파일만 업로드할 수 있습니다.');
+                        return;
+                    }
+                    
+                    uploadedFiles.push(file);
+                    displayImagePreview(file);
+                });
+            });
+        }
+        
+        function displayImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'preview-item';
+                
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-image';
+                removeBtn.innerHTML = '×';
+                removeBtn.onclick = function() {
+                    const index = uploadedFiles.indexOf(file);
+                    if (index > -1) {
+                        uploadedFiles.splice(index, 1);
+                    }
+                    previewItem.remove();
+                };
+                
+                previewItem.appendChild(img);
+                previewItem.appendChild(removeBtn);
+                imagePreview.appendChild(previewItem);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
     </script>
 </th:block>
 

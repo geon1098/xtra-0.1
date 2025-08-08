@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # Spring Boot 애플리케이션
+  spring-app:
+    build: .
+    container_name: xtra-spring-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - KAKAO_JS_KEY=${KAKAO_JS_KEY}
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - xtra-network
+    depends_on:
+      - postgres
+    ports:
+      - "8083:8083"
+
+  # PostgreSQL 데이터베이스
+  postgres:
+    image: postgres:15
+    container_name: xtra-postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-xtra}
+      - POSTGRES_USER=${POSTGRES_USER:-xtra_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-xtra_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - xtra-network
+    ports:
+      - "5432:5432"
+
+  # Nginx 웹 서버
+  nginx:
+    image: nginx:alpine
+    container_name: xtra-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./src/main/resources/static:/var/www/static:ro
+      - ./src/main/resources/static/images:/var/www/images:ro
+      - ./uploads:/var/www/uploads:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - xtra-network
+    depends_on:
+      - spring-app
+
+volumes:
+  postgres_data:
+  nginx_logs:
+
+networks:
+  xtra-network:
+    driver: bridge 

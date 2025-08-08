@@ -2,6 +2,7 @@ package com.mysite.xtra.offer;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -26,4 +27,9 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     // List<Offer> findPendingOffers();
 
     List<Offer> findByAuthorOrderByCreateDateDesc(SiteUser author);
+    
+    // 사용자별 게시글 삭제
+    @Modifying
+    @Query("DELETE FROM Offer o WHERE o.author = :author")
+    void deleteByAuthor(@Param("author") SiteUser author);
 } 

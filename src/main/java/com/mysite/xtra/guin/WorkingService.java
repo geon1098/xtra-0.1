@@ -55,6 +55,9 @@ public class WorkingService {
         working.setGender(workingForm.getGender());
         working.setAge(workingForm.getAge());
         working.setAddress(workingForm.getAddress());
+        working.setIndustry(workingForm.getIndustry());
+        working.setExperience(workingForm.getExperience());
+        working.setSalary(workingForm.getSalary());
         
         if (workingForm.getMapLocation() != null && workingForm.getMapLocation().getAddress() != null && !workingForm.getMapLocation().getAddress().isEmpty()) {
             MapLocation mapLocation = new MapLocation();
@@ -70,12 +73,30 @@ public class WorkingService {
         return workingRepository.save(working);
     }
 	
-	public Page<Working> getPageList(int page, String kw) {
-		List<Sort.Order> sorts = new ArrayList<>();
-		sorts.add(Sort.Order.desc("createDate"));
-		Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-		return workingRepository.findAllByKeyword(kw, pageable);
+    public Page<Working> getPageList(int page, String kw) {
+		try {
+			List<Sort.Order> sorts = new ArrayList<>();
+			sorts.add(Sort.Order.desc("createDate"));
+			Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+			return workingRepository.findAllByKeyword(kw, pageable);
+		} catch (Exception e) {
+			System.err.println("구인글 목록 조회 중 오류 발생: " + e.getMessage());
+			// 빈 페이지 반환
+			return Page.empty(PageRequest.of(page, 10));
+		}
 	}
+
+    public Page<Working> getPageListWithFilters(int page, String kw, String gender, String experience, String salary) {
+        try {
+            List<Sort.Order> sorts = new ArrayList<>();
+            sorts.add(Sort.Order.desc("createDate"));
+            Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+            return workingRepository.findAllByFilters(kw, gender, experience, salary, pageable);
+        } catch (Exception e) {
+            System.err.println("구인글(필터) 목록 조회 중 오류 발생: " + e.getMessage());
+            return Page.empty(PageRequest.of(page, 10));
+        }
+    }
 
     @Transactional
     public void updateWorking(Working working, WorkingForm form) {
@@ -93,6 +114,9 @@ public class WorkingService {
         working.setGender(form.getGender());
         working.setAge(form.getAge());
         working.setAddress(form.getAddress());
+        working.setIndustry(form.getIndustry());
+        working.setExperience(form.getExperience());
+        working.setSalary(form.getSalary());
         
         if (form.getMapLocation() != null && form.getMapLocation().getAddress() != null && !form.getMapLocation().getAddress().isEmpty()) {
             MapLocation mapLocation = working.getMapLocation();
@@ -131,6 +155,9 @@ public class WorkingService {
         working.setGender(form.getGender());
         working.setAge(form.getAge());
         working.setAddress(form.getAddress());
+        working.setIndustry(form.getIndustry());
+        working.setExperience(form.getExperience());
+        working.setSalary(form.getSalary());
         
         if (form.getMapLocation() != null && form.getMapLocation().getAddress() != null && !form.getMapLocation().getAddress().isEmpty()) {
             MapLocation mapLocation = working.getMapLocation();

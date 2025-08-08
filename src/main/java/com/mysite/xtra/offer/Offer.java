@@ -20,6 +20,10 @@ public class Offer {
     @Column(nullable = false)
     private OfferCategory category;
 
+    // 제목
+    @Column(length = 200, nullable = false)
+    private String title;
+
     // 작성자
     @ManyToOne(fetch = FetchType.LAZY)
     private SiteUser author;

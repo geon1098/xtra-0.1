@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>존재하지 않는 구인글</title>
+    <style>
+        body { background: #f8f9fa; font-family: 'Noto Sans KR', sans-serif; }
+        .error-container {
+            max-width: 480px;
+            margin: 120px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(102,126,234,0.10);
+            padding: 48px 32px 40px 32px;
+            text-align: center;
+        }
+        .error-title { font-size: 2.1rem; font-weight: 800; color: #667eea; margin-bottom: 18px; }
+        .error-message { font-size: 1.2rem; color: #444; margin-bottom: 32px; }
+        .btn-back {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 32px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: linear-gradient(45deg, #764ba2, #667eea); }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-title">존재하지 않는 구인글입니다</div>
+        <div class="error-message" th:text="${message}">해당 구인글을 찾을 수 없습니다.</div>
+        <a href="/work/list" class="btn-back">구인 목록으로 돌아가기</a>
+    </div>
+</body>
+</html> 

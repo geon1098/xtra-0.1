@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>이력서 상세</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .resume-detail-container {
+            width: 900px;
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            padding: 40px 48px 32px 48px;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .status-unread {
+            background: #dc3545;
+            color: white;
+        }
+        .status-read {
+            background: #28a745;
+            color: white;
+        }
+        .info-section {
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #764ba2;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .info-item {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 80px;
+        }
+        .info-value {
+            color: #333;
+        }
+        .file-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .file-icon {
+            color: #667eea;
+            font-size: 24px;
+        }
+        .file-details {
+            flex: 1;
+        }
+        .file-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .file-meta {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .message-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .message-content {
+            color: #333;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .btn {
+            min-width: 120px;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 12px 24px;
+            margin-right: 12px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #667eea;
+        }
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .working-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .working-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="resume-detail-container" layout:fragment="content">
+    <div class="page-title">
+        이력서 상세
+        <span th:if="${!resume.read}" class="status-badge status-unread">미읽</span>
+        <span th:if="${resume.read}" class="status-badge status-read">읽음</span>
+    </div>
+    
+    <!-- 기본 정보 -->
+    <div class="info-section">
+        <div class="section-title">기본 정보</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">발신자:</span>
+                <span class="info-value" th:text="${resume.sender.username}">발신자명</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">수신자:</span>
+                <span class="info-value" th:text="${resume.receiver.username}">수신자명</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">전송일시:</span>
+                <span class="info-value" th:text="${#temporals.format(resume.sendDate, 'yyyy-MM-dd HH:mm')}">전송일시</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">관련 게시글:</span>
+                <span class="info-value">
+                    <a th:if="${resume.working != null}"
+                       th:href="@{'/work/detail/' + ${resume.working.id}}"
+                       class="working-link"
+                       th:text="${resume.working.siteName}">구인 제목</a>
+                    <a th:if="${resume.working == null and resume.offer != null}"
+                       th:href="@{'/offer/detail/' + ${resume.offer.id}}"
+                       class="working-link"
+                       th:text="${resume.offer.title}">오퍼 제목</a>
+                    <span th:if="${resume.working == null and resume.offer == null}">연결된 게시글 없음</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 파일 정보 -->
+    <div class="file-section">
+        <div class="section-title">이력서 파일</div>
+        <div class="file-info">
+            <i class="fas fa-file-alt file-icon"></i>
+            <div class="file-details">
+                <div class="file-name" th:text="${resume.originalFileName}">파일명</div>
+                <div class="file-meta">
+                    <span th:text="${#numbers.formatDecimal(resume.fileSize / 1024, 1, 1) + ' KB'}">파일크기</span>
+                    <span th:if="${resume.contentType != null}"> • </span>
+                    <span th:text="${resume.contentType}">파일타입</span>
+                </div>
+            </div>
+        </div>
+        <a th:href="@{'/resume/download/' + ${resume.id}}" class="btn btn-primary">
+            <i class="fas fa-download"></i> 파일 다운로드
+        </a>
+    </div>
+    
+    <!-- 메시지 -->
+    <div th:if="${resume.message != null and !resume.message.isEmpty()}" class="message-section">
+        <div class="section-title">전달 메시지</div>
+        <div class="message-content" th:text="${resume.message}">메시지 내용</div>
+    </div>
+    
+    <!-- 버튼 영역 -->
+    <div style="text-align: center; margin-top: 32px;">
+        <!-- 발신자인 경우 삭제 버튼 표시 -->
+        <form th:if="${!isReceiver}" th:action="@{'/resume/delete/' + ${resume.id}}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 이력서를 삭제하시겠습니까?')">
+                <i class="fas fa-trash"></i> 삭제
+            </button>
+        </form>
+        
+        <!-- 수신자인 경우 관련 게시글로 이동 버튼 표시 -->
+        <a th:if="${isReceiver and resume.working != null}"
+           th:href="@{'/work/detail/' + ${resume.working.id}}" class="btn btn-primary">
+            <i class="fas fa-eye"></i> 구인 상세 보기
+        </a>
+        <a th:if="${isReceiver and resume.offer != null and resume.working == null}"
+           th:href="@{'/offer/detail/' + ${resume.offer.id}}" class="btn btn-primary">
+            <i class="fas fa-eye"></i> 오퍼 상세 보기
+        </a>
+        
+        <a th:if="${isReceiver and resume.working != null}" th:href="@{'/resume/working/' + ${resume.working.id}}" class="btn btn-secondary">
+            <i class="fas fa-list"></i> 해당 구인 이력서 목록
+        </a>
+        
+        <a th:if="${!isReceiver}" th:href="@{'/resume/sent'}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> 보낸 이력서 목록
+        </a>
+        
+        <a th:if="${isReceiver}" th:href="@{'/resume/received'}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> 받은 이력서 목록
+        </a>
+    </div>
+</div>
+</body>
+</html> 

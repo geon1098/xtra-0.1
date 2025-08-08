@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>메인</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        body { background: #f6f8fa; }
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* 구인 검색창 */
+        .search-section {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(44,90,160,0.10);
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .search-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c5aa0;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .search-form {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 16px rgba(44,90,160,0.15);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 18px 24px;
+            font-size: 1.1rem;
+            outline: none;
+            background: #fff;
+        }
+        .search-btn {
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3f6b 100%);
+            color: #fff;
+            border: none;
+            padding: 18px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .search-btn:hover {
+            background: linear-gradient(135deg, #1e3f6b 0%, #2c5aa0 100%);
+            transform: translateY(-2px);
+        }
+        
+        /* 메인 콘텐츠 레이아웃 */
+        .content-layout {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .side-right {
+            width: 300px;
+            flex-shrink: 0;
+        }
+        
+        /* 카드형 오퍼 섹션 */
+        .offer-section {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(44,90,160,0.10);
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c5aa0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: #f39c12;
+            border-radius: 2px;
+        }
+        
+        /* 카드 그리드 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .offer-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(44,90,160,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .offer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 32px rgba(44,90,160,0.15);
+            border-color: #f39c12;
+        }
+        .offer-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #eee;
+        }
+        .offer-info {
+            padding: 20px;
+        }
+        .offer-category {
+            display: inline-block;
+            background: #f39c12;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .offer-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .offer-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .offer-detail {
+            font-size: 0.95rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .offer-detail strong {
+            color: #2c5aa0;
+            font-weight: 600;
+        }
+        
+        /* 게시판형 무료 구인 */
+        .free-job-section {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(44,90,160,0.10);
+            padding: 24px;
+        }
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .board-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c5aa0;
+        }
+        .create-btn {
+            background: linear-gradient(135deg, #2c5aa0 0%, #f39c12 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(44,90,160,0.2);
+        }
+        .job-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .job-table th {
+            background: #f8f9fa;
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c5aa0;
+            border-bottom: 2px solid #e3e3e3;
+        }
+        .job-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #e3e3e3;
+            vertical-align: middle;
+        }
+        .job-table tr:hover {
+            background: #f8f9fa;
+        }
+        .job-title {
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+        }
+        .job-title:hover {
+            color: #2c5aa0;
+        }
+        .job-location {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .job-author {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        .job-date {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+        
+        /* 오른쪽 광고 배너 */
+        .ad-banner-section {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(44,90,160,0.10);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .ad-banner-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c5aa0;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .ad-banner-swiper {
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .ad-banner-slide {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .ad-banner-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: #eee;
+        }
+        .ad-banner-info {
+            padding: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .ad-banner-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .ad-banner-desc {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .content-layout {
+                flex-direction: column;
+            }
+            .side-right {
+                width: 100%;
+            }
+            .card-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+                border-radius: 16px;
+            }
+            .search-input, .search-btn {
+                border-radius: 0;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            .job-table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="main-container" layout:fragment="content">
+    <!-- 구인 검색창 -->
+    <section class="search-section">
+        <h1 class="search-title">구인 검색창</h1>
+        <form th:action="@{/}" method="get" class="search-form">
+            <input type="text" name="kw" class="search-input" th:value="${kw}" placeholder="구인글을 검색해보세요...">
+            <button type="submit" class="search-btn">검색하기</button>
+        </form>
+    </section>
+    
+    <div class="content-layout">
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 프리미엄 섹션 -->
+            <section class="offer-section">
+                <h2 class="section-title">프리미엄</h2>
+                <div class="card-grid">
+                    <div class="offer-card" th:each="offer : ${premiumOffers}">
+                        <a th:href="@{|/offer/detail/${offer.id}|}" style="text-decoration: none; color: inherit;">
+                            <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/premium_default.jpg'}" 
+                                 th:alt="${offer.workPlace}" class="offer-img">
+                            <div class="offer-info">
+                                <div class="offer-category" th:text="${offer.type}">프리미엄</div>
+                                <div class="offer-title" th:text="${offer.workPlace}">현장명</div>
+                                <div class="offer-details">
+                                    <div class="offer-detail">
+                                        <strong>급료:</strong> <span th:text="${offer.pay}">급료</span>
+                                    </div>
+                                    <div class="offer-detail">
+                                        <strong>복리후생:</strong> <span th:text="${offer.afterWork}">복리후생</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- VIP 섹션 -->
+            <section class="offer-section">
+                <h2 class="section-title">VIP</h2>
+                <div class="card-grid">
+                    <div class="offer-card" th:each="offer : ${vipOffers}">
+                        <a th:href="@{|/offer/detail/${offer.id}|}" style="text-decoration: none; color: inherit;">
+                            <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/vip_default.jpg'}" 
+                                 th:alt="${offer.workPlace}" class="offer-img">
+                            <div class="offer-info">
+                                <div class="offer-category" th:text="${offer.type}">VIP</div>
+                                <div class="offer-title" th:text="${offer.workPlace}">현장명</div>
+                                <div class="offer-details">
+                                    <div class="offer-detail">
+                                        <strong>급료:</strong> <span th:text="${offer.pay}">급료</span>
+                                    </div>
+                                    <div class="offer-detail">
+                                        <strong>복리후생:</strong> <span th:text="${offer.afterWork}">복리후생</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 익스퍼트 섹션 -->
+            <section class="offer-section">
+                <h2 class="section-title">익스퍼트</h2>
+                <div class="card-grid">
+                    <div class="offer-card" th:each="offer : ${expertOffers}">
+                        <a th:href="@{|/offer/detail/${offer.id}|}" style="text-decoration: none; color: inherit;">
+                            <img th:src="${offer.imageUrl != null ? offer.imageUrl : '/images/expert_default.jpg'}" 
+                                 th:alt="${offer.workPlace}" class="offer-img">
+                            <div class="offer-info">
+                                <div class="offer-category" th:text="${offer.type}">익스퍼트</div>
+                                <div class="offer-title" th:text="${offer.workPlace}">현장명</div>
+                                <div class="offer-details">
+                                    <div class="offer-detail">
+                                        <strong>급료:</strong> <span th:text="${offer.pay}">급료</span>
+                                    </div>
+                                    <div class="offer-detail">
+                                        <strong>복리후생:</strong> <span th:text="${offer.afterWork}">복리후생</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 무료 구인 게시판 -->
+            <section class="free-job-section">
+                <div class="board-header">
+                    <h2 class="board-title">무료 구인</h2>
+                    <a href="/work/create" class="create-btn">+ 구인 등록</a>
+                </div>
+                <table class="job-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">제목</th>
+                            <th style="width: 20%;">소재지</th>
+                            <th style="width: 20%;">작성자</th>
+                            <th style="width: 20%;">등록일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="working : ${paging.content}">
+                            <td>
+                                <a th:href="@{|/work/detail/${working.id}|}" class="job-title" 
+                                   th:text="${working.siteName}">현장명</a>
+                            </td>
+                            <td class="job-location" th:text="${working.location}">소재지</td>
+                            <td class="job-author" th:text="${working.author != null ? working.author.username : '알 수 없음'}">작성자</td>
+                            <td class="job-date" th:text="${#temporals.format(working.createDate, 'yyyy-MM-dd')}">등록일</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+        
+        <!-- 오른쪽 광고 배너 -->
+        <aside class="side-right">
+            <div class="ad-banner-section">
+                <h3 class="ad-banner-title">광고 배너</h3>
+                <div class="ad-banner-swiper swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <a href="https://www.naver.com" target="_blank" style="text-decoration: none; color: inherit;">
+                                <div class="ad-banner-slide">
+                                    <img src="/images/1750318480923.png" alt="광고1" class="ad-banner-img">
+                                    <div class="ad-banner-info">
+                                        <div class="ad-banner-text">사장님의 뽀송한 여름을 위해</div>
+                                        <div class="ad-banner-desc">미니 건조기 증정 이벤트</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="https://www.daum.net" target="_blank" style="text-decoration: none; color: inherit;">
+                                <div class="ad-banner-slide">
+                                    <img src="/images/1750318957252.png" alt="광고2" class="ad-banner-img">
+                                    <div class="ad-banner-info">
+                                        <div class="ad-banner-text">여름맞이 특별 이벤트</div>
+                                        <div class="ad-banner-desc">다양한 경품 이벤트</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+            
+            <!-- 매물정보 배너 -->
+            <div class="ad-banner-section">
+                <h3 class="ad-banner-title">매물정보</h3>
+                <div class="ad-banner-swiper swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" th:each="item : ${propertyList}">
+                            <a th:href="@{'/property/' + ${item.id}}" style="text-decoration: none; color: inherit;">
+                                <div class="ad-banner-slide">
+                                    <img th:if="${item.imageUrls != null and !item.imageUrls.isEmpty()}"
+                                         th:src="${item.imageUrls[0]}"
+                                         class="ad-banner-img" alt="매물">
+                                    <img th:if="${item.imageUrls == null or item.imageUrls.isEmpty()}"
+                                         src="/images/default-user.png"
+                                         class="ad-banner-img" alt="매물">
+                                    <div class="ad-banner-info">
+                                        <div class="ad-banner-text" th:text="${item.title}">매물 제목</div>
+                                        <div class="ad-banner-desc" th:text="${#strings.abbreviate(item.description, 20)}">매물 설명</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script th:inline="javascript">
+window.onload = function() {
+    // 광고 배너 슬라이드
+    var adBannerSwipers = document.querySelectorAll('.ad-banner-swiper');
+    adBannerSwipers.forEach(function(swiperEl) {
+        var slideCount = swiperEl.querySelectorAll('.swiper-slide').length;
+        var enableLoop = slideCount > 1;
+        var enableAutoplay = slideCount > 1;
+        
+        new Swiper(swiperEl, {
+            direction: 'vertical',
+            slidesPerView: 1,
+            spaceBetween: 10,
+            loop: enableLoop,
+            pagination: { 
+                el: swiperEl.querySelector('.swiper-pagination'), 
+                clickable: true 
+            },
+            autoplay: enableAutoplay ? { 
+                delay: 4000, 
+                disableOnInteraction: false, 
+                pauseOnMouseEnter: true 
+            } : false,
+            watchSlidesProgress: true,
+            observer: true,
+            observeParents: true
+        });
+    });
+};
+</script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 탈퇴</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .withdraw-container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 32px 24px 24px 24px;
+        }
+        .withdraw-title {
+            font-size: 1.4rem;
+            color: #dc3545;
+            font-weight: bold;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .warning-title {
+            color: #856404;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .warning-list {
+            color: #856404;
+            margin: 0;
+            padding-left: 20px;
+        }
+        .warning-list li {
+            margin-bottom: 8px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+            color: #333;
+        }
+        .form-control {
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+            background: #fafdff;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .user-info {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .user-info h4 {
+            margin: 0 0 12px 0;
+            color: #333;
+        }
+        .user-info p {
+            margin: 4px 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="withdraw-container" layout:fragment="content">
+    <div class="withdraw-title">⚠️ 회원 탈퇴</div>
+    
+    <div class="warning-box">
+        <div class="warning-title">탈퇴 전 반드시 확인해주세요!</div>
+        <ul class="warning-list">
+            <li>탈퇴 시 모든 개인정보가 영구적으로 삭제됩니다.</li>
+            <li>작성한 게시글, 댓글, 결제 내역 등 모든 데이터가 삭제됩니다.</li>
+            <li>삭제된 데이터는 복구할 수 없습니다.</li>
+            <li>탈퇴 후 동일한 이메일로 재가입이 제한될 수 있습니다.</li>
+        </ul>
+    </div>
+    
+    <div class="user-info">
+        <h4>현재 계정 정보</h4>
+        <p><strong>아이디:</strong> <span th:text="${user.username}"></span></p>
+        <p><strong>닉네임:</strong> <span th:text="${user.nickname}"></span></p>
+        <p><strong>이메일:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong>가입일:</strong> <span th:text="${#temporals.format(user.createDate, 'yyyy년 MM월 dd일')}"></span></p>
+    </div>
+    
+    <form th:action="@{/user/withdraw}" method="post" th:object="${withdrawForm}">
+        <div class="form-group">
+            <label for="password" class="form-label">비밀번호 확인</label>
+            <input type="password" id="password" name="password" class="form-control" 
+                   placeholder="탈퇴를 위해 비밀번호를 입력해주세요" required>
+            <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></div>
+        </div>
+        
+        <div class="form-group">
+            <label for="confirmText" class="form-label">탈퇴 확인</label>
+            <input type="text" id="confirmText" name="confirmText" class="form-control" 
+                   placeholder="'탈퇴하겠습니다'를 입력해주세요" required>
+            <div th:if="${#fields.hasErrors('confirmText')}" class="text-danger" th:errors="*{confirmText}"></div>
+        </div>
+        
+        <div class="btn-group">
+            <a href="/mypage" class="btn btn-secondary">취소</a>
+            <button type="submit" class="btn btn-danger">회원 탈퇴</button>
+        </div>
+    </form>
+</div>
+</body>
+</html> 

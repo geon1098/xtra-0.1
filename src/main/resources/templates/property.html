@@ -11,35 +11,44 @@
             padding: 24px;
         }
         .property-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
         }
         .property-card {
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            width: 260px;
-            padding: 18px 16px 16px 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid #007bff;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            height: 100%;
+        }
+        .property-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
         }
         .property-img-thumb {
-            width: 100px; height: 100px;
+            width: 100%;
+            height: 200px;
             object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #e3f0ff;
-            margin-bottom: 10px;
+            border-radius: 0 !important;
+            flex-shrink: 0;
+        }
+        .property-info {
+            padding: 16px;
         }
         .property-title {
-            font-size: 1.1em;
+            font-size: 1.2em;
             font-weight: bold;
-            margin: 0 0 6px 0;
+            margin-bottom: 8px;
             color: #007bff;
         }
         .property-desc {
-            font-size: 0.97em;
+            font-size: 1em;
             color: #666;
             margin-bottom: 10px;
         }
@@ -49,8 +58,9 @@
         }
         @media (max-width: 700px) {
             .property-board-container { padding: 10px; }
-            .property-list { flex-direction: column; gap: 12px; }
+            .property-list { grid-template-columns: 1fr; gap: 12px; }
             .property-card { width: 100%; }
+            .property-img-thumb { height: 160px; }
         }
     </style>
 </head>
@@ -62,12 +72,18 @@
     </div>
     <div class="property-list">
         <div class="property-card" th:each="item : ${propertyList}">
-            <img th:if="${item.imageUrls != null and !item.imageUrls.isEmpty()}"
-                 th:src="${item.imageUrls[0]}"
-                 class="property-img-thumb" alt="썸네일">
-            <div class="property-title" th:text="${item.title}"></div>
-            <div class="property-desc" th:text="${#strings.abbreviate(item.description, 40)}"></div>
-            <a th:href="@{'/property/' + ${item.id}}" class="btn btn-secondary property-btn">상세보기</a>
+            <a th:href="@{'/property/' + ${item.id}}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
+                <img th:if="${item.imageUrls != null and !item.imageUrls.isEmpty()}"
+                     th:src="${item.imageUrls[0]}"
+                     class="property-img-thumb" alt="썸네일">
+                <img th:if="${item.imageUrls == null or item.imageUrls.isEmpty()}"
+                     src="/images/default-user.png"
+                     class="property-img-thumb" alt="썸네일">
+                <div class="property-info">
+                    <div class="property-title" th:text="${item.title}"></div>
+                    <div class="property-desc" th:text="${#strings.abbreviate(item.description, 40)}"></div>
+                </div>
+            </a>
         </div>
     </div>
 

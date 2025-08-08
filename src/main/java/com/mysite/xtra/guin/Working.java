@@ -32,7 +32,7 @@ public class Working { //구인
 	    private String category; // 분류 (아파트, 오피스텔, 상가, 건물)
 
 	    @Column(length = 100)
-	    private String jobContent; // 업무
+	    private String jobContent; // 업무  분양, 업무대행, 기타 
 
 	    @Column(length = 50)
 	    private String jobType; // 고용형태
@@ -52,12 +52,12 @@ public class Working { //구인
 	    // 모집 조건
 	    private String deadDate; // 모집기간
 
-	    private String workNumber; // 모집 인원
+	    private String workNumber; // 모집 인원 0명, 00명, 1명, 2명, 3명, 4명, 5명
 
 	    @Column(length = 10)
-	    private String gender; // 성별
+	    private String gender; // 성별 남자, 여자 , 무관
 
-	    private String age; //나이
+	    private String age; //나이  무관, 40세 미만, 50세미만, 60세 미만
 
 	    private LocalDateTime createDate; // 등록일자
 
@@ -77,6 +77,15 @@ public class Working { //구인
 
 	    @Column(length = 20)
 	    private String Phone; // 연락처
+
+	    @Column(length = 50)
+	    private String industry; // 업종
+
+	    @Column(length = 50)
+	    private String experience; // 경력
+
+	    @Column(length = 50)
+	    private String salary; // 급여
 
     @ManyToOne
     private SiteUser author; // 작성자
@@ -121,6 +130,12 @@ public class Working { //구인
     public void setCPerson(String cPerson) { this.cPerson = cPerson; }
     public String getPhone() { return Phone; }
     public void setPhone(String Phone) { this.Phone = Phone; }
+    public String getIndustry() { return industry; }
+    public void setIndustry(String industry) { this.industry = industry; }
+    public String getExperience() { return experience; }
+    public void setExperience(String experience) { this.experience = experience; }
+    public String getSalary() { return salary; }
+    public void setSalary(String salary) { this.salary = salary; }
     public SiteUser getAuthor() { return author; }
     public void setAuthor(SiteUser author) { this.author = author; }
 }

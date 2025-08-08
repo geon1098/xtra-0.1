@@ -32,7 +32,10 @@ public class PropertyController {
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
+    public String form(Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/user/login";
+        }
         model.addAttribute("property", new Property());
         return "pro_form";
     }

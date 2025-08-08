@@ -12,12 +12,13 @@ html, body {
 body {
   font-family: 'Noto Sans KR', sans-serif;
   padding-top: 120px; /* 고정된 nav 높이만큼 여백 */
+  padding-bottom: 120px !important; /* footer 높이+여유 */
 }
 
 /* wrapper로 콘텐츠 감싸기 */
 .wrapper {
-  min-height: calc(100vh - 200px);
-  padding-bottom: 2rem;
+  min-height: 100vh;
+  padding-bottom: 140px !important;
 }
 
 /* NAVIGATION */
@@ -99,46 +100,92 @@ body {
   }
 }
 
+.site-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 /* FOOTER */
 .footer {
-  background-color: #333;
-  color: white;
-  padding: 2rem;
+  background: #222;
+  color: #fff;
+  font-size: 15px;
+  width: 100%;
+  padding: 32px 0 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.footer-container {
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
 }
 
-.footer-info,
-.footer-links,
-.footer-contact {
-  flex: 1;
-  min-width: 200px;
-}
-
-.footer-links a {
-  color: white;
-  text-decoration: none;
-  display: block;
-  margin-bottom: 0.5rem;
+.footer-link {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: 500;
   transition: color 0.2s;
 }
 
-.footer-links a:hover {
+.footer-link:hover {
+  color: #00b894;
+}
+
+.footer-divider {
+  color: #555;
+  margin: 0 8px;
+}
+
+.footer-phone {
   color: #bbb;
+  font-weight: 400;
 }
 
-.footer-contact h3 {
-  margin-bottom: 0.5rem;
+.container,
+.work-board-container,
+.create_form {
+  margin-bottom: 60px !important;
 }
 
-@media (max-width: 768px) {
-  .footer-container {
-    flex-direction: column;
-  }
+/* 티스토리 스타일 프로필 레이어 */
+.header_layer.layer_profile {
+  position: absolute;
+  top: 48px; right: 0;
+  width: 320px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  z-index: 1000;
+  padding: 24px 0 12px 0;
+  animation: fadeIn 0.2s;
 }
+.inner_header_layer { padding: 0 24px; }
+.info_profile { border-bottom: 1px solid #f0f0f0; padding-bottom: 16px; margin-bottom: 16px; }
+.wrap_account .txt_id { font-weight: bold; font-size: 1.1rem; }
+.txt_email { color: #888; font-size: 0.95rem; display: block; margin: 4px 0 8px 0; }
+.link_setting { color: #667eea; font-size: 0.95rem; text-decoration: none; }
+.wrap_list { margin-bottom: 16px; }
+.tit_list_type { font-size: 1rem; color: #333; margin-bottom: 8px; }
+.txt_id { display: block; color: #333; margin-bottom: 6px; text-decoration: none; }
+.txt_id:hover, .link_setting:hover { color: #764ba2; }
+.btn_logout {
+  width: 100%; background: #f5f5f5; border: none; border-radius: 8px;
+  padding: 10px 0; color: #888; font-weight: bold; cursor: pointer;
+  transition: background 0.2s;
+}
+.btn_logout:hover { background: #ffe8e8; color: #a52d2d; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px);} to { opacity: 1; transform: none; } }

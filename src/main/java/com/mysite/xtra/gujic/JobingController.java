@@ -32,10 +32,18 @@ public class JobingController {
     }
 
     @GetMapping("/list")
-    public String listJobings(Model model, @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="keyword", required=false) String keyword) {
-    	Page<Jobing> paging = this.jobingService.getPageList(page, keyword);
+    public String listJobings(Model model,
+            @RequestParam(value="page", defaultValue="0") int page,
+            @RequestParam(value="kw", required=false) String kw,
+            @RequestParam(value="career", required=false) String career,
+            @RequestParam(value="age", required=false) String age,
+            @RequestParam(value="gender", required=false) String gender) {
+        Page<Jobing> paging = this.jobingService.getPageListWithFilters(page, kw, career, age, gender);
         java.util.Map<String, Object> param = new java.util.HashMap<>();
-        if (keyword != null) param.put("keyword", keyword);
+        if (kw != null) param.put("kw", kw);
+        if (career != null) param.put("career", career);
+        if (age != null) param.put("age", age);
+        if (gender != null) param.put("gender", gender);
         model.addAttribute("paging", paging);
         model.addAttribute("param", param);
         return "job_list";

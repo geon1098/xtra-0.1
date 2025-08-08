@@ -18,5 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
         // 업로드된 이미지 파일에 대한 정적 리소스 매핑
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:" + Paths.get(uploadDir).toAbsolutePath().normalize() + "/");
+
+        registry.addResourceHandler("/images/profile/**")
+                .addResourceLocations("file:" + uploadDir);
     }
 } 

@@ -1,0 +1,46 @@
+{
+  "name": "xtra-cypress-tests",
+  "version": "1.0.0",
+  "description": "Cypress automated tests for Xtra project",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:run:headed": "cypress run --headed",
+    "cypress:run:chrome": "cypress run --browser chrome",
+    "cypress:run:firefox": "cypress run --browser firefox",
+    "cypress:run:edge": "cypress run --browser edge",
+    "test:user": "cypress run --spec 'cypress/e2e/01-user-management.cy.js'",
+    "test:job": "cypress run --spec 'cypress/e2e/02-job-management.cy.js'",
+    "test:work": "cypress run --spec 'cypress/e2e/03-work-management.cy.js'",
+    "test:offer": "cypress run --spec 'cypress/e2e/04-offer-management.cy.js'",
+    "test:admin": "cypress run --spec 'cypress/e2e/05-admin-management.cy.js'",
+    "test:chat": "cypress run --spec 'cypress/e2e/06-chat-functionality.cy.js'",
+    "test:integration": "cypress run --spec 'cypress/e2e/07-integration-tests.cy.js'",
+    "test:transactional": "cypress run --spec 'cypress/e2e/08-transactional-tests.cy.js'",
+    "test:all": "cypress run",
+    "test:smoke": "cypress run --spec 'cypress/e2e/07-integration-tests.cy.js' --grep 'smoke'",
+    "test:regression": "cypress run --grep 'regression'",
+    "test:clean": "cypress run --spec 'cypress/e2e/08-transactional-tests.cy.js' --grep '데이터 자동 정리'",
+    "test:rollback": "cypress run --spec 'cypress/e2e/08-transactional-tests.cy.js' --grep '롤백'",
+    "test:isolation": "cypress run --spec 'cypress/e2e/08-transactional-tests.cy.js' --grep '격리'",
+    "test:performance": "cypress run --spec 'cypress/e2e/08-transactional-tests.cy.js' --grep '성능'",
+    "test:error-handling": "cypress run --spec 'cypress/e2e/08-transactional-tests.cy.js' --grep '에러'"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.2",
+    "@types/node": "^24.0.12",
+    "cypress": "^13.6.0",
+    "cypress-file-upload": "^5.0.8"
+  },
+  "keywords": [
+    "cypress",
+    "testing",
+    "automation",
+    "e2e",
+    "xtra",
+    "transactional",
+    "data-cleanup"
+  ],
+  "author": "Xtra Development Team",
+  "license": "MIT"
+}

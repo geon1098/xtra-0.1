@@ -58,7 +58,7 @@ public class JobingService {
         return jobingRepository.save(jobing);
     }
 	
-	public Page<Jobing> getPageList(int page, String keyword) {
+    public Page<Jobing> getPageList(int page, String keyword) {
 		List<Sort.Order> sorts = new ArrayList<>();
 		sorts.add(Sort.Order.desc("createDate"));
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
@@ -69,6 +69,13 @@ public class JobingService {
 			return this.jobingRepository.findAll(pageable);
 		}
 	}
+
+    public Page<Jobing> getPageListWithFilters(int page, String kw, String career, String age, String gender) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return this.jobingRepository.findAllByFilters(kw, career, age, gender, pageable);
+    }
 
     @Transactional
     public void updateJobing(Jobing jobing, JobingForm form) {

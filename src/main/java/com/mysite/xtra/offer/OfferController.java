@@ -15,6 +15,7 @@ import java.security.Principal;
 
 import com.mysite.xtra.config.KakaoProperties;
 import com.mysite.xtra.api.MapLocation;
+import com.mysite.xtra.resume.ResumeService;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class OfferController {
     private final com.mysite.xtra.user.UserService userService;
     private final FileUploadService fileUploadService;
     private final KakaoProperties kakaoProperties;
+    private final ResumeService resumeService;
 
     // 카테고리별 리스트
     @GetMapping("/list/{category}")
@@ -48,6 +50,16 @@ public class OfferController {
         if (principal != null) {
             com.mysite.xtra.user.SiteUser currentUser = userService.getUser(principal.getName());
             model.addAttribute("currentUser", currentUser);
+            
+            // 이력서 전송 여부 확인
+            try {
+                boolean alreadySentResume = resumeService.hasAlreadySentResumeToOffer(principal.getName(), id);
+                model.addAttribute("alreadySentResume", alreadySentResume);
+            } catch (Exception e) {
+                model.addAttribute("alreadySentResume", false);
+            }
+        } else {
+            model.addAttribute("alreadySentResume", false);
         }
 
         return "offer_detail";
@@ -64,6 +76,17 @@ public class OfferController {
     // 등록 처리 - work_list로 리다이렉트
     @PostMapping("/create")
     public String create(@ModelAttribute Offer offer, @RequestParam("imageFile") MultipartFile imageFile) {
+        // 필수 필드 검증
+        if (offer.getTitle() == null || offer.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목은 필수 입력 항목입니다.");
+        }
+        if (offer.getCategory() == null) {
+            throw new IllegalArgumentException("카테고리는 필수 선택 항목입니다.");
+        }
+        if (offer.getWorkPlace() == null || offer.getWorkPlace().trim().isEmpty()) {
+            throw new IllegalArgumentException("근무지는 필수 입력 항목입니다.");
+        }
+        
         offer.setCreateDate(LocalDateTime.now());
         offer.setApprovalStatus(Offer.ApprovalStatus.PENDING);
         
@@ -111,6 +134,17 @@ public class OfferController {
     // 수정 처리 - work_list로 리다이렉트
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable Long id, @ModelAttribute Offer offer, @RequestParam("imageFile") MultipartFile imageFile) {
+        // 필수 필드 검증
+        if (offer.getTitle() == null || offer.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목은 필수 입력 항목입니다.");
+        }
+        if (offer.getCategory() == null) {
+            throw new IllegalArgumentException("카테고리는 필수 선택 항목입니다.");
+        }
+        if (offer.getWorkPlace() == null || offer.getWorkPlace().trim().isEmpty()) {
+            throw new IllegalArgumentException("근무지는 필수 입력 항목입니다.");
+        }
+        
         Optional<Offer> existingOffer = offerService.getOffer(id);
         if (existingOffer.isPresent()) {
             Offer existing = existingOffer.get();

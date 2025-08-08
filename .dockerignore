@@ -1,0 +1,39 @@
+# Git 관련
+.git
+.gitignore
+
+# IDE 관련
+.idea
+.vscode
+*.iml
+
+# OS 관련
+.DS_Store
+Thumbs.db
+
+# 로그 파일
+*.log
+
+# 임시 파일
+*.tmp
+*.temp
+
+# Docker 관련
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# 테스트 관련
+cypress/
+tests/
+tests-examples/
+*.spec.js
+
+# Node.js 관련
+node_modules/
+package.json
+package-lock.json
+
+# 기타
+README.md
+ADMIN_SETUP.md 

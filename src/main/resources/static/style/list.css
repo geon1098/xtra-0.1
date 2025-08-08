@@ -1,85 +1,158 @@
 .work-board-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 40px auto;
   padding: 0 20px;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .work-board-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  background: #fff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(44, 90, 160, 0.1);
+  border: 1px solid rgba(44, 90, 160, 0.1);
 }
 
 .board-title {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  position: relative;
+  padding-left: 16px;
+}
+
+.board-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 24px;
+  background: linear-gradient(135deg, #2c5aa0 0%, #f39c12 100%);
+  border-radius: 2px;
 }
 
 .board-button {
-  background-color: #1f8ecd;
+  background: linear-gradient(135deg, #2c5aa0 0%, #1e3f6b 100%);
   color: white;
-  padding: 10px 16px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 4px;
+  border-radius: 12px;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(44, 90, 160, 0.2);
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .board-button:hover {
-  background-color: #1379b9;
+  background: linear-gradient(135deg, #1e3f6b 0%, #2c5aa0 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(44, 90, 160, 0.3);
+  color: #fff;
+  text-decoration: none;
 }
 
 .work-board-table-wrapper {
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  border: 1px solid #e9ecef;
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(44, 90, 160, 0.1);
+  background: #fff;
 }
 
 .work-board-table {
   width: 100%;
   border-collapse: collapse;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .work-board-table thead {
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #ddd;
+  background: linear-gradient(135deg, #2c5aa0 0%, #1e3f6b 100%);
+  color: #fff;
 }
 
 .work-board-table th,
 .work-board-table td {
-  padding: 12px 14px;
+  padding: 16px 20px;
   text-align: left;
-  font-size: 15px;
-  border-bottom: 1px solid #eee;
-}
-
-.board-link {
-  color: #1f8ecd;
-  text-decoration: none;
+  font-size: 1rem;
+  border-bottom: 1px solid #e9ecef;
   font-weight: 500;
 }
 
+.work-board-table th {
+  font-weight: 600;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.work-board-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.work-board-table tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(44, 90, 160, 0.1);
+}
+
+.work-board-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.board-link {
+  color: #2c5aa0;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
 .board-link:hover {
-  text-decoration: underline;
+  color: #f39c12;
+  background-color: rgba(44, 90, 160, 0.1);
+  text-decoration: none;
+  transform: translateX(4px);
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 25px;
-  gap: 10px;
+  margin-top: 40px;
+  gap: 12px;
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(44, 90, 160, 0.1);
 }
 
 .pagination-button {
-  padding: 8px 14px;
-  background-color: white;
-  border: 1px solid #ccc;
+  padding: 10px 16px;
+  background: #fff;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: #2c3e50;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.pagination-button:hover {
+  border-color: #2c5aa0;
+  color: #2c5aa0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(44, 90, 160, 0.15);
 }
 
 .pagination-pages {
@@ -89,14 +162,26 @@
 
 .page-number {
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: #2c3e50;
+  background: #fff;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.page-number:hover {
+  border-color: #2c5aa0;
+  color: #2c5aa0;
+  transform: translateY(-2px);
 }
 
 .page-number.active {
-  background-color: #1f8ecd;
+  background: linear-gradient(135deg, #2c5aa0 0%, #1e3f6b 100%);
   color: white;
-  border-color: #1f8ecd;
+  border-color: #2c5aa0;
+  box-shadow: 0 4px 16px rgba(44, 90, 160, 0.2);
 }

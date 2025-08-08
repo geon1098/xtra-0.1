@@ -30,13 +30,18 @@ import com.mysite.xtra.offer.OfferService;
 import com.mysite.xtra.offer.Offer;
 import com.mysite.xtra.config.KakaoProperties;
 import com.mysite.xtra.api.MapLocation;
+import com.mysite.xtra.DataNotFoundException;
+import com.mysite.xtra.resume.ResumeService;
 
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.security.Principal;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+
+
 
 @RequestMapping("/work")
 @RequiredArgsConstructor
@@ -46,58 +51,104 @@ public class WorkingController {
 	private final WorkingService workingService;
 	private final UserService userService;
 	private final OfferService offerService;
+	private final ResumeService resumeService;
 	private final KakaoProperties kakaoProperties;
 	private static final Logger logger = LoggerFactory.getLogger(WorkingController.class);
 	
-	@GetMapping("/info")
-	public String workInfo() {
-		return "work_info";
-	}
-	
-	@GetMapping("/list")
-	public String listWorkings(Model model, @RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value = "kw", defaultValue = "") String kw) {
-		Page<Working> paging = this.workingService.getPageList(page, kw);
-		model.addAttribute("paging",paging);
-		// 오퍼(프리미엄, 익스퍼트, VIP) 리스트 추가 - 승인된 게시글만 (임시 주석 처리)
-		model.addAttribute("premiumOffers", offerService.getOffersByCategory(Offer.OfferCategory.PREMIUM));
-		model.addAttribute("expertOffers", offerService.getOffersByCategory(Offer.OfferCategory.EXPERT));
-		model.addAttribute("vipOffers", offerService.getOffersByCategory(Offer.OfferCategory.VIP));
-		// model.addAttribute("premiumOffers", offerService.getOffersByCategory(Offer.OfferCategory.PREMIUM).stream()
-		// 	.filter(offer -> offer.getApprovalStatus() == Offer.ApprovalStatus.APPROVED)
-		// 	.collect(java.util.stream.Collectors.toList()));
-		// model.addAttribute("expertOffers", offerService.getOffersByCategory(Offer.OfferCategory.EXPERT).stream()
-		// 	.filter(offer -> offer.getApprovalStatus() == Offer.ApprovalStatus.APPROVED)
-		// 	.collect(java.util.stream.Collectors.toList()));
-		// model.addAttribute("vipOffers", offerService.getOffersByCategory(Offer.OfferCategory.VIP).stream()
-		// 	.filter(offer -> offer.getApprovalStatus() == Offer.ApprovalStatus.APPROVED)
-		// 	.collect(java.util.stream.Collectors.toList()));
-		System.out.println("✅ work_list.html 렌더링됨!");
-		return "work_list";
+    @GetMapping("/list")
+    public String listWorkings(Model model,
+            @RequestParam(value="page", defaultValue="0") int page,
+            @RequestParam(value = "kw", defaultValue = "") String kw,
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam(value = "experience", required = false) String experience,
+            @RequestParam(value = "salary", required = false) String salary) {
+		try {
+            Page<Working> paging = this.workingService.getPageListWithFilters(page, kw, gender, experience, salary);
+			model.addAttribute("paging", paging);
+            java.util.Map<String, Object> param = new java.util.HashMap<>();
+            if (kw != null) param.put("kw", kw);
+            if (gender != null) param.put("gender", gender);
+            if (experience != null) param.put("experience", experience);
+            if (salary != null) param.put("salary", salary);
+            model.addAttribute("param", param);
+			
+			// 오퍼(프리미엄, 익스퍼트, VIP) 리스트 추가 - 예외 처리 추가
+			try {
+				model.addAttribute("premiumOffers", offerService.getOffersByCategory(Offer.OfferCategory.PREMIUM));
+			} catch (Exception e) {
+				logger.error("프리미엄 오퍼 조회 중 오류 발생: " + e.getMessage());
+				model.addAttribute("premiumOffers", new java.util.ArrayList<>());
+			}
+			
+			try {
+				model.addAttribute("expertOffers", offerService.getOffersByCategory(Offer.OfferCategory.EXPERT));
+			} catch (Exception e) {
+				logger.error("익스퍼트 오퍼 조회 중 오류 발생: " + e.getMessage());
+				model.addAttribute("expertOffers", new java.util.ArrayList<>());
+			}
+			
+			try {
+				model.addAttribute("vipOffers", offerService.getOffersByCategory(Offer.OfferCategory.VIP));
+			} catch (Exception e) {
+				logger.error("VIP 오퍼 조회 중 오류 발생: " + e.getMessage());
+				model.addAttribute("vipOffers", new java.util.ArrayList<>());
+			}
+			
+			System.out.println("✅ work_list.html 렌더링됨!");
+			return "work_list";
+		} catch (Exception e) {
+			logger.error("work/list 페이지 로딩 중 오류 발생: " + e.getMessage(), e);
+			model.addAttribute("error", "페이지 로딩 중 오류가 발생했습니다.");
+			model.addAttribute("paging", null);
+			model.addAttribute("premiumOffers", new java.util.ArrayList<>());
+			model.addAttribute("expertOffers", new java.util.ArrayList<>());
+			model.addAttribute("vipOffers", new java.util.ArrayList<>());
+			return "work_list";
+		}
 	}
 	
 	@GetMapping("/detail/{id}")
-	public String detail(Model model, @PathVariable("id") Long id) {
+	public String detail(Model model, @PathVariable("id") Long id, Authentication authentication) {
 		Working working = this.workingService.getWorking(id);
 		model.addAttribute("working", working);
 		model.addAttribute("kakaoAppKey", kakaoProperties.getJavascriptAppKey());
+		
+		// 로그인한 사용자가 이미 이력서를 보냈는지 확인
+		if (authentication != null && authentication.isAuthenticated()) {
+			try {
+				String username = authentication.getName();
+				boolean alreadySentResume = resumeService.hasAlreadySentResume(username, id);
+				model.addAttribute("alreadySentResume", alreadySentResume);
+			} catch (DataNotFoundException e) {
+				model.addAttribute("alreadySentResume", false);
+			}
+		} else {
+			model.addAttribute("alreadySentResume", false);
+		}
+		
 		return "work_detail";
 	}
 	
-	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/create")
-	public String workCreateForm(Model model) {
+	public String workCreateForm(Model model, Principal principal) {
+		if (principal == null) {
+			return "redirect:/user/login";
+		}
 		model.addAttribute("workingForm", new WorkingForm());
 		model.addAttribute("action", "/work/create");
 		model.addAttribute("offer", new Offer());
 		return "work_form";
 	}
 
-	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/create")
 	public String workCreate(@Valid @ModelAttribute("workingForm") WorkingForm workingForm,
 			BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes,
+			Principal principal) {
+		
+		if (principal == null) {
+			return "redirect:/user/login";
+		}
 		
 		if (bindingResult.hasErrors()) {
 			return "work_form";
@@ -117,9 +168,37 @@ public class WorkingController {
 	}
 
 	@GetMapping("/chat/{id}")
-	public String chatRoom(Model model, @PathVariable("id") Long id, Authentication authentication, HttpServletRequest request) throws JsonProcessingException {
-		Working working = this.workingService.getWorking(id);
-		model.addAttribute("working", working);
+	public String chatRoom(Model model, @PathVariable("id") Long id, Authentication authentication, HttpServletRequest request, Principal principal) throws JsonProcessingException {
+		if (principal == null) {
+			return "redirect:/user/login";
+		}
+		// 먼저 Working에서 찾기
+		Working working = null;
+		Offer offer = null;
+		
+		try {
+			working = this.workingService.getWorking(id);
+			logger.debug("Working 찾음: {}", working.getId());
+		} catch (Exception e) {
+			logger.debug("Working에서 찾을 수 없음: {}", id);
+		}
+		
+		// Working에서 찾지 못했다면 Offer에서 찾기
+		if (working == null) {
+			try {
+				offer = this.offerService.getOffer(id).orElse(null);
+				if (offer != null) {
+					logger.debug("Offer 찾음: {}", offer.getId());
+				}
+			} catch (Exception e) {
+				logger.debug("Offer에서도 찾을 수 없음: {}", id);
+			}
+		}
+		
+		// 둘 다 찾지 못했다면 에러
+		if (working == null && offer == null) {
+			throw new RuntimeException("채팅방을 찾을 수 없습니다.");
+		}
 		
 		// CSRF 토큰 추가
 		CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
@@ -132,10 +211,11 @@ public class WorkingController {
 			SiteUser currentUser = userService.getUser(authentication.getName());
 			logger.debug("현재 사용자 정보: {}", currentUser);
 			model.addAttribute("currentUser", currentUser);
-			// JSON 문자열로 변환하여 추가
+			// JSON 문자열로 변환하여 추가 (DTO로 변환)
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.registerModule(new JavaTimeModule()); // LocalDateTime 지원
-			String currentUserJson = currentUser != null ? objectMapper.writeValueAsString(currentUser) : "null";
+			SimpleUserDTO simpleUser = currentUser != null ? new SimpleUserDTO(currentUser) : null;
+			String currentUserJson = simpleUser != null ? objectMapper.writeValueAsString(simpleUser) : "null";
 			logger.debug("현재 사용자 JSON: {}", currentUserJson);
 			model.addAttribute("currentUserJson", currentUserJson);
 		} else {
@@ -144,12 +224,23 @@ public class WorkingController {
 			model.addAttribute("currentUserJson", "null");
 		}
 		
+		// Working이면 working을, Offer면 offer를 DTO로 변환해서 모델에 추가
+		if (working != null) {
+			model.addAttribute("working", new WorkingChatDTO(working));
+			model.addAttribute("offer", null);
+		} else {
+			model.addAttribute("working", null);
+			model.addAttribute("offer", new OfferChatDTO(offer));
+		}
+		
 		return "work_chat";
 	}
 
-	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/edit/{id}")
 	public String workEditForm(@PathVariable("id") Long id, Model model, Principal principal) {
+		if (principal == null) {
+			return "redirect:/user/login";
+		}
 		Working working = workingService.getWorking(id);
 		if (!working.getAuthor().getUsername().equals(principal.getName())) {
 			throw new RuntimeException("수정 권한이 없습니다.");
@@ -180,9 +271,11 @@ public class WorkingController {
 		return "work_form";
 	}
 
-	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/edit/{id}")
 	public String workEdit(@PathVariable("id") Long id, @Valid @ModelAttribute("workingForm") WorkingForm workingForm, BindingResult bindingResult, Principal principal) {
+		if (principal == null) {
+			return "redirect:/user/login";
+		}
 		if (bindingResult.hasErrors()) {
 			return "work_form";
 		}
@@ -194,9 +287,11 @@ public class WorkingController {
 		return "redirect:/work/detail/" + id;
 	}
 
-	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/delete/{id}")
 	public String workDelete(@PathVariable("id") Long id, Principal principal) {
+		if (principal == null) {
+			return "redirect:/user/login";
+		}
 		Working working = workingService.getWorking(id);
 		if (!working.getAuthor().getUsername().equals(principal.getName())) {
 			throw new RuntimeException("삭제 권한이 없습니다.");
@@ -205,9 +300,11 @@ public class WorkingController {
 		return "redirect:/work/list";
 	}
 
-	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/modify/{id}")
 	public String workingUpdate(WorkingForm form, @PathVariable("id") Long id, Principal principal) {
+		if (principal == null) {
+			return "redirect:/user/login";
+		}
 		// ... (validation and authorization)
 		
 		Working working = this.workingService.getWorking(id);
@@ -218,9 +315,11 @@ public class WorkingController {
 		return String.format("redirect:/work/detail/%s", id);
 	}
 	
-	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/modify/{id}")
 	public String workingModify(WorkingForm form, @PathVariable("id") Long id, Principal principal) {
+		if (principal == null) {
+			return "redirect:/user/login";
+		}
 		Working working = this.workingService.getWorking(id);
 		if(!working.getAuthor().getUsername().equals(principal.getName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
@@ -240,5 +339,49 @@ public class WorkingController {
 		form.setCPerson(working.getCPerson());
 		form.setPhone(working.getPhone());
 		return "work_form";
+	}
+
+	// SimpleUserDTO 클래스 추가 (컨트롤러 내부 또는 별도 파일로 분리 가능)
+	static class SimpleUserDTO {
+		public Long id;
+		public String username;
+		public String nickname;
+		public String profileImageUrl;
+		public SimpleUserDTO(com.mysite.xtra.user.SiteUser user) {
+			this.id = user.getId();
+			this.username = user.getUsername();
+			this.nickname = user.getNickname();
+			this.profileImageUrl = user.getProfileImageUrl();
+		}
+	}
+
+	// --- DTO 클래스 추가 ---
+	static class WorkingChatDTO {
+		public Long id;
+		public String siteName;
+		public String cPerson;
+		public Long authorId;
+		public String authorUsername;
+		public WorkingChatDTO(Working w) {
+			this.id = w.getId();
+			this.siteName = w.getSiteName();
+			this.cPerson = w.getCPerson();
+			this.authorId = w.getAuthor() != null ? w.getAuthor().getId() : null;
+			this.authorUsername = w.getAuthor() != null ? w.getAuthor().getUsername() : null;
+		}
+	}
+	static class OfferChatDTO {
+		public Long id;
+		public String workPlace;
+		public String perName;
+		public Long authorId;
+		public String authorUsername;
+		public OfferChatDTO(Offer o) {
+			this.id = o.getId();
+			this.workPlace = o.getWorkPlace();
+			this.perName = o.getPerName();
+			this.authorId = o.getAuthor() != null ? o.getAuthor().getId() : null;
+			this.authorUsername = o.getAuthor() != null ? o.getAuthor().getUsername() : null;
+		}
 	}
 }

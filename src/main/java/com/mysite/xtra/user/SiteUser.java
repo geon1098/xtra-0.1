@@ -40,6 +40,8 @@ public class SiteUser implements UserDetails {
 	@Column(nullable = false)
 	private boolean emailVerified = false;
 
+	private String profileImageUrl;
+
 	public Long getId() { return id; }
 	public void setId(Long id) { this.id = id; }
 	public String getNickname() { return nickname; }
@@ -62,10 +64,18 @@ public class SiteUser implements UserDetails {
 	public void setEmailVerified(boolean emailVerified) {
 		this.emailVerified = emailVerified;
 	}
+	public String getProfileImageUrl() {
+		return profileImageUrl;
+	}
+	public void setProfileImageUrl(String profileImageUrl) {
+		this.profileImageUrl = profileImageUrl;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singletonList(new SimpleGrantedAuthority(role != null ? role : "ROLE_USER"));
+		// role이 null이거나 비어있는 경우 기본값 설정
+		String userRole = (role != null && !role.trim().isEmpty()) ? role : "ROLE_USER";
+		return Collections.singletonList(new SimpleGrantedAuthority(userRole));
 	}
 
 	@Override
@@ -85,6 +95,10 @@ public class SiteUser implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
+		// 관리자 계정은 이메일 인증 없이도 활성화
+		if ("ROLE_ADMIN".equals(role)) {
+			return true;
+		}
 		return emailVerified;
 	}
 

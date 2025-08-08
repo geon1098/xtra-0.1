@@ -5,423 +5,180 @@
     <title>구직</title>
     <link rel="stylesheet" href="/style/style.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-
-        .job-container {
+        /* 분양라인 스타일 반영 */
+        body { background: #f6f8fa; font-family: 'Noto Sans KR', sans-serif; }
+        
+        .job-board-container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 20px auto;
+            padding: 0;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
         }
-
+        
         /* 상단 검색/필터 바 */
-        .search-filter-bar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
+        .search-filter-bar { background:#fff; padding:24px; border-radius:16px; margin-bottom:24px; box-shadow:0 4px 24px rgba(44,90,160,0.10); }
+        
         .search-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .search-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin: 0;
-        }
-
-        .register-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .register-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-            color: white;
-        }
-
-        .search-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            padding: 12px 16px;
-            border: 2px solid #e1e8ed;
-            border-radius: 12px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .search-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .search-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        /* 프리미엄 구직 슬라이드 */
-        .premium-section {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .premium-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-        }
-
-        .premium-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .premium-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .premium-badge {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .premium-slide {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-
-        .premium-job-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .premium-job-info {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        /* 구직 카드 리스트 */
-        .job-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .job-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid #f0f0f0;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .job-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-        }
-
-        .job-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .job-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            width: 100%;
             margin-bottom: 15px;
         }
-
-        .job-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin: 0;
+        
+        .search-title { font-size: 1.6rem; font-weight:700; color:#2c5aa0; margin:0; }
+        
+        .register-btn { background: linear-gradient(135deg, #2c5aa0 0%, #f39c12 100%); color:#fff; padding:12px 24px; border-radius:10px; text-decoration:none; font-weight:600; transition:transform .2s, box-shadow .2s; display:inline-block; }
+        .register-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(44,90,160,0.25); color:#fff; }
+        
+        .search-form { display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%; }
+        
+        .career-select, .age-select, .gender-select { padding:12px 14px; border:2px solid #e1e5e9; border-radius:12px; background:#fff; font-size:14px; min-width:120px; transition:border-color .2s; }
+        .career-select:focus, .age-select:focus, .gender-select:focus { outline:none; border-color:#2c5aa0; }
+        
+        .search-input { flex:1; padding:14px 16px; border:2px solid #e1e5e9; border-radius:50px; font-size:15px; min-width:160px; background:#fff; transition:border-color .2s; }
+        .search-input:focus { outline:none; border-color:#2c5aa0; }
+        
+        .search-btn { background: linear-gradient(135deg, #2c5aa0 0%, #1e3f6b 100%); color:#fff; border:none; padding:12px 24px; border-radius:50px; cursor:pointer; font-weight:600; transition:transform .2s, box-shadow .2s; }
+        .search-btn:hover { transform: translateY(-2px); box-shadow:0 6px 18px rgba(44,90,160,0.25); }
+        
+        /* 섹션 제목 */
+        .board-title { font-size:1.5rem; font-weight:700; color:#2c5aa0; margin:30px 0 16px 0; display:flex; align-items:center; gap:10px; }
+        .board-title::before { content:''; width:4px; height:24px; background:#f39c12; border-radius:2px; }
+        
+        /* 구직 게시글 리스트 */
+        .job-list { background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(44,90,160,0.10); }
+        
+        .job-item { padding:20px; border-bottom:1px solid #eef1f5; transition: background .2s, transform .2s; }
+        
+        .job-item:hover { background:#f8f9ff; transform: translateY(-1px); }
+        
+        .job-item:last-child {
+            border-bottom: none;
         }
-
+        
+        .job-title { font-size:18px; font-weight:700; color:#333; margin-bottom:8px; }
+        
+        .job-info { display:flex; gap:20px; color:#666; font-size:14px; flex-wrap:wrap; }
+        
         .job-date {
+            color: #999;
             font-size: 12px;
-            color: #7f8c8d;
-            background: #f8f9fa;
-            padding: 4px 8px;
-            border-radius: 8px;
         }
-
-        .job-intro {
-            color: #34495e;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .job-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .job-detail-item {
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            color: #7f8c8d;
-        }
-
-        .job-detail-icon {
-            width: 16px;
-            height: 16px;
-            margin-right: 6px;
-            opacity: 0.6;
-        }
-
-        .job-link {
-            display: inline-block;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .job-link:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            color: white;
-        }
-
+        
         /* 페이지네이션 */
         .pagination {
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 10px;
             margin-top: 30px;
         }
-
-        .pagination-btn {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid #e1e8ed;
-            color: #667eea;
-            padding: 10px 16px;
-            border-radius: 12px;
+        
+        .page-link {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #333;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            border-radius: 4px;
+            transition: all 0.2s;
         }
-
-        .pagination-btn:hover {
-            background: #667eea;
+        
+        .page-link:hover, .page-link.active {
+            background: #007bff;
             color: white;
-            transform: translateY(-1px);
+            border-color: #007bff;
         }
-
-        .pagination-btn:disabled {
-            background: #f8f9fa;
-            color: #adb5bd;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .pagination-current {
-            background: #667eea;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        /* 반응형 디자인 */
+        
+        /* 반응형 */
         @media (max-width: 768px) {
-            .job-container {
-                padding: 15px;
-            }
-
             .search-header {
                 flex-direction: column;
                 gap: 15px;
                 text-align: center;
             }
-
+            
             .search-form {
-                grid-template-columns: 1fr;
-            }
-
-            .job-list {
-                grid-template-columns: 1fr;
-            }
-
-            .job-details {
-                grid-template-columns: 1fr;
-            }
-
-            .premium-header {
                 flex-direction: column;
-                gap: 10px;
-                text-align: center;
+                align-items: stretch;
             }
-        }
-
-        /* 로딩 애니메이션 */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-        }
-
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #667eea;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            
+            .career-select, .age-select, .gender-select, .search-input {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .job-info {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="job-container" layout:fragment="content">
+<div class="job-board-container" layout:fragment="content">
     <!-- 상단 검색/필터 바 -->
     <div class="search-filter-bar">
         <div class="search-header">
             <h1 class="search-title">구직</h1>
-            <a class="register-btn" th:href="@{/job/create}" sec:authorize="isAuthenticated()">+ 구직 등록</a>
-            <a class="register-btn" th:href="@{/user/login}" sec:authorize="isAnonymous()">+ 구직 등록</a>
+            <a href="/job/create" class="register-btn">구직등록</a>
         </div>
-        <form class="search-form" method="get" th:action="@{/job/list}">
-            <input type="text" name="keyword" placeholder="키워드 검색" class="search-input" th:value="${param.keyword}">
+
+        <form class="search-form" th:action="@{/job/list}" method="get">
+            <input type="text" class="search-input" placeholder="구직글을 검색해보세요..." name="kw" th:value="${param.kw}">
+            <select class="career-select" name="career" th:value="${param.career}">
+                <option value="">경력</option>
+                <option value="신입">신입</option>
+                <option value="1-3년">1-3년</option>
+                <option value="3-5년">3-5년</option>
+                <option value="5년이상">5년이상</option>
+            </select>
+            <select class="age-select" name="age" th:value="${param.age}">
+                <option value="">나이</option>
+                <option value="20대">20대</option>
+                <option value="30대">30대</option>
+                <option value="40대">40대</option>
+                <option value="50대이상">50대이상</option>
+            </select>
+            <select class="gender-select" name="gender" th:value="${param.gender}">
+                <option value="">성별</option>
+                <option value="남성">남성</option>
+                <option value="여성">여성</option>
+                <option value="무관">무관</option>
+            </select>
             <button type="submit" class="search-btn">검색</button>
         </form>
     </div>
-    <!-- 구직 카드 리스트 -->
-    <div class="job-list">
-        <div class="job-card" th:each="jobing : ${paging.content}">
-            <div class="job-header">
-                <h3 class="job-name" th:text="${jobing.name}">이름</h3>
-                <span class="job-date" th:text="${#temporals.format(jobing.createDate, 'yyyy-MM-dd')}">등록일</span>
+    
+    <!-- 구직 게시글 리스트 -->
+    <div th:if="${!paging.empty}">
+        <h2 class="board-title">일반 구직</h2>
+        <div class="job-list">
+            <div th:each="jobing : ${paging}" class="job-item">
+                <a th:href="@{/job/detail/{id}(id=${jobing.id})}" style="text-decoration: none; color: inherit;">
+                    <div class="job-title" th:text="${jobing.name}">이름</div>
+                    <div class="job-info">
+                        <span th:text="${jobing.career != null ? jobing.career : '경력 미지정'}">경력</span>
+                        <span th:text="${jobing.age != null ? jobing.age : '나이 미지정'}">나이</span>
+                        <span th:text="${jobing.gender != null ? jobing.gender : '성별 미지정'}">성별</span>
+                        <span th:text="${#strings.abbreviate(jobing.introduction, 20)}">내용</span>
+                    </div>
+                    <div class="job-date" th:text="${#temporals.format(jobing.createDate, 'yyyy-MM-dd')}">등록일</div>
+                </a>
             </div>
-            <p class="job-intro" th:text="${#strings.abbreviate(jobing.introduction, 100)}">자기 소개</p>
-            <div class="job-details">
-                <div class="job-detail-item">
-                    <span class="job-detail-icon">📅</span>
-                    <span th:text="${#strings.abbreviate(jobing.startDate, 15)}">근무 가능일</span>
-                </div>
-                <div class="job-detail-item">
-                    <span class="job-detail-icon">💼</span>
-                    <span th:text="${#strings.abbreviate(jobing.requestWork, 15)}">희망 업무</span>
-                </div>
-                <div class="job-detail-item">
-                    <span class="job-detail-icon">📍</span>
-                    <span th:text="${#strings.abbreviate(jobing.hopArea, 15)}">희망 지역</span>
-                </div>
-                <div class="job-detail-item">
-                    <span class="job-detail-icon">👤</span>
-                    <span th:text="${jobing.name}">이름</span>
-                </div>
-            </div>
-            <a th:href="@{|/job/detail/${jobing.id}|}" class="job-link">상세보기</a>
         </div>
     </div>
-
+    
     <!-- 페이지네이션 -->
-    <div class="pagination">
-        <a class="pagination-btn"
-           th:if="${paging.hasPrevious()}"
-           th:href="@{/job/list(page=${paging.number - 1}, keyword=${param.keyword})}">
-            ← 이전
-        </a>
-        <span class="pagination-current" th:text="${paging.number + 1}">1</span>
-        <a class="pagination-btn"
-           th:if="${paging.hasNext()}"
-           th:href="@{/job/list(page=${paging.number + 1}, keyword=${param.keyword})}">
-            다음 →
-        </a>
+    <div class="pagination" th:if="${paging.totalPages > 1}">
+        <a th:if="${paging.hasPrevious()}" th:href="@{/job/list(page=${paging.number - 1}, kw=${param.kw})}" class="page-link">이전</a>
+        <a th:each="pageNum : ${#numbers.sequence(0, paging.totalPages - 1)}" 
+           th:href="@{/job/list(page=${pageNum}, kw=${param.kw})}" 
+           th:text="${pageNum + 1}" 
+           th:class="${pageNum == paging.number ? 'page-link active' : 'page-link'}">1</a>
+        <a th:if="${paging.hasNext()}" th:href="@{/job/list(page=${paging.number + 1}, kw=${param.kw})}" class="page-link">다음</a>
     </div>
 </div>
 </body>

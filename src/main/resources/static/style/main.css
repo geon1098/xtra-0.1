@@ -6,28 +6,33 @@
     }
 
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
+        font-family: 'Noto Sans KR', sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        color: #2c3e50;
+        line-height: 1.6;
     }
 
     .main_container {
         width: 100%;
         background-color: #fff;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 32px rgba(44, 90, 160, 0.1);
+        border-radius: 0 0 16px 16px;
     }
 
     .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 30px;
-        background-color: #2c3e50;
+        padding: 20px 40px;
+        background: linear-gradient(135deg, #2c5aa0 0%, #1e3f6b 100%);
         color: #fff;
+        border-bottom: 3px solid #f39c12;
     }
 
     .header .user_auth ul {
         display: flex;
-        gap: 20px;
+        gap: 24px;
+        list-style: none;
     }
 
     .header .user_auth li {
@@ -38,15 +43,22 @@
         color: #fff;
         text-decoration: none;
         font-size: 16px;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
     }
 
     .header .user_auth a:hover {
-        text-decoration: underline;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #f39c12;
+        transform: translateY(-2px);
     }
 
     .header div ul {
         display: flex;
-        gap: 30px;
+        gap: 32px;
+        list-style: none;
     }
 
     .header div li {
@@ -54,13 +66,36 @@
     }
 
     .header div a {
-        color: #ecf0f1;
+        color: #fff;
         text-decoration: none;
         font-size: 18px;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
     }
 
     .header div a:hover {
-        color: #3498db;
+        color: #f39c12;
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .header div a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 3px;
+        background-color: #f39c12;
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    .header div a:hover::after {
+        width: 80%;
     }
 
     /* Responsive design */
@@ -68,11 +103,13 @@
         .header {
             flex-direction: column;
             text-align: center;
+            padding: 15px 20px;
         }
 
         .header div ul {
             flex-direction: column;
             gap: 15px;
+            margin-top: 15px;
         }
 
         .header .user_auth ul {

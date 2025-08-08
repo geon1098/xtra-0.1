@@ -2,6 +2,8 @@ package com.mysite.xtra.user;
 
 import java.security.Principal;
 import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.mysite.xtra.guin.Working;
 import com.mysite.xtra.guin.WorkingRepository;
@@ -33,6 +37,8 @@ public class MyPageController {
     private final JobingRepository jobingRepository;
     private final PasswordEncoder passwordEncoder;
     private final OfferRepository offerRepository;
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     public MyPageController(UserService userService, WorkingRepository workingRepository, 
                           JobingRepository jobingRepository, PasswordEncoder passwordEncoder, OfferRepository offerRepository) {
@@ -192,5 +198,29 @@ public class MyPageController {
             redirectAttributes.addFlashAttribute("error", "비밀번호 변경에 실패했습니다: " + e.getMessage());
             return "redirect:/mypage/password";
         }
+    }
+
+    @PostMapping("/profile-image")
+    public String uploadProfileImage(Principal principal, @RequestParam("profileImage") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (!file.isEmpty()) {
+            try {
+                File dir = new File(uploadDir);
+                if (!dir.exists()) dir.mkdirs();
+                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                File dest = new File(uploadDir + fileName);
+                file.transferTo(dest);
+
+                // 사용자 정보에 이미지 경로 저장
+                SiteUser user = userService.getUser(principal.getName());
+                user.setProfileImageUrl("/images/profile/" + fileName);
+                userService.save(user);
+
+                redirectAttributes.addFlashAttribute("profileImageUrl", "/images/profile/" + fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+                redirectAttributes.addFlashAttribute("error", "파일 업로드 실패");
+            }
+        }
+        return "redirect:/mypage/profile";
     }
 } 
