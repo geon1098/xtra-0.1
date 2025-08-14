@@ -218,9 +218,7 @@
 </details>
 
 ---
-
 ## 💡 기술적 고민/해결 경험
 - **JWT 인증/권한 문제**:  세션/JWT토큰 인증 처리
-- **JPA N+1 문제**: fetch join, @EntityGraph, 쿼리 최적화 적용
+- **JPA N+1 문제**: fetch join, @EntityGraph, 쿼리 최적화 적용 
 - **대용량 데이터 페이징**: Pageable, Slice, QueryDSL 활용
-- **실시간 알림/채팅**: WebSocket, STOMP, 비동기 메시지 처리
