@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, devices } from '@playwright/test';
+const { defineConfig, devices } = require('@playwright/test');
 
 /**
  * Read environment variables from file.
@@ -12,7 +12,7 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-export default defineConfig({
+module.exports = defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -23,7 +23,11 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    ['list'],
+    ['junit', { outputFile: 'playwright-results.xml' }],
+    ['html', { open: 'never' }],
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -72,10 +76,11 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-   webServer: {
-     command: 'npm run start',
-     url: 'http://localhost:8083',
-  //   reuseExistingServer: !process.env.CI,
-   },
+  webServer: {
+    command: 'npm run start:boot',
+    url: 'http://localhost:8083',
+    reuseExistingServer: !process.env.CI,
+    env: { SPRING_PROFILES_ACTIVE: 'ci' },
+  },
 });
 

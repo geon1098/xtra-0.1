@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  jenkins:
+    build:
+      context: ./jenkins
+    container_name: xtra-jenkins
+    restart: unless-stopped
+    user: root
+    ports:
+      - "8090:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - xtra-network
+
   # Spring Boot 애플리케이션
   spring-app:
     build: .
@@ -64,6 +79,7 @@ services:
 volumes:
   postgres_data:
   nginx_logs:
+  jenkins_home:
 
 networks:
   xtra-network:

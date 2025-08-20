@@ -1,0 +1,11 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="7.7478700000000025">
+<testsuite name="e2e-job-flow.spec.ts" timestamp="2025-08-20T03:16:41.968Z" hostname="chromium" tests="1" failures="0" skipped="0" time="4.446" errors="0">
+<testcase name="로그인 → 구인 등록 → 메인으로 돌아가 일반 구인 클릭" classname="e2e-job-flow.spec.ts" time="4.446">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\e2e-job-flow-로그인-→-구인-등록-→-메인으로-돌아가-일반-구인-클릭-chromium\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

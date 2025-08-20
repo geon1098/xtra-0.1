@@ -139,6 +139,29 @@ nginx:
     - "443:443"    # HTTPS
 ```
 
+## 🧰 Jenkins (Docker) 설정
+
+### 1) 컨테이너 기동
+```bash
+docker compose up -d jenkins
+```
+
+초기 어드민 패스워드 확인:
+```bash
+docker exec -it xtra-jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+### 2) Jenkins 플러그인/툴
+- NodeJS 플러그인 설치 후 Global Tool에 Node 18 등록 (이름: node18)
+- JDK 17 등록 (이름: jdk17)
+
+### 3) 파이프라인 잡 생성
+- SCM에 현재 리포를 연결하여 루트 `Jenkinsfile`로 파이프라인 실행
+
+### 4) Playwright 브라우저 설치
+- 첫 실행 시 스테이지에서 `npx playwright install --with-deps`가 수행되도록 되어 있습니다. 필요 시 수동 실행 가능
+
+
 ## 📊 모니터링
 
 ### 로그 확인

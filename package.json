@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "Cypress automated tests for Xtra project",
   "scripts": {
+    "start": "node -e \"process.exit(require('os').platform()==='win32'?0:0)\"",
+    "start:boot": "node -e \"const {spawn}=require('child_process');const isWin=process.platform==='win32';const cmd=isWin?'gradlew.bat bootRun':'./gradlew bootRun';const p=spawn(cmd,{stdio:'inherit',shell:true});p.on('exit',code=>process.exit(code));\"",
+    "playwright:test": "playwright test",
+    "playwright:ui": "playwright test --ui",
+    "mcp:mock": "node scripts/mcp-mock-server.js",
+    "playwright:install": "playwright install --with-deps",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:run:headed": "cypress run --headed",
@@ -27,7 +33,7 @@
     "test:error-handling": "cypress run --spec 'cypress/e2e/08-transactional-tests.cy.js' --grep '에러'"
   },
   "devDependencies": {
-    "@playwright/test": "^1.53.2",
+    "@playwright/test": "^1.54.2",
     "@types/node": "^24.0.12",
     "cypress": "^13.6.0",
     "cypress-file-upload": "^5.0.8"
@@ -42,5 +48,8 @@
     "data-cleanup"
   ],
   "author": "Xtra Development Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.54.2"
+  }
 }
