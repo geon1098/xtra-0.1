@@ -106,20 +106,26 @@ public class ResumeService {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("파일이 비어있습니다.");
         }
-        
-        // 허용된 파일 타입 검증
-        String contentType = file.getContentType();
-        if (contentType == null || 
-            (!contentType.equals("application/pdf") && 
-             !contentType.equals("application/x-hwp") &&
-             !contentType.equals("application/msword") &&
-             !contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
-            throw new IllegalArgumentException("지원하지 않는 파일 형식입니다. (PDF, HWP, DOC, DOCX만 가능)");
-        }
-        
+
         // 파일 크기 검증 (10MB 제한)
         if (file.getSize() > 10 * 1024 * 1024) {
             throw new IllegalArgumentException("파일 크기는 10MB를 초과할 수 없습니다.");
+        }
+
+        // 허용된 확장자 기반 검증 (contentType 신뢰 어려움 대비)
+        String originalFileName = file.getOriginalFilename();
+        if (originalFileName == null || !originalFileName.contains(".")) {
+            throw new IllegalArgumentException("확장자를 확인할 수 없습니다. 문서 파일만 업로드 가능합니다.");
+        }
+        String extension = originalFileName.substring(originalFileName.lastIndexOf('.') + 1).toLowerCase();
+
+        // 문서 포맷 화이트리스트
+        List<String> allowedExtensions = List.of(
+                "pdf", "hwp", "hwpx", "doc", "docx", "ppt", "pptx", "rtf", "txt", "odt", "xls", "xlsx", "csv"
+        );
+
+        if (!allowedExtensions.contains(extension)) {
+            throw new IllegalArgumentException("지원하지 않는 파일 형식입니다. (문서 파일만 가능: PDF, HWP/HWPX, DOC/DOCX, PPT/PPTX, TXT, RTF, ODT, XLS/XLSX, CSV)");
         }
     }
     

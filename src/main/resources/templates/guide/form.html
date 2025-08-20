@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>이용방법 작성</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <style>
+        .guide-container { max-width: 1000px; margin: 20px auto; background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(44,90,160,0.10); padding:24px; }
+        .form-row { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+        .form-label { font-weight:700; color:#2c5aa0; }
+        .form-input { padding:12px 14px; border:2px solid #e1e5e9; border-radius:12px; font-size:14px; }
+        .btn { background:#2c5aa0; color:#fff; padding:12px 18px; border:none; border-radius:8px; font-weight:700; cursor:pointer; }
+    </style>
+</head>
+<body>
+<div class="guide-container" layout:fragment="content">
+    <form th:action="${action}" method="post" onsubmit="return submitEditor()">
+        <div class="form-row">
+            <label class="form-label">제목</label>
+            <input class="form-input" type="text" name="title" th:value="${post.title}">
+        </div>
+        <div class="form-row">
+            <label class="form-label">내용</label>
+            <div id="editor"></div>
+            <textarea id="content" name="content" style="display:none;" th:text="${post.content}"></textarea>
+        </div>
+        <button class="btn" type="submit">저장</button>
+    </form>
+</div>
+
+<th:block layout:fragment="bodyScript">
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script>
+  const initialValue = document.getElementById('content').value || '';
+  const editor = new toastui.Editor({
+    el: document.querySelector('#editor'),
+    height: '500px',
+    initialEditType: 'wysiwyg',
+    previewStyle: 'vertical',
+    initialValue
+  });
+  function submitEditor() {
+    document.getElementById('content').value = editor.getHTML();
+    return true;
+  }
+  window.submitEditor = submitEditor;
+  if (initialValue) {
+    editor.setHTML(initialValue);
+  }
+  </script>
+</th:block>
+</body>
+</html>
+
+

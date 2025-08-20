@@ -28,8 +28,8 @@ public class MainController {
         Page<com.mysite.xtra.guin.Working> paging = workingService.getPageList(page, kw);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
-        // 유료 오퍼(프리미엄) 리스트 - 승인된 오퍼만
-        model.addAttribute("premiumOffers", offerService.getApprovedOffers());
+        // 유료 오퍼(프리미엄) 리스트 - 카테고리 필터 및 승인된 오퍼만
+        model.addAttribute("premiumOffers", offerService.getOffersByCategory(Offer.OfferCategory.PREMIUM));
         // VIP/익스퍼트 오퍼 (카테고리별)
         model.addAttribute("vipOffers", offerService.getOffersByCategory(Offer.OfferCategory.VIP));
         model.addAttribute("expertOffers", offerService.getOffersByCategory(Offer.OfferCategory.EXPERT));

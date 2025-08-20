@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -92,6 +94,10 @@ public class SecurityConfig {
                                  new AntPathRequestMatcher("/style/**"),
                                  new AntPathRequestMatcher("/webjars/**")
                 ).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/guide"))
+                .permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/guide/*"))
+                .permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/work/list")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/work/detail/**")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/work/create")).authenticated()

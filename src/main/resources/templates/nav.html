@@ -14,7 +14,7 @@
       <span class="custom-navbar-divider" sec:authorize="isAnonymous()">|</span>
       <a class="custom-navbar-link" th:href="@{/user/signup}" sec:authorize="isAnonymous()">회원가입</a>
       <span class="custom-navbar-divider" sec:authorize="isAnonymous()">|</span>
-      <a class="custom-navbar-link" href="/notice">공지사항</a>
+      <a class="custom-navbar-link" href="/guide">이용방법</a>
       <div class="user-dropdown" sec:authorize="isAuthenticated()" style="position:relative;">
         <button type="button" id="userAvatar" style="cursor:pointer; background:none; border:none; padding:8px 10px; color:#fff; font-weight:600;">
           <span sec:authentication="name">사용자ID</span>
@@ -33,7 +33,6 @@
             <div class="wrap_list">
               <h3 class="tit_list_type">내 활동</h3>
               <a class="txt_id" href="/mypage">내 게시글</a>
-              <a class="txt_id" href="/mypage/payments">결제내역</a>
             </div>
             <form th:action="@{/user/logout}" method="post">
               <button class="btn_logout" type="submit">로그아웃</button>

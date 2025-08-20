@@ -17,36 +17,28 @@
             box-shadow: none;
         }
         
-        /* 상단 검색/필터 바 */
-        .search-filter-bar { background:#fff; padding:24px; border-radius:16px; margin-bottom:24px; box-shadow:0 4px 24px rgba(44,90,160,0.10); }
+        /* 메인 검색창 스타일로 통일 */
+        .search-filter-bar { background:#fff; padding:30px; border-radius:16px; margin:0 auto 24px; box-shadow:0 4px 24px rgba(44,90,160,0.10); width: 830px; }
         
-        .search-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 15px;
-        }
+        .search-header { display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:15px; }
         
-        .search-title { font-size: 1.6rem; font-weight:700; color:#2c5aa0; margin:0; }
+        .search-title { font-size: 2rem; font-weight:700; color:#2c5aa0; margin:0; }
         
-        .register-btn { background: linear-gradient(135deg, #2c5aa0 0%, #f39c12 100%); color:#fff; padding:12px 24px; border-radius:10px; text-decoration:none; font-weight:600; transition:transform .2s, box-shadow .2s; display:inline-block; }
-        .register-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(44,90,160,0.25); color:#fff; }
+        .create-btn { background: linear-gradient(135deg, #2c5aa0 0%, #f39c12 100%); color:#fff; padding:12px 24px; border-radius:10px; text-decoration:none; font-weight:600; transition:transform .2s, box-shadow .2s; display:inline-block; }
+        .create-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(44,90,160,0.25); color:#fff; }
         
-        .search-form { display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%; }
+        .search-form { display:flex; max-width:600px; margin:0 auto; box-shadow:0 4px 16px rgba(44,90,160,0.15); border-radius:50px; overflow:hidden; }
         
-        .career-select, .age-select, .gender-select { padding:12px 14px; border:2px solid #e1e5e9; border-radius:12px; background:#fff; font-size:14px; min-width:120px; transition:border-color .2s; }
-        .career-select:focus, .age-select:focus, .gender-select:focus { outline:none; border-color:#2c5aa0; }
+        .career-select, .age-select, .gender-select { display:none; }
         
-        .search-input { flex:1; padding:14px 16px; border:2px solid #e1e5e9; border-radius:50px; font-size:15px; min-width:160px; background:#fff; transition:border-color .2s; }
-        .search-input:focus { outline:none; border-color:#2c5aa0; }
+        .search-input { flex:1; border:none; padding:18px 24px; font-size:1.1rem; outline:none; background:#fff; }
         
-        .search-btn { background: linear-gradient(135deg, #2c5aa0 0%, #1e3f6b 100%); color:#fff; border:none; padding:12px 24px; border-radius:50px; cursor:pointer; font-weight:600; transition:transform .2s, box-shadow .2s; }
-        .search-btn:hover { transform: translateY(-2px); box-shadow:0 6px 18px rgba(44,90,160,0.25); }
+        .search-btn { background: linear-gradient(135deg, #2c5aa0 0%, #1e3f6b 100%); color:#fff; border:none; padding:18px 32px; font-size:1.1rem; font-weight:600; cursor:pointer; transition: all 0.3s ease; }
+        .search-btn:hover { background: linear-gradient(135deg, #1e3f6b 0%, #2c5aa0 100%); transform: translateY(-2px); }
         
-        /* 섹션 제목 */
-        .board-title { font-size:1.5rem; font-weight:700; color:#2c5aa0; margin:30px 0 16px 0; display:flex; align-items:center; gap:10px; }
-        .board-title::before { content:''; width:4px; height:24px; background:#f39c12; border-radius:2px; }
+        /* 섹션 제목 - 메인페이지와 통일 */
+        .section-title { font-size:1.5rem; font-weight:700; color:#2c5aa0; margin:30px 0 16px 0; display:flex; align-items:center; gap:10px; }
+        .section-title::before { content:''; width:4px; height:24px; background:#f39c12; border-radius:2px; }
         
         /* 구직 게시글 리스트 */
         .job-list { background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(44,90,160,0.10); }
@@ -123,7 +115,7 @@
     <div class="search-filter-bar">
         <div class="search-header">
             <h1 class="search-title">구직</h1>
-            <a href="/job/create" class="register-btn">구직등록</a>
+            <a href="/job/create" class="create-btn">구직등록</a>
         </div>
 
         <form class="search-form" th:action="@{/job/list}" method="get">
@@ -154,7 +146,7 @@
     
     <!-- 구직 게시글 리스트 -->
     <div th:if="${!paging.empty}">
-        <h2 class="board-title">일반 구직</h2>
+        <h2 class="section-title">일반 구직</h2>
         <div class="job-list">
             <div th:each="jobing : ${paging}" class="job-item">
                 <a th:href="@{/job/detail/{id}(id=${jobing.id})}" style="text-decoration: none; color: inherit;">

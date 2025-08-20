@@ -207,13 +207,13 @@
         <div class="form-group">
             <label class="form-label">이력서 파일 *</label>
             <div class="file-input">
-                <input type="file" name="file" id="resumeFile" accept=".pdf,.hwp,.doc,.docx" required>
+                <input type="file" name="file" id="resumeFile" accept=".pdf,.hwp,.hwpx,.doc,.docx,.ppt,.pptx,.rtf,.txt,.odt,.xls,.xlsx,.csv" required>
                 <label for="resumeFile" class="file-input-label">
                     <i class="fas fa-upload"></i> 파일을 선택하세요
                 </label>
             </div>
             <div class="file-info">
-                지원 형식: PDF, HWP, DOC, DOCX (최대 10MB)
+                지원 형식: PDF, HWP/HWPX, DOC/DOCX, PPT/PPTX, TXT, RTF, ODT, XLS/XLSX, CSV (최대 10MB)
             </div>
         </div>
         
@@ -271,12 +271,13 @@
                 return;
             }
             
-            // 파일 형식 검증
-            const allowedTypes = ['application/pdf', 'application/x-hwp', 'application/msword', 
-                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-            if (!allowedTypes.includes(file.type)) {
+            // 파일 형식 검증 (확장자 기준)
+            const allowedExtensions = ['pdf','hwp','hwpx','doc','docx','ppt','pptx','rtf','txt','odt','xls','xlsx','csv'];
+            const fileName = file.name || '';
+            const ext = (fileName.slice(fileName.lastIndexOf('.') + 1) || '').toLowerCase();
+            if (!allowedExtensions.includes(ext)) {
                 e.preventDefault();
-                alert('지원하지 않는 파일 형식입니다. (PDF, HWP, DOC, DOCX만 가능)');
+                alert('지원하지 않는 파일 형식입니다. (문서 파일만 가능: PDF, HWP/HWPX, DOC/DOCX, PPT/PPTX, TXT, RTF, ODT, XLS/XLSX, CSV)');
                 return;
             }
         });

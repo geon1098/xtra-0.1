@@ -158,6 +158,31 @@
             color: #2c5aa0;
             font-weight: 600;
         }
+
+        /* 섹션별 크기 차등 (분양라인 스타일 참고) */
+        .premium-section .card-grid {
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 24px;
+        }
+        .premium-section .offer-img { height: 300px; }
+        .premium-section .offer-title { font-size: 1.6rem; }
+        .premium-section .offer-card { border-width: 3px; }
+        .premium-section .offer-category { background: linear-gradient(135deg,#8a2be2,#667eea); }
+
+        .vip-section .card-grid {
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 22px;
+        }
+        .vip-section .offer-img { height: 200px; }
+        .vip-section .offer-title { font-size: 1.35rem; }
+        .vip-section .offer-category { background: linear-gradient(135deg,#2c5aa0,#6fb1fc); }
+
+        .expert-section .card-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+        .expert-section .offer-img { height: 170px; }
+        .expert-section .offer-title { font-size: 1.25rem; }
+        .expert-section .offer-category { background: linear-gradient(135deg,#2c7a7b,#81e6d9); }
         
         /* 게시판형 무료 구인 */
         .free-job-section {
@@ -325,7 +350,7 @@
         <!-- 메인 콘텐츠 -->
         <main class="main-content">
             <!-- 프리미엄 섹션 -->
-            <section class="offer-section">
+            <section class="offer-section premium-section">
                 <h2 class="section-title">프리미엄</h2>
                 <div class="card-grid">
                     <div class="offer-card" th:each="offer : ${premiumOffers}">
@@ -350,7 +375,7 @@
             </section>
             
             <!-- VIP 섹션 -->
-            <section class="offer-section">
+            <section class="offer-section vip-section">
                 <h2 class="section-title">VIP</h2>
                 <div class="card-grid">
                     <div class="offer-card" th:each="offer : ${vipOffers}">
@@ -375,7 +400,7 @@
             </section>
             
             <!-- 익스퍼트 섹션 -->
-            <section class="offer-section">
+            <section class="offer-section expert-section">
                 <h2 class="section-title">익스퍼트</h2>
                 <div class="card-grid">
                     <div class="offer-card" th:each="offer : ${expertOffers}">

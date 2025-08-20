@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>이용방법 상세</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .guide-container { max-width: 1000px; margin: 20px auto; background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(44,90,160,0.10); padding:24px; }
+        .guide-title { font-size:1.8rem; font-weight:800; color:#2c5aa0; margin-bottom:16px; }
+        .guide-meta { color:#888; font-size:0.9rem; margin-bottom:24px; }
+        .guide-content { line-height:1.8; color:#333; }
+        .guide-actions { display:flex; gap:10px; margin-top:20px; }
+        .btn { background:#2c5aa0; color:#fff; padding:10px 16px; border-radius:8px; text-decoration:none; }
+        .btn-danger { background:#d9534f; }
+    </style>
+</head>
+<body>
+<div class="guide-container" layout:fragment="content">
+    <h1 class="guide-title" th:text="${post.title}">제목</h1>
+    <div class="guide-meta">
+        <span th:text="${post.author}">작성자</span> · 
+        <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+    </div>
+    <div class="guide-content" th:utext="${post.content}"></div>
+
+    <div class="guide-actions" sec:authorize="hasRole('ADMIN')">
+        <a class="btn" th:href="@{|/guide/edit/${post.id}|}">수정</a>
+        <form th:action="@{|/guide/delete/${post.id}|}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger">삭제</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+

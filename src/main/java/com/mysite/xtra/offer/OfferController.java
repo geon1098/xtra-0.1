@@ -1,6 +1,7 @@
 package com.mysite.xtra.offer;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,18 @@ public class OfferController {
     private final FileUploadService fileUploadService;
     private final KakaoProperties kakaoProperties;
     private final ResumeService resumeService;
+
+    @Value("${payment.bank-name:우리은행}")
+    private String paymentBankName;
+
+    @Value("${payment.account-number:1002-123-456789}")
+    private String paymentAccountNumber;
+
+    @Value("${payment.account-holder:(주)엑스트라}")
+    private String paymentAccountHolder;
+
+    @Value("${admin.phone:010-1234-5678}")
+    private String adminPhone;
 
     // 카테고리별 리스트
     @GetMapping("/list/{category}")
@@ -73,7 +86,7 @@ public class OfferController {
         return "offer_form";
     }
 
-    // 등록 처리 - work_list로 리다이렉트
+    // 등록 처리 - 결제 안내 모달 페이지로 이동
     @PostMapping("/create")
     public String create(@ModelAttribute Offer offer, @RequestParam("imageFile") MultipartFile imageFile) {
         // 필수 필드 검증
@@ -117,7 +130,19 @@ public class OfferController {
         }
         
         offerService.save(offer);
-        return "redirect:/work/list";
+
+        // 결제 안내 모달 페이지로 이동 (수동 결제 안내)
+        return "forward:/offer/create/success";
+    }
+
+    // 오퍼 생성 성공 시 결제 안내 모달 표시
+    @PostMapping("/create/success")
+    public String createSuccess(Model model) {
+        model.addAttribute("bankName", paymentBankName);
+        model.addAttribute("accountNumber", paymentAccountNumber);
+        model.addAttribute("accountHolder", paymentAccountHolder);
+        model.addAttribute("adminPhone", adminPhone);
+        return "offer_payment_modal";
     }
 
     // 수정 폼

@@ -115,16 +115,7 @@ public class MyPageController {
         return "mypage_jobings";
     }
 
-    @GetMapping("/payments")
-    public String myPayments(Principal principal, Model model) {
-        SiteUser user = userService.getUser(principal.getName());
-        
-        // TODO: 결제 내역 구현 (현재는 더미 데이터)
-        model.addAttribute("user", user);
-        model.addAttribute("payments", List.of()); // 빈 리스트로 시작
-        
-        return "mypage_payments";
-    }
+    
 
     @GetMapping("/profile")
     public String editProfile(Principal principal, Model model) {

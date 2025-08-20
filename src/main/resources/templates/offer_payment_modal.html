@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 안내</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <style>
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display:flex; align-items:center; justify-content:center; padding:16px; }
+        .modal-card { width: 520px; max-width: 95vw; background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.2); overflow:hidden; }
+        .modal-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:#fff; padding:18px 22px; font-weight:700; font-size:1.1rem; }
+        .modal-body { padding: 22px; color:#333; }
+        .info-row { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #f0f0f0; }
+        .info-row:last-child { border-bottom:none; }
+        .label { color:#667eea; font-weight:700; }
+        .value { font-weight:600; }
+        .modal-actions { display:flex; justify-content:flex-end; gap:10px; padding: 16px 22px 22px; }
+        .btn { border:none; border-radius:10px; padding:10px 16px; font-weight:700; cursor:pointer; }
+        .btn-primary { background:#667eea; color:#fff; }
+        .btn-secondary { background:#f5f5f5; color:#667eea; }
+        .note { background:#f8f9ff; border:1px solid #e3e6ff; border-radius:10px; padding:12px; margin-top:14px; color:#4a4f7a; font-size:0.95rem; }
+    </style>
+    <script>
+        function goToWorkList(){ window.location.href = '/work/list'; }
+    </script>
+    </head>
+<body>
+<div layout:fragment="content">
+    <div class="modal-backdrop">
+        <div class="modal-card" role="dialog" aria-modal="true">
+            <div class="modal-header">유료 오퍼 등록 안내</div>
+            <div class="modal-body">
+                <div class="info-row">
+                    <span class="label">입금 은행</span>
+                    <span class="value" th:text="${bankName}">우리은행</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">계좌번호</span>
+                    <span class="value" th:text="${accountNumber}">1002-123-456789</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">예금주</span>
+                    <span class="value" th:text="${accountHolder}">(주)엑스트라</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">관리자 문의</span>
+                    <span class="value" th:text="${adminPhone}">010-1234-5678</span>
+                </div>
+                <div class="note">
+                    입금 확인 후 관리자가 게시글을 승인합니다. 영업일 기준 1일 내 반영됩니다. 입금자명과 계정명이 다르면 지연될 수 있습니다.
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="goToWorkList()">나중에 보기</button>
+                <button class="btn btn-primary" onclick="goToWorkList()">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
