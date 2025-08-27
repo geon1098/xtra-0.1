@@ -22,11 +22,12 @@ pipeline {
       }
     }
 
-    stage('Backend Build') {
-      steps {
-        sh './gradlew clean build -x test'
-      }
-    }
+            stage('Backend Build') {
+            steps {
+                sh 'chmod +x ./gradlew'
+                sh './gradlew clean build -x test'
+            }
+        }
 
     stage('E2E (Playwright + CI Profile)') {
       environment {
