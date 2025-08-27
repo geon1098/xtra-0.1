@@ -40,14 +40,15 @@ pipeline {
       }
       post {
         always {
-          publishHTML target: [
-            allowMissing: true,
-            alwaysLinkToLastBuild: true,
-            keepAll: true,
-            reportDir: 'playwright-report',
-            reportFiles: 'index.html',
-            reportName: 'Playwright Report'
-          ]
+          // publishHTML 플러그인이 설치되지 않아 주석 처리
+          // publishHTML target: [
+          //   allowMissing: true,
+          //   alwaysLinkToLastBuild: true,
+          //   keepAll: true,
+          //   reportDir: 'playwright-report',
+          //   reportFiles: 'index.html',
+          //   reportName: 'Playwright Report'
+          // ]
         }
       }
     }
