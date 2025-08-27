@@ -38,19 +38,7 @@ pipeline {
         archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true, onlyIfSuccessful: false
         junit allowEmptyResults: true, testResults: 'playwright-results.xml'
       }
-      post {
-        always {
-          // publishHTML 플러그인이 설치되지 않아 주석 처리
-          // publishHTML target: [
-          //   allowMissing: true,
-          //   alwaysLinkToLastBuild: true,
-          //   keepAll: true,
-          //   reportDir: 'playwright-report',
-          //   reportFiles: 'index.html',
-          //   reportName: 'Playwright Report'
-          // ]
-        }
-      }
+      // publishHTML 플러그인이 설치되지 않아 post 블록 제거
     }
 
     stage('E2E Job Flow (등록→메인→상세)') {
