@@ -2,9 +2,7 @@ pipeline {
   agent any
 
   environment {
-    NODEJS_HOME = tool name: 'node18', type: 'nodejs'
-    PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-    JAVA_HOME = tool name: 'jdk17', type: 'hudson.model.JDK'
+    // Use system default tools
   }
 
   options {
