@@ -1,0 +1,111 @@
+pipeline {
+    agent any
+    
+    environment {
+        NODEJS_HOME = tool name: 'node18', type: 'nodejs'
+        PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+        JAVA_HOME = tool name: 'jdk17', type: 'hudson.model.JDK'
+    }
+    
+    options {
+        timestamps()
+        ansiColor('xterm')
+    }
+    
+    stages {
+        stage('Checkout from GitHub') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/auto_test']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/geon1098/xtra-0.1.git',
+                        credentialsId: ''
+                    ]]
+                ])
+                sh 'git branch -a'
+                sh 'git checkout auto_test'
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                sh 'node -v && npm -v'
+                sh 'npm ci'
+                sh 'npx playwright install --with-deps'
+            }
+        }
+        
+        stage('Backend Build') {
+            steps {
+                sh './gradlew clean build -x test'
+            }
+        }
+        
+        stage('Start Backend Server') {
+            steps {
+                script {
+                    // 백그라운드에서 Spring Boot 애플리케이션 시작
+                    sh 'nohup ./gradlew bootRun -Dspring.profiles.active=ci > backend.log 2>&1 &'
+                    sh 'sleep 30' // 서버 시작 대기
+                    sh 'curl -f http://localhost:8083/actuator/health || echo "Server not ready yet"'
+                }
+            }
+        }
+        
+        stage('Run Playwright Tests') {
+            environment {
+                SPRING_PROFILES_ACTIVE = 'ci'
+            }
+            steps {
+                sh 'npx playwright test'
+                archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true, onlyIfSuccessful: false
+                junit allowEmptyResults: true, testResults: 'playwright-results.xml'
+            }
+            post {
+                always {
+                    publishHTML target: [
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'playwright-report',
+                        reportFiles: 'index.html',
+                        reportName: 'Playwright Report'
+                    ]
+                }
+            }
+        }
+        
+        stage('Run Specific E2E Tests') {
+            environment {
+                SPRING_PROFILES_ACTIVE = 'ci'
+            }
+            steps {
+                sh 'npx playwright test tests/e2e-job-flow.spec.ts'
+                archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true, onlyIfSuccessful: false
+            }
+        }
+        
+        stage('Stop Backend Server') {
+            steps {
+                sh 'pkill -f "gradlew bootRun" || echo "No backend process found"'
+            }
+        }
+    }
+    
+    post {
+        always {
+            archiveArtifacts artifacts: 'build/libs/*.jar,backend.log', fingerprint: true, onlyIfSuccessful: false
+            sh 'pkill -f "gradlew bootRun" || echo "Cleanup completed"'
+        }
+        success {
+            echo 'Playwright tests completed successfully!'
+        }
+        failure {
+            echo 'Playwright tests failed!'
+        }
+    }
+}
