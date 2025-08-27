@@ -1,9 +1,7 @@
 pipeline {
   agent any
 
-  environment {
-    // Use system default tools
-  }
+  // No specific environment variables needed
 
   options {
     timestamps()
